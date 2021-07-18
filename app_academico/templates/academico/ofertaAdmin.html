@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Periodos
+{% endblock %}
+
+{% block container %}
+    <div>
+        {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-{% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}danger{%else%}success{% endif %} mb-3">
+                {{ message|safe }}  
+            </div>
+            {% endfor %}
+        {% endif %}
+        <form action="{% url 'editar_periodo' periodo.id %}" method="POST">
+            {% csrf_token %}
+            <div class="row">
+
+                <div class="col-3">
+                    <div class="row">
+                        <div class="col-4">
+                            <label class="align-middle fw-bold" for="numperiodo">PERIODO</label>
+                        </div>
+                        <div class="col-8">
+                            <select name="numperiodo" id="numperiodo" class="form-select form-select-sm">
+                            {% for i in "123" %} <!--https://stackoverflow.com/questions/5242866/how-to-loop-7-times-in-the-django-templates-->
+                                <option value={{i}} {% if periodo.periodo == i %} selected {% endif %}>{{i}} PERIODO</option>>
+                            {% endfor %}
+                            </select> 
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-2">
+                    <label for="anio" class="align-middle fw-bold">AÑO&nbsp</label>
+                    <input class="text-center" type="text" name="anio" id="anio" value="{{periodo.anio}}" data-provide="datepicker" style="cursor: pointer; width:70%"/>
+                </div>
+
+                <div class="col-7 form-check" style="padding-left: 2.5em;">
+                    <input class="form-check-input" type="checkbox" name="estado" id="estado" {% if periodo.estado %}checked{% endif %}>
+                    <label class="form-check-label fw-bold" for="estado">
+                        PERIODO EN CURSO
+                    </label>
+                </div>
+
+            </div>
+        
+            <div>
+                <div class="row mt-5 mb-4">
+                    <div class="col-6">
+                        <h5 class="fw-bold">Seleccionar clases para la oferta académica</h5>
+                    </div>
+                    <div class="col-6 text-end">
+                        <input onclick="if (!confirm('¿Desea guardar los cambios?')) return false;"  type ="submit" class="btn btn-block text-white" style="background-color: #ff8a50" value="Actualizar Oferta">
+                    </div>
+                </div>
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>ASIGNATURA</th>
+                            <th class="text-center">SECCIÓN</th>
+                            <th>HORA</th>
+                            <th>DÍAS</th>
+                            <th>AULA</th>
+                            <th class="text-center">CUPOS</th>
+                            <th  class="text-center">OFERTADA</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody" data-oferta="{% for o in ofertadas %}o.id,{% endfor %}">
+                        {% for c in clases %}
+                            <tr>
+                                <td>{{ c.asignatura }}</td>
+                                <td class="text-center">{{ c.seccion }}</td>
+                                <td>{{ c.hora }}</td>
+                                <td>{{ c.dias}}</td>
+                                <td>{{ c.aula}}</td>
+                                <td class="text-center">{{ c.cupos}}</td>
+                                <td class="text-center">
+                                    <input class="form-check-input" type="checkbox" name="chk-{{c.id}}" value="{{c.id}}" id="{{c.id}}" {% for o in ofertadas %}{% if o.id == c.id %}checked{% endif %}{% endfor %}>
+                                </td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="6" class="text-danger text-center fw-bold">NO SE ENCONTRARON RESULTADOS</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            
+        </form>
+    </div>
+{% endblock %}
+
+{% block js %}
+    <script>   
+        $(function () {
+                setTimeout(() => {
+                $('.alert').slideUp(function () { 
+                    $(this).remove();
+                });
+            }, 3000)
+        });
+
+        // https://stackoverflow.com/questions/13128701/how-display-only-years-in-input-bootstrap-datepicker
+        $("#anio").datepicker({
+            format: "yyyy",
+            viewMode: "years", 
+            minViewMode: "years",
+            autoclose: true,
+        });
+    </script> 
+{% endblock  %}

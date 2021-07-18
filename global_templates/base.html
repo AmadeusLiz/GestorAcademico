@@ -1,0 +1,42 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %}</title>
+    <link href="{% static 'academico/bootstrap/bootstrap.min.css' %}" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+    <link href="{% static 'academico/css/all.css' %}" rel="stylesheet" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+    <link href="{% static 'academico/bootstrap/bootstrap-datepicker.css' %}" rel="stylesheet"/>
+    <style>
+      .form-check-input:checked {
+          background-color: #ff8a50;
+          border-color: #ff8a50;
+      }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #ff8a50">
+        <div class="container">
+          <a class="navbar-brand" href="/">Navbar</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+              <a class="nav-link {% if activo == 'clases' %} active {% endif %}" href="{% url 'clasesAdmin' %}">Clases</a>
+              <a class="nav-link {% if activo == 'periodos' %} active {% endif %}" href="{% url 'periodosAdmin' %}">Periodos</a>
+              <a class="nav-link {% if activo == 'oferta' %} active {% endif %}">Oferta Academica</a>
+            </div>
+          </div>
+        </div>
+      </nav>
+      <div class="container mt-5">
+            {% block container %}{% endblock %}     
+      </div>
+  <script src="{% static 'academico/js/jquery.min.js' %}"></script>
+  <script src="{% static 'academico/bootstrap/bootstrap-datepicker.js' %} "></script>
+  <script  src="{% static 'academico/bootstrap/bootstrap.bundle.min.js' %}" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
+  {% block js %}{% endblock  %}
+</body>
+</html>
