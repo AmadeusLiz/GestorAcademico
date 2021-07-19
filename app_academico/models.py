@@ -45,3 +45,5 @@ class Docente(models.Model):
     telefono = models.CharField(max_length=9)
     correo = models.EmailField()
     genero = models.CharField(max_length=1,choices=GENEROS, default='1')
+    fecha_nacimiento = models.DateField()
+    fecha_contratacion = models.DateField(default=datetime.now())
