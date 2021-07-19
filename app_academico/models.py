@@ -33,3 +33,15 @@ class OfertaAcademica(models.Model):
     periodo = models.CharField(max_length=1, choices=PERIODOS, default='1')
     clases = models.ManyToManyField(Clase, blank=True) #MtM no llevan on delete y el nulo no aplica
     estado = models.BooleanField(default=True)
+
+class Docente(models.Model):
+    GENEROS =(
+        ('1','Mujer'),
+        ('2','Hombre'),
+        ('3','Otro')
+    )
+    nombre = models.CharField(max_length=25)
+    apellido = models.CharField(max_length=25)
+    telefono = models.CharField(max_length=9)
+    correo = models.EmailField()
+    genero = models.CharField(max_length=1,choices=GENEROS, default='1')
