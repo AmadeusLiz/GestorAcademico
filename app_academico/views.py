@@ -186,7 +186,7 @@ def editar_docente(request, id):
     ctx = {
         'activo': 'docentes',
         'docentes': docentes,
-        'c': docente
+        'c': docente,
     }
 
     return render(request, 'academico/docenteAdmin.html', ctx)
