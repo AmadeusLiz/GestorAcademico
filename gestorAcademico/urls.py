@@ -29,5 +29,8 @@ urlpatterns = [
     path('periodos_admin/<int:id>/eliminar/', views.eliminar_periodo, name='eliminar_periodo'),
     path('periodos_admin/<int:id>/editar/', views.editar_periodo, name='editar_periodo'),
     path('periodo_Admin_agg/', views.agregar_periodo, name='agregar_periodo'),
+    path('docentes_admin/', views.docenteAdmin, name='docenteAdmin'),
+    path('docentes_admin/<int:id>/eliminar/', views.docenteAdmin, name='eliminar_docente'),
+    path('docentes_admin/<int:id>/editar/', views.docenteAdmin, name='editar_docente'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
