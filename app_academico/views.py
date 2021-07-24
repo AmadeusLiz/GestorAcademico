@@ -155,7 +155,13 @@ def docenteAdmin(request):
                                genero=request.POST.get('genero'), fecha_nacimiento=request.POST.get('datebirth'),
                                fecha_contratacion=request.POST.get('datecon'))
 
-    docentes = Docente.objects.all()
+    if request.GET.get('q'):
+        docentes = Docente.objects.filter(nombre__startswith=request.GET.get('q')).order_by('nombre')
+    else:
+        docentes = Docente.objects.all()
+
+
+
     ctx = {
         'activo': 'docentes',
         'docentes': docentes,
@@ -183,6 +189,8 @@ def editar_docente(request, id):
     docentes = Docente.objects.all()
     docente = get_object_or_404(Docente, pk=id)
 
+    print(f'{docente.fecha_nacimiento} {docente.fecha_contratacion}')
+
     ctx = {
         'activo': 'docentes',
         'docentes': docentes,
@@ -193,6 +201,6 @@ def editar_docente(request, id):
 
 
 def eliminar_docente(request, id):
-    messages.add_message(request, messages.INFO, f'La clase se ha eliminado éxitosamente')
+    messages.add_message(request, messages.INFO, f'El docente se ha eliminado éxitosamente')
     Docente.objects.get(pk=id).delete()
     return redirect(reverse('docenteAdmin'))

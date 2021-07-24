@@ -16,39 +16,56 @@
                 {% csrf_token %}
                 <div class="mb-2">
                     <label class="mb-2" for="nombre">Nombre</label>
-                    <input type="text" value="{{ c.nombre }}" name="nombre" id="nombre" class="form-control" required>
+                    <input type="text" value="{{ c.nombre }}" name="nombre" id="nombre" class="form-control" placeholder="Su nombre" required>
                 </div>
                 <div class="mb-2">
                     <label class="mb-2" for="apellido">Apellido</label>
-                    <input type="text" value="{{ c.apellido }}" name="apellido" id="nombre" class="form-control" required>
+                    <input type="text" value="{{ c.apellido }}" name="apellido" id="apellido" class="form-control" placeholder="Su apellido" required>
                 </div>
                 <div class="mb-2">
                     <label class="mb-2" for="telefono">Teléfono</label>
-                    <input type="tel" value="{{ c.telefono }}" name="telefono" id="seccion" class="form-control" required>
+                    <input type="tel" value="{{ c.telefono }}" name="telefono" id="telefono" class="form-control" pattern="[0-9]{4}-[0-9]{4}" placeholder="9999-9999" required>
                 </div>
 
                 <div class="mb-2">
                     <label class="mb-2" for="correo">Correo</label>
-                    <input type="email" value="{{ c.correo}}" name="correo" id="hora" class="form-control" min="07:00" required>
+                    <input type="email" value="{{ c.correo}}" name="correo" id="correo" class="form-control" placeholder="ejemplo@final.com" required>
                 </div>
 
                 <div class="mb-2">
                     <label class="mb-2" for="genero">Genero</label>
-                    <select name="genero" id="genero">
-                        <option value="1">Mujer</option>
-                        <option value="2">Hombre</option>
-                        <option value="3">Otro</option>
+                    <select name="genero" id="genero" aria-selected="{{ c.genero }}">
+                        {% if c.genero == '1' %}
+                            <option value="1" selected>Mujer</option>
+                            <option value="2">Hombre</option>
+                            <option value="3">Otro</option>
+
+                    {% elif c.genero == '2' %}
+                            <option value="1" >Mujer</option>
+                            <option value="2" selected>Hombre</option>
+                            <option value="3">Otro</option>
+
+                    {% elif c == '3' %}
+                            <option value="1" >Mujer</option>
+                            <option value="2">Hombre</option>
+                            <option value="3" selected>Otro</option>
+
+                    {% else %}
+                            <option value="1" >Mujer</option>
+                            <option value="2">Hombre</option>
+                            <option value="3">Otro</option>
+                        {% endif %}
                     </select>
                 </div>
 
                 <div class="mb-2">
                     <label class="mb-2" for="datebirth">Fecha de nacimiento</label>
-                    <input type="date"  value="{{ c.fecha_nacimiento }}" name="datebirth" id="aula" class="form-control" required>
+                    <input type="date"  value="{{ c.fecha_nacimiento }}" name="datebirth" id="datebirth" class="form-control" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}" required>
                 </div>
 
                 <div class="mb-2">
                     <label for="datecon">Fecha de Contratación</label>
-                    <input type="date"  value="{{ c.fecha_contratacion }}" name="datecon" id="datecon" class="form-control" min="10"  required>
+                    <input type="date"  value="{{ c.fecha_contratacion }}" name="datecon" id="datecon" class="form-control" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}"  required>
                 </div>
 
                 <div class="mb-2">
@@ -96,7 +113,7 @@
                             <td>{{ c.apellido }}</td>
                             <td>{{ c.telefono }}</td>
                             <td>{{ c.correo}}</td>
-                            <td>{{ c.genero}}</td>
+                            <td>{% if c.genero == '1' %}Mujer{% elif c.genero == '2' %}Hombre{% else %}Otro{% endif %}</td>
                             <td>{{ c.fecha_nacimiento}}</td>
                             <td>{{ c.fecha_contratacion}}</td>
                             <td>

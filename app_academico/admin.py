@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Clase, Asignatura, OfertaAcademica
+from .models import Clase, Asignatura, OfertaAcademica, Docente
 
 # Register your models here.
 
@@ -12,3 +12,4 @@ class OfertaAdmin(admin.ModelAdmin):
 admin.site.register(Clase, ClaseAdmin)
 admin.site.register(Asignatura)
 admin.site.register(OfertaAcademica, OfertaAdmin)
+admin.site.register(Docente)

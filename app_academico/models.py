@@ -1,5 +1,6 @@
 from django.db import models
-from datetime import datetime
+from datetime import datetime,date
+from phone_field import PhoneField
 
 class Asignatura(models.Model):
     nombre = models.CharField(max_length=30)
@@ -42,8 +43,11 @@ class Docente(models.Model):
     )
     nombre = models.CharField(max_length=25)
     apellido = models.CharField(max_length=25)
-    telefono = models.CharField(max_length=9)
+    telefono = PhoneField(blank=True, help_text='Numero de teléfono')
     correo = models.EmailField()
     genero = models.CharField(max_length=1,choices=GENEROS, default='1')
     fecha_nacimiento = models.DateField()
-    fecha_contratacion = models.DateField(default=datetime.now())
+    fecha_contratacion = models.DateField(default=date.today())
+
+    def __str__(self):
+        return f'{self.nombre} {self.apellido}'
