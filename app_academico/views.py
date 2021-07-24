@@ -186,10 +186,13 @@ def editar_docente(request, id):
 
         messages.add_message(request, messages.INFO, f'El docente {nombre} se ha actualizado éxitosamente')
 
-    docentes = Docente.objects.all()
+    if request.GET.get('q'):
+        docentes = Docente.objects.filter(nombre__startswith=request.GET.get('q')).order_by('nombre')
+    else:
+        docentes = Docente.objects.all()
     docente = get_object_or_404(Docente, pk=id)
 
-    print(f'{docente.fecha_nacimiento} {docente.fecha_contratacion}')
+    print(f'{docente.genero}')
 
     ctx = {
         'activo': 'docentes',
