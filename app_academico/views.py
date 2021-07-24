@@ -3,8 +3,56 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
 from django.urls import reverse
-from .models import Clase, Asignatura, OfertaAcademica
+from .models import Clase, Asignatura, OfertaAcademica, Alumnos
 from django.http import HttpResponse
+
+
+def alumnos(request):
+    if request.method == 'POST':
+        usuario = request.POST.get('usuario')
+        nombre = request.POST.get('nombre')
+        apellido = request.POST.get('apellido')
+        correo = request.POST.get('correo')
+        telefono = request.POST.get('telefono')
+        edad = request.POST.get('edad')
+
+        Alumnos.objects.filter(pk=id).update(usuario=usuario, nombre=nombre, apellido=apellido, correo=correo, telefono=telefono, edad=edad)
+
+        messages.add_message(request, messages.INFO, f'El alumno {alumno.nombre} se ha actualizado éxitosamente')
+
+    alumnos = Alumnos.objects.all().order_by('nombre')
+    
+    ctx = {
+        'activo': 'alumnos',
+        'alumnos': alumnos
+    }
+
+    return render(request, 'academico/alumnos.html', ctx)
+
+
+def editar_alumnos(request, id):
+    if request.method=='POST':
+        usuario = request.POST.get('usuario')
+        nombre  = request.POST.get('nombre')
+        apellido  = request.POST.get('apellido')
+        correo = request.POST.get('correo')
+        telefono = request.POST.get('telefono')
+        edad = request.POST.get('edad')
+
+        Alumnos.objects.filter(pk=id).update(usuario=usuario, nombre=nombre, apellido=apellido, correo=correo, telefono=telefono, edad=edad)
+
+        messages.add_message(request, messages.INFO, f'El alumno {alumno.nombre} se ha actualizado éxitosamente')
+
+        alumno = get_object_or_404(Alumnos, pk=id)
+   
+    
+    ctx = {
+        'activo': 'alumnos',
+        'alumno': alumno
+    }
+
+    return render(request, 'academico/alumnos.html', ctx)
+
 
 def clasesAdmin(request):
     asignaturas = Asignatura.objects.all().order_by('nombre')
