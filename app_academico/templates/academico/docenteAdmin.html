@@ -16,11 +16,11 @@
                 {% csrf_token %}
                 <div class="mb-2">
                     <label class="mb-2" for="nombre">Nombre</label>
-                    <input type="text" value="{{ c.nombre }}" name="nombre" id="nombre" class="form-control" placeholder="Su nombre" required>
+                    <input type="text" value="{{ c.nombre }}" name="nombre" id="nombre" class="form-control" placeholder="Ejemplo Ejemplar" pattern="(\b[A-Z]\w+)?(\s)?(\b[A-Z]\w+)" required>
                 </div>
                 <div class="mb-2">
                     <label class="mb-2" for="apellido">Apellido</label>
-                    <input type="text" value="{{ c.apellido }}" name="apellido" id="apellido" class="form-control" placeholder="Su apellido" required>
+                    <input type="text" value="{{ c.apellido }}" name="apellido" id="apellido" class="form-control" placeholder="Ejemplo Ejemplar" pattern="(\b[A-Z]\w+)?(\s)?(\b[A-Z]\w+)" required>
                 </div>
                 <div class="mb-2">
                     <label class="mb-2" for="telefono">Teléfono</label>
