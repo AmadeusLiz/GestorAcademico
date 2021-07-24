@@ -8,27 +8,33 @@ from django.http import HttpResponse
 
 
 def alumnos(request):
-    if request.method == 'POST':
+    if request.method=='POST':
         usuario = request.POST.get('usuario')
-        nombre = request.POST.get('nombre')
-        apellido = request.POST.get('apellido')
+        nombre  = request.POST.get('nombre')
+        apellido  = request.POST.get('apellido')
         correo = request.POST.get('correo')
         telefono = request.POST.get('telefono')
         edad = request.POST.get('edad')
 
-        Alumnos.objects.filter(pk=id).update(usuario=usuario, nombre=nombre, apellido=apellido, correo=correo, telefono=telefono, edad=edad)
-
-        messages.add_message(request, messages.INFO, f'El alumno {alumno.nombre} se ha actualizado éxitosamente')
+        Alumnos.objects.create(usuario=usuario, nombre=nombre, apellido=apellido, correo=correo, telefono=telefono, edad=edad)
+         
+        messages.add_message(request, messages.INFO, f'El alumno {nombre} se ha actualizado éxitosamente')
 
     alumnos = Alumnos.objects.all().order_by('nombre')
+   
     
     ctx = {
-        'activo': 'alumnos',
+        'activo': 'alumnado',
         'alumnos': alumnos
     }
 
     return render(request, 'academico/alumnos.html', ctx)
 
+
+def eliminar_alumnos(request, id):
+    messages.add_message(request, messages.INFO, f'La clase se ha eliminado éxitosamente')
+    Alumnos.objects.get(pk=id).delete()
+    return redirect(reverse('alumnos'))
 
 def editar_alumnos(request, id):
     if request.method=='POST':
@@ -41,15 +47,14 @@ def editar_alumnos(request, id):
 
         Alumnos.objects.filter(pk=id).update(usuario=usuario, nombre=nombre, apellido=apellido, correo=correo, telefono=telefono, edad=edad)
 
-        messages.add_message(request, messages.INFO, f'El alumno {alumno.nombre} se ha actualizado éxitosamente')
+        messages.add_message(request, messages.INFO, f'El alumno {alumnos.nombre} se ha actualizado éxitosamente')
 
-        alumno = get_object_or_404(Alumnos, pk=id)
-   
-    
+    alumno = Alumnos.objects.all().order_by('nombre')
     ctx = {
-        'activo': 'alumnos',
-        'alumno': alumno
+        'activo': 'alumnado',
+        'alumnos': alumno,
     }
+    
 
     return render(request, 'academico/alumnos.html', ctx)
 
