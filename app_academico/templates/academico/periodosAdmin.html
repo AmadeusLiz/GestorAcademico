@@ -53,8 +53,8 @@
                         {% endif %}
 
                         <td class="text-center">
-                            <a onclick="if (!confirm('¿Desea eliminar {{p.periodo}} {{p.anio}}?')) return false;" href="{% url 'eliminar_periodo' p.id %}" class="text-danger"> <span class="fas fa-trash-alt"></span></a>
-                            <a href="{% url 'editar_periodo' p.id %}"><span class="fas fa-edit"></span></a>
+                            <a href="{% url 'editar_periodo' p.id %}" class="edit"><span class="fas fa-edit"></span></a>&nbsp
+                            <a onclick="if (!confirm('¿Desea eliminar {{p.periodo}} {{p.anio}}?')) return false;" href="{% url 'eliminar_periodo' p.id %}" class="delete"> <span class="fas fa-trash-alt"></span></a>
                         </td>
                     </tr>
                 {% empty %}

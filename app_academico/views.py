@@ -1,6 +1,5 @@
 from typing import AsyncIterable
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
 from django.urls import reverse
 from .models import Clase, Asignatura, OfertaAcademica, Docente
@@ -101,7 +100,7 @@ def editar_periodo(request, id):
         anio = request.POST.get('anio')
         numperiodo = request.POST.get('numperiodo')
         estado = request.POST.get('estado')
-        print(anio)
+
         periodo.anio = anio
         periodo.periodo = numperiodo
 
@@ -149,7 +148,6 @@ def agregar_periodo(request):
 
     return redirect(reverse('periodosAdmin'))
 
-#asignaturas
 def asignaturas(request):
     if request.method == 'POST':
         nombre = request.POST.get('nombre')
@@ -166,11 +164,6 @@ def asignaturas(request):
     if q:
         data = Asignatura.objects.filter(nombre__contains=q).order_by('nombre')
 
-        '''
-            select * 
-            from asignaturas
-            where nombre like 'n%'
-        '''
     else:
         data = Asignatura.objects.all().order_by('nombre')
 
@@ -185,6 +178,7 @@ def asignaturas(request):
 
 def eliminar_asignatura(request, id):
     Asignatura.objects.get(pk=id).delete()
+    messages.add_message(request, messages.INFO, f'La asignatura se ha eliminado éxitosamente')
     return redirect(reverse('asignaturas'))
 
 def editar_asignatura(request, id):
@@ -222,8 +216,6 @@ def docenteAdmin(request):
     else:
         docentes = Docente.objects.all()
 
-
-
     ctx = {
         'activo': 'docentes',
         'docentes': docentes,
@@ -253,8 +245,6 @@ def editar_docente(request, id):
     else:
         docentes = Docente.objects.all()
     docente = get_object_or_404(Docente, pk=id)
-
-    print(f'{docente.genero}')
 
     ctx = {
         'activo': 'docentes',

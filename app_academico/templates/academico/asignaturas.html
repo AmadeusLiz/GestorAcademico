@@ -21,20 +21,19 @@
 
                 <div class="mb-3">
                     <label for="descripcion">Descripcion</label>
-                    <input type="text" value="{{ c.descripcion }}" name="descripcion" id="descripcion" class="form-control" required>
+                    <textarea name="descripcion" id="descripcion" class="form-control" required rows="7" style="width:100%" required>{{ c.descripcion }}</textarea>
                 </div>
 
                 <div class="mb-3">
                     <label for="creditos">Creditos</label>
                     <input type="number" value="{{ c.creditos }}" name="creditos" id="creditos" class="form-control" required>
                 </div>
-
                 
                 <div class="mb-3">
                 {% if c %}
-                    <input onclick="if (!confirm('¿Desea actualizar {{c.asignatura}} ?')) return false;"  type ="submit" class="btn btn-success" value="Actualizar Asignatura">
+                    <input onclick="if (!confirm('¿Desea actualizar {{c.asignatura}} ?')) return false;"  type ="submit" class="btn text-white orange" value="Actualizar Asignatura">
                 {% else %}
-                    <input type ="submit" class="btn btn-success" value="Registrar Asignatura">
+                    <input type ="submit" class="btn text-white orange" value="Registrar Asignatura">
                 {% endif %}
                 </div>
             </form>
@@ -63,7 +62,6 @@
                         <th>Descripcion</th>
                         <th>Creditos</th>
                         <th>Acciones</th>
-                        
                     </tr>
                 </thead>
                 <tbody>
@@ -71,10 +69,10 @@
                     <tr>
                         <td>{{ c.nombre }}</td>
                         <td>{{ c.descripcion }}</td>
-                        <td>{{ c.creditos }}</td>
+                        <td class="text-center">{{ c.creditos }}</td>
                         <td class="text-center">
-                            <a onclick="if (!confirm('Eliminar Asignatura')) return false;" href="{% url 'eliminar_asignatura' c.id  %}"  class="text-danger"><span class="fas fa-trash-alt"></span></a>
-                            <a href="{% url 'editar_asignatura' c.id %}" class="text-success"><span class="fas fa-edit"></span></a>
+                            <a href="{% url 'editar_asignatura' c.id %}" class="edit"><span class="fas fa-edit"></span></a>&nbsp
+                            <a onclick="if (!confirm('Eliminar Asignatura')) return false;" href="{% url 'eliminar_asignatura' c.id  %}"  class="delete"><span class="fas fa-trash-alt"></span></a>
                         </td>
                         
                     </tr>

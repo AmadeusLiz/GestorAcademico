@@ -54,9 +54,9 @@
 
                 <div class="mb-2">
                 {% if c %}
-                    <input onclick="if (!confirm('¿Desea actualizar {{c.asignatura}} {{c.seccion}}?')) return false;"  type ="submit" class="btn btn-success" value="Actualizar Asignatura">
+                    <input onclick="if (!confirm('¿Desea actualizar {{c.asignatura}} {{c.seccion}}?')) return false;"  type ="submit" class="btn text-white orange" value="Actualizar Asignatura">
                 {% else %}
-                    <input type ="submit" class="btn btn-success" value="Registrar Asignatura">
+                    <input type ="submit" class="btn text-white orange" value="Registrar Asignatura">
                 {% endif %}
                 </div>
             </form>
@@ -98,8 +98,8 @@
                             <td>{{ c.aula}}</td>
                             <td>{{ c.cupos}}</td>
                             <td class="text-center">
-                                <a onclick="if (!confirm('¿Desea eliminar {{c.asignatura}} {{c.seccion}}?')) return false;" href="{% url 'eliminar_clase' c.id %}" class="text-danger"> <span class="fas fa-trash-alt"></span></a>
-                                <a href="{% url 'editar_clase' c.id %}"><span class="fas fa-edit"></span></a>
+                                <a href="{% url 'editar_clase' c.id %}" class="edit"><span class="fas fa-edit"></span></a>&nbsp
+                                <a onclick="if (!confirm('¿Desea eliminar {{c.asignatura}} {{c.seccion}}?')) return false;" href="{% url 'eliminar_clase' c.id %}" class="delete"> <span class="fas fa-trash-alt"></span></a>
                             </td>
                         </tr>
                     {% empty %}

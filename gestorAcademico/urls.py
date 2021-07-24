@@ -19,7 +19,6 @@ from app_academico import views
 from django.conf import settings
 from django.conf.urls.static import static
 
-
 urlpatterns = [
     path('', views.index, name='index'),
     path('admin/', admin.site.urls),
@@ -29,7 +28,7 @@ urlpatterns = [
     path('periodos_admin/', views.periodosAdmin, name='periodosAdmin'),
     path('periodos_admin/<int:id>/eliminar/', views.eliminar_periodo, name='eliminar_periodo'),
     path('periodos_admin/<int:id>/editar/', views.editar_periodo, name='editar_periodo'),
-    path('periodo_Admin_agg/', views.agregar_periodo, name='agregar_periodo'),
+    path('periodo_agregar/', views.agregar_periodo, name='agregar_periodo'),
     path('asignaturas/', views.asignaturas, name="asignaturas"),
     path('asignaturas/<int:id>/eliminar/', views.eliminar_asignatura, name="eliminar_asignatura"),
     path('asignaturas/<int:id>/editar/', views.editar_asignatura, name="editar_asignatura"),

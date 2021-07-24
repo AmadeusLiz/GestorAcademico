@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block title %}
-    Docente
+    Docentes
 {% endblock %}
 
 {% block container %}
@@ -70,9 +70,9 @@
 
                 <div class="mb-2">
                 {% if c %}
-                    <input onclick="if (!confirm('¿Desea actualizar {{c.nombre}} {{c.apellido}}?')) return false;"  type ="submit" class="btn btn-success" value="Actualizar Docente">
+                    <input onclick="if (!confirm('¿Desea actualizar {{c.nombre}} {{c.apellido}}?')) return false;"  type ="submit" class="btn text-white orange" value="Actualizar Docente">
                 {% else %}
-                    <input type ="submit" class="btn btn-success" value="Registrar Docente">
+                    <input type ="submit" class="btn text-white orange" value="Registrar Docente">
                 {% endif %}
                 </div>
             </form>
@@ -117,8 +117,8 @@
                             <td>{{ c.fecha_nacimiento}}</td>
                             <td>{{ c.fecha_contratacion}}</td>
                             <td>
-                                <a onclick="if (!confirm('Confirme la eliminacion')) return false;" href="{% url 'eliminar_docente' c.id %}" class="text-danger"><span class="fas fa-trash-alt"></span></a>
-                                <a href="{% url 'editar_docente' c.id %}" class="text-success"><span class="fas fa-edit"></span></a>
+                                <a href="{% url 'editar_docente' c.id %}" class="edit"><span class="fas fa-edit"></span></a>&nbsp
+                                <a onclick="if (!confirm('Confirme la eliminacion')) return false;" href="{% url 'eliminar_docente' c.id %}" class="delete"><span class="fas fa-trash-alt"></span></a>
                             </td>
                         </tr>
                     {% empty %}
