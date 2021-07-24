@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+
+{% block title %}
+    OFERTA ACADÉMICA
+{% endblock %}
+
+{% block container %}
+    <div class="container">
+        {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-{% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}danger{%else%}success{% endif %} mb-3">
+                {{ message|safe }}  
+            </div>
+            {% endfor %}
+        {% endif %}
+
+        <h2 class="fw-bold mb-5">Bienvenidx, NOMBRE ALUMNO</h2>
+
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th class="text-center">SECCIÓN</th>
+                    <th>FECHAS</th>
+                    <th>HORARIO</th>
+                    <th>DÍAS</th>
+                    <th>AULA</th>
+                    <th class="text-center">CUPOS</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="tbody">
+            {% for a in asignaturas %}
+                <tr><td class="pb-0 fw-bold text-white gray" colspan="7"><h5 class="card-header fw-bold text-white gray">{{a}}</h5></td></tr>
+                    {% for c in clasesOfertadas %}
+                        {% if a == c.asignatura.nombre %}
+                        <tr>
+                            <td class="text-center">{{ c.seccion }}</td>
+                            <td>{{ c.asignatura.nombre }}</td>
+                            <td>{{ c.hora }}</td>
+                            <td>{{ c.dias}}</td>
+                            <td>{{ c.aula}}</td>
+                            <td class="text-center">{{ c.cupos}}</td>
+                            {% comment %}Conficionar el nombre del icono src dependiendo cuando le de click o no {% endcomment %}
+                            <td>
+                                <lord-icon
+                                    id="lordicon"
+                                    src="https://cdn.lordicon.com/mecwbjnp.json"
+                                    trigger="click"
+                                    colors="primary:#121331,secondary:#fb743e"
+                                    stroke="80"
+                                    style="width:2em;height:2em; cursor:pointer">
+                                </lord-icon>
+                                <lord-icon
+                                    id="lordicon2"
+                                    src="https://cdn.lordicon.com/rivoakkk.json"
+                                    trigger="click"
+                                    colors="primary:#121331,secondary:#fb743e"
+                                    stroke="80"
+                                    style="width:2em;height:2em; cursor:pointer">
+                                </lord-icon>
+                            
+                            </td>
+                        </tr>
+                        {% endif %}
+                    {% empty %}
+                        <tr>
+                            <td colspan="7" class="text-danger text-center fw-bold">NO HAY CLASES OFERTADAS</td>
+                        </tr>
+                    {% endfor %}
+            {% endfor %}
+            </tbody>
+        </table>
+        
+    </div>
+{% endblock %}
+
+{% block js %}
+    <script>   
+        $(function () {
+                setTimeout(() => {
+                $('.alert').slideUp(function () { 
+                    $(this).remove();
+                });
+            }, 3000)
+        });
+
+        $(function(){
+
+            $("#lordicon").click(function(){
+                //hacer espera en la vista para terminar de ver el movimiento
+                $("#lordicon").attr("src","width=250px;height:250px")
+            });
+            $("#lordicon2").click(function(){
+                alert('Evento click2');
+            });
+        });
+    </script> 
+{% endblock  %}

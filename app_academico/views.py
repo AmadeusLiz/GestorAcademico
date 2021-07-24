@@ -371,3 +371,29 @@ def editar_nota(request, id):
     }
 
     return render(request, 'academico/notas.html', ctx)
+    
+def ofertaAlumno(request):
+    oferta = OfertaAcademica.objects.get(pk=1) # Obtener TODAS las clases ofertadas del periodo activo
+    asignaturas = [] 
+
+    # Bucle que ingresa a la lista de asignaturas, unicamente los nombres de las asignaturas ofertadas
+    for c in oferta.clases.all().order_by('asignatura'):
+        if not c.asignatura.nombre in asignaturas:
+            asignaturas.append(c.asignatura.nombre)
+
+    # for a in asignaturas: # Recorrer Asignaturas
+    #     for c in clasesOfertadas: # Recorrer Clases Ofertadas en el periodo
+    #         if a.id == c.asignatura.id: # Verificar si coincide la asignatura con la clase ofertada
+    #             clasesAgrupadas.append({
+    #                 'idAsignatura': a.id,
+    #                 'idClase': c.id,
+    #                 'nombreAsignatura': a.nombre,
+    #                 'seccion': c.seccion,
+    #             })
+    ctx = {
+        'oferta': oferta,
+        'asignaturas': asignaturas,
+        'clasesOfertadas': oferta.clases.order_by('asignatura', 'seccion') # Clases de la oferta ordenadas por asignatura y seccion
+    }
+
+    return render(request, 'academico/ofertaAlumno.html', ctx)
