@@ -156,7 +156,7 @@ def asignaturas(request):
     q = request.GET.get('q')
 
     if q:
-        data = Asignatura.objects.filter(nombre__startswith=q).order_by('nombre')
+        data = Asignatura.objects.filter(nombre__contains=q).order_by('nombre')
 
         '''
             select * 
@@ -187,10 +187,6 @@ def editar_asignatura(request, id):
         descripcion= request.POST.get('descripcion')
         creditos = request.POST.get('creditos')
 
-        #asig.nombre = nombre
-        #asig.descripcion = descripcion
-        #asig.creditos = creditos
-        #asig.save()
         Asignatura.objects.filter(pk=id).update(nombre=nombre, descripcion=descripcion, creditos=creditos)
 
         messages.add_message(request, messages.INFO, f'La clase {nombre} se ha actualizado éxitosamente')
