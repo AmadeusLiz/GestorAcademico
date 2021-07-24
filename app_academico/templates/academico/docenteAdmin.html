@@ -60,12 +60,12 @@
 
                 <div class="mb-2">
                     <label class="mb-2" for="datebirth">Fecha de nacimiento</label>
-                    <input type="date"  value="{{ c.fecha_nacimiento }}" name="datebirth" id="datebirth" class="form-control" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}" required>
+                    <input type="date"  value="{{ c.fecha_nacimiento.isoformat }}" name="datebirth" id="datebirth" class="form-control" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}" required>
                 </div>
 
                 <div class="mb-2">
                     <label for="datecon">Fecha de Contratación</label>
-                    <input type="date"  value="{{ c.fecha_contratacion }}" name="datecon" id="datecon" class="form-control" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}"  required>
+                    <input type="date"  value="{{ c.fecha_contratacion.isoformat }}" name="datecon" id="datecon" class="form-control" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}"  required>
                 </div>
 
                 <div class="mb-2">
