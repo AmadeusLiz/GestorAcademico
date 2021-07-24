@@ -3,6 +3,8 @@ from datetime import datetime
 
 class Asignatura(models.Model):
     nombre = models.CharField(max_length=30)
+    descripcion = models.CharField(max_length=30, null=True, blank=True)
+    creditos = models.IntegerField(null=True, blank=True)
 
     def __str__(self):
         return f'{self.nombre}'

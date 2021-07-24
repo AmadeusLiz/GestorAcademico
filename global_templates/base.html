@@ -21,6 +21,7 @@
             <div class="navbar-nav">
               <a class="nav-link {% if activo == 'clases' %} active {% endif %}" href="{% url 'clasesAdmin' %}">Clases</a>
               <a class="nav-link {% if activo == 'periodos' %} active {% endif %}" href="{% url 'periodosAdmin' %}">Periodos</a>
+              <a class="nav-link" href="{% url 'asignaturas' %}">Asignaturas</a>
               <a class="nav-link {% if activo == 'oferta' %} active {% endif %}">Oferta Academica</a>
             </div>
           </div>

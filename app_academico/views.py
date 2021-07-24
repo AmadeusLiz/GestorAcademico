@@ -6,6 +6,9 @@ from django.urls import reverse
 from .models import Clase, Asignatura, OfertaAcademica
 from django.http import HttpResponse
 
+def index(request):
+    return render(request, 'academico/index.html')
+
 def clasesAdmin(request):
     asignaturas = Asignatura.objects.all().order_by('nombre')
 
@@ -137,4 +140,64 @@ def agregar_periodo(request):
         messages.add_message(request, messages.INFO, f'El periodo académico ha sido añadido con éxito')
 
     return redirect(reverse('periodosAdmin'))
+
+#asignaturas
+def asignaturas(request):
+    if request.method == 'POST':
+        nombre = request.POST.get('nombre')
+        descripcion= request.POST.get('descripcion')
+        creditos = request.POST.get('creditos')
+        
+        c = Asignatura(nombre=nombre, descripcion=descripcion, creditos=creditos)
+        c.save()
+
+        messages.add_message(request, messages.INFO, f'La asignatura {nombre}  ha sido registrado con éxito')
+
+    q = request.GET.get('q')
+
+    if q:
+        data = Asignatura.objects.filter(nombre__contains=q).order_by('nombre')
+
+        '''
+            select * 
+            from asignaturas
+            where nombre like 'n%'
+        '''
+    else:
+        data = Asignatura.objects.all().order_by('nombre')
+
+    ctx = {
+        'asignaturas': data,
+        'q':q
+    }
+
+    return render(request, 'academico/asignaturas.html', ctx)
+
+
+
+def eliminar_asignatura(request, id):
+    Asignatura.objects.get(pk=id).delete()
+    return redirect(reverse('asignaturas'))
+
+def editar_asignatura(request, id):
+    asig = get_object_or_404(Asignatura, pk=id)
+
+    if request.method == 'POST':
+        nombre = request.POST.get('nombre')
+        descripcion= request.POST.get('descripcion')
+        creditos = request.POST.get('creditos')
+
+        Asignatura.objects.filter(pk=id).update(nombre=nombre, descripcion=descripcion, creditos=creditos)
+
+        messages.add_message(request, messages.INFO, f'La clase {nombre} se ha actualizado éxitosamente')
+
+    data = Asignatura.objects.all().order_by('nombre')
+
+    ctx = {
+        'activo': 'asignaturas',
+        'asignaturas': data,
+        'c' : asig
+    }
+
+    return render(request, 'academico/asignaturas.html', ctx)
     
