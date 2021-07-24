@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Asignaturas
+{% endblock %}
+
+{% block container %}
+    <div class="row">
+        <div class="col-3">
+        {% if c %}
+            <form action="{% url 'editar_asignatura' c.id %}" method="POST">
+        {% else %}
+            <form action="{% url 'asignaturas' %}" method="POST">
+        {% endif %}
+            
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="nombre">Nombre</label>
+                    <input type="text" value="{{ c.nombre }}" name="nombre" id="nombre" class="form-control" required autofocus>
+                </div>
+
+                <div class="mb-3">
+                    <label for="descripcion">Descripcion</label>
+                    <input type="text" value="{{ c.descripcion }}" name="descripcion" id="descripcion" class="form-control" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="creditos">Creditos</label>
+                    <input type="number" value="{{ c.creditos }}" name="creditos" id="creditos" class="form-control" required>
+                </div>
+
+                
+                <div class="mb-3">
+                {% if c %}
+                    <input onclick="if (!confirm('¿Desea actualizar {{c.asignatura}} ?')) return false;"  type ="submit" class="btn btn-success" value="Actualizar Asignatura">
+                {% else %}
+                    <input type ="submit" class="btn btn-success" value="Registrar Asignatura">
+                {% endif %}
+                </div>
+            </form>
+        </div>
+
+
+
+        <div class="col-9">
+            {% if messages %}
+                <div class="alert alert-success mb-2">
+                {% for message in messages %}
+                    {{ message }}
+                {% endfor %}
+                </div>
+            {% endif %}
+
+            <form action="" method="get">
+                <input type="search" name="q" value="{{ q|default_if_none:'' }}" class="form-control" placeholder="Buscar asignatura">
+            </form>
+
+            <h2 class="mt-4">Lista de Asignaturas: {{ asignaturas.count }}</h2>
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Descripcion</th>
+                        <th>Creditos</th>
+                        <th>Acciones</th>
+                        
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for c in asignaturas %}
+                    <tr>
+                        <td>{{ c.nombre }}</td>
+                        <td>{{ c.descripcion }}</td>
+                        <td>{{ c.creditos }}</td>
+                        <td class="text-center">
+                            <a onclick="if (!confirm('Eliminar Asignatura')) return false;" href="{% url 'eliminar_asignatura' c.id  %}"  class="text-danger"><span class="fas fa-trash-alt"></span></a>
+                            <a href="{% url 'editar_asignatura' c.id %}" class="text-success"><span class="fas fa-edit"></span></a>
+                        </td>
+                        
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4" class="text-danger text-center">No se encontraron resultados</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
+
+{% block js %}
+<script>
+    $(function () {
+        
+        setTimeout(() => {
+            $('.alert').slideUp(function () {
+                $(this).remove();
+            });
+        }, 3000)
+
+    });
+</script>
+{% endblock  %}
