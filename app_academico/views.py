@@ -156,7 +156,7 @@ def docenteAdmin(request):
                                fecha_contratacion=request.POST.get('datecon'))
 
     if request.GET.get('q'):
-        docentes = Docente.objects.filter(nombre__startswith=request.GET.get('q')).order_by('nombre')
+        docentes = Docente.objects.filter(nombre__contains=request.GET.get('q')).order_by('nombre')
     else:
         docentes = Docente.objects.all()
 
