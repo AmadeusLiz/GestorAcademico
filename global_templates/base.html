@@ -5,8 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}{% endblock %}</title>
-    <link href="{% static 'academico/bootstrap/bootstrap.min.css' %}" rel="stylesheet">
-    <link href="{% static 'academico/css/all.css' %}" rel="stylesheet"/>
+    <link href="{% static 'academico/bootstrap/bootstrap.min.css' %}" rel="stylesheet" crossorigin="anonymous">
+    <link href="{% static 'academico/css/all.css' %}" rel="stylesheet" crossorigin="anonymous"/>
     <link href="{% static 'academico/bootstrap/bootstrap-datepicker.css' %}" rel="stylesheet"/>
     <link href="{% static 'academico/css/styled.css' %}" rel="stylesheet"/>
 </head>
@@ -23,6 +23,7 @@
               <a class="nav-link {% if activo == 'periodos' %} active {% endif %}" href="{% url 'periodosAdmin' %}">Periodos</a>
               <a class="nav-link" href="{% url 'asignaturas' %}">Asignaturas</a>
               <a class="nav-link {% if activo == 'oferta' %} active {% endif %}">Oferta Academica</a>
+                <a class="nav-link {% if activo == 'docentes' %} active {% endif %}" href="{% url 'docenteAdmin' %}">Docente</a>
             </div>
           </div>
         </div>
@@ -30,9 +31,10 @@
       <div class="container mt-5">
             {% block container %}{% endblock %}     
       </div>
+    <script src="https://kit.fontawesome.com/5803f0f48d.js" crossorigin="anonymous"></script>
   <script src="{% static 'academico/js/jquery.min.js' %}"></script>
   <script src="{% static 'academico/bootstrap/bootstrap-datepicker.js' %} "></script>
-  <script  src="{% static 'academico/bootstrap/bootstrap.bundle.min.js' %}"></script>
+  <script  src="{% static 'academico/bootstrap/bootstrap.bundle.min.js' %}" crossorigin="anonymous"></script>
   {% block js %}{% endblock  %}
 </body>
 </html>
