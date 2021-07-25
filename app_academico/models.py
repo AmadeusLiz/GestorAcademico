@@ -49,8 +49,8 @@ class Clase(models.Model):
     aula = models.CharField(max_length=20)
     cupos = models.SmallIntegerField(default=10)
     room = models.URLField(null=True)
-    fecha_inicio = models.DateField()
-    fecha_finalizacion = models.DateField()
+    fecha_inicio = models.DateField(null=True)
+    fecha_finalizacion = models.DateField(null=True)
     docente = models.ForeignKey(Docente, on_delete=models.CASCADE, null=True, blank=True)
     alumnos = models.ManyToManyField(Alumno, null=True, blank=True)
 
