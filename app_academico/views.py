@@ -1,14 +1,14 @@
-from typing import AsyncIterable
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.urls import reverse
 from .models import Clase, Asignatura, OfertaAcademica, Docente
-from django.http import HttpResponse
+
 
 def index(request):
     return render(request, 'academico/index.html')
 
-def clasesAdmin(request):
+
+def clases_admin(request):
     asignaturas = Asignatura.objects.all().order_by('nombre')
 
     if request.method == 'POST':
@@ -75,7 +75,7 @@ def eliminar_clase(request, id):
     return redirect(reverse('clasesAdmin'))
 
 
-def periodosAdmin(request):
+def periodos_admin(request):
     periodos = OfertaAcademica.objects.all().order_by('-anio', '-periodo')
 
     ctx = {
@@ -148,12 +148,13 @@ def agregar_periodo(request):
 
     return redirect(reverse('periodosAdmin'))
 
+
 def asignaturas(request):
     if request.method == 'POST':
         nombre = request.POST.get('nombre')
-        descripcion= request.POST.get('descripcion')
+        descripcion = request.POST.get('descripcion')
         creditos = request.POST.get('creditos')
-        
+
         c = Asignatura(nombre=nombre, descripcion=descripcion, creditos=creditos)
         c.save()
 
@@ -169,11 +170,10 @@ def asignaturas(request):
 
     ctx = {
         'asignaturas': data,
-        'q':q
+        'q': q
     }
 
     return render(request, 'academico/asignaturas.html', ctx)
-
 
 
 def eliminar_asignatura(request, id):
@@ -181,12 +181,13 @@ def eliminar_asignatura(request, id):
     messages.add_message(request, messages.INFO, f'La asignatura se ha eliminado éxitosamente')
     return redirect(reverse('asignaturas'))
 
+
 def editar_asignatura(request, id):
     asig = get_object_or_404(Asignatura, pk=id)
 
     if request.method == 'POST':
         nombre = request.POST.get('nombre')
-        descripcion= request.POST.get('descripcion')
+        descripcion = request.POST.get('descripcion')
         creditos = request.POST.get('creditos')
 
         Asignatura.objects.filter(pk=id).update(nombre=nombre, descripcion=descripcion, creditos=creditos)
@@ -198,13 +199,13 @@ def editar_asignatura(request, id):
     ctx = {
         'activo': 'asignaturas',
         'asignaturas': data,
-        'c' : asig
+        'c': asig
     }
 
     return render(request, 'academico/asignaturas.html', ctx)
-    
 
-def docenteAdmin(request):
+
+def docente_admin(request):
     if request.method == 'POST':
         Docente.objects.create(nombre=request.POST.get('nombre'), apellido=request.POST.get('apellido'),
                                telefono=request.POST.get('telefono'), correo=request.POST.get('correo'),
