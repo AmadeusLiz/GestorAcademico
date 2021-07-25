@@ -1,21 +1,18 @@
 from django.db import models
 from datetime import datetime
+from django.contrib.auth.models import User
 from phone_field import PhoneField
 
-
 class Alumno(models.Model):
-    usuario = models.CharField(max_length=25)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
     nombre = models.CharField(max_length=25)
     apellido = models.CharField(max_length=25)
     correo = models.EmailField()
-    telefono = models.IntegerField(null=True, blank=True)
-    edad = models.IntegerField(null=True, blank=True)
+    telefono = PhoneField(blank=True, help_text='Numero de teléfono')
+    fecha_nacimiento = models.DateField()
 
     def __str__(self):
         return f'{self.nombre} {self.apellido}'
-
-
-
 
 class Asignatura(models.Model):
     nombre = models.CharField(max_length=30)
@@ -25,20 +22,13 @@ class Asignatura(models.Model):
     def __str__(self):
         return f'{self.nombre}'
 
-
-class Alumno(models.Model):
-    nombre = models.CharField(max_length=30)
-
-    def __str__(self):
-        return f'{self.nombre}'
-
-
 class Docente(models.Model):
     GENEROS = (
         ('1', 'Mujer'),
         ('2', 'Hombre'),
         ('3', 'Otro')
     )
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
     nombre = models.CharField(max_length=25)
     apellido = models.CharField(max_length=25)
     telefono = PhoneField(blank=True, help_text='Numero de teléfono')
@@ -49,10 +39,6 @@ class Docente(models.Model):
 
     def __str__(self):
         return f'{self.nombre} {self.apellido}'
-
-
-# class Matricula(models.Model):
-#     alumno = 
 
 class Clase(models.Model):
     asignatura = models.ForeignKey(Asignatura, on_delete=models.CASCADE)
@@ -72,7 +58,6 @@ class Clase(models.Model):
     def __str__(self):
         return f'{self.asignatura} | {self.seccion} '
 
-
 class OfertaAcademica(models.Model):
     PERIODOS = (
         ('1', 'I PERIODO'),
@@ -88,7 +73,6 @@ class OfertaAcademica(models.Model):
     periodo = models.CharField(max_length=1, choices=PERIODOS, default='1')
     clases = models.ManyToManyField(Clase, blank=True)  # MtM no llevan on delete y el nulo no aplica
     estado = models.BooleanField(default=True)
-
 
 class NotasClase(models.Model):
     clase = models.ForeignKey(Clase, on_delete=models.CASCADE)

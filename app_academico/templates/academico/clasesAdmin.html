@@ -29,7 +29,7 @@
 
                 <div class="mb-2">
                     <label class="mb-2" for="seccion">Seccion</label>
-                    <input type="text" value="{{ c.seccion }}" name="seccion" id="seccion" class="form-control" required>
+                    <input type="text" value="{{ c.seccion }}" name="seccion" id="seccion" class="form-control" placeholder="1201" required>
                 </div>
 
                 <div class="mb-2">
@@ -39,17 +39,17 @@
 
                 <div class="mb-2">
                     <label class="mb-2" for="dias">Dias</label>
-                    <input type="text"  value="{{ c.dias }}" name="dias" id="dias" class="form-control" required>
+                    <input type="text"  value="{{ c.dias }}" name="dias" id="dias" class="form-control" placeholder="L, M, X, J, V" required>
                 </div>
 
                 <div class="mb-2">
                     <label class="mb-2" for="aula">Aula</label>
-                    <input type="text"  value="{{ c.aula }}" name="aula" id="aula" class="form-control" required>
+                    <input type="text"  value="{{ c.aula }}" name="aula" id="aula" class="form-control" placeholder="C303" required>
                 </div>
 
                 <div class="mb-2">
                     <label for="cupos">Cupos</label>
-                    <input type="number"  value="{{ c.cupos }}" name="cupos" id="cupos" class="form-control" min="10"  required>
+                    <input type="number"  value="{{ c.cupos }}" name="cupos" id="cupos" class="form-control" min="10" placeholder="10" required>
                 </div>
 
                 <div class="mb-2">
@@ -104,7 +104,7 @@
                         </tr>
                     {% empty %}
                         <tr>
-                            <td colspan="6" class="text-danger text-center fw-bold">NO SE ENCONTRARON RESULTADOS</td>
+                            <td colspan="7" class="text-danger text-center fw-bold">NO SE ENCONTRARON RESULTADOS</td>
                         </tr>
                     {% endfor %}
                 </tbody>

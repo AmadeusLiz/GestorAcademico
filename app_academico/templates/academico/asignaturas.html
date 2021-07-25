@@ -16,7 +16,7 @@
                 {% csrf_token %}
                 <div class="mb-3">
                     <label for="nombre">Nombre</label>
-                    <input type="text" value="{{ c.nombre }}" name="nombre" id="nombre" class="form-control" required autofocus>
+                    <input type="text" value="{{ c.nombre }}" name="nombre" id="nombre" class="form-control" placeholder="Programación Web" required autofocus>
                 </div>
 
                 <div class="mb-3">
@@ -26,7 +26,7 @@
 
                 <div class="mb-3">
                     <label for="creditos">Creditos</label>
-                    <input type="number" value="{{ c.creditos }}" name="creditos" id="creditos" class="form-control" required>
+                    <input type="number" value="{{ c.creditos }}" name="creditos" id="creditos" class="form-control" placeholder="5" min="1" required>
                 </div>
                 
                 <div class="mb-3">
@@ -38,8 +38,6 @@
                 </div>
             </form>
         </div>
-
-
 
         <div class="col-9">
             {% if messages %}

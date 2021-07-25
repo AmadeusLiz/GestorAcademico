@@ -1,25 +1,22 @@
+from .models import Clase, Asignatura, OfertaAcademica, Docente, Alumno
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.urls import reverse
-from .models import Clase, Asignatura, OfertaAcademica, Docente, Alumno
-
 
 def index(request):
     return render(request, 'academico/index.html')
 
-
 def alumnos(request):
     if request.method=='POST':
-        usuario = request.POST.get('usuario')
         nombre  = request.POST.get('nombre')
         apellido  = request.POST.get('apellido')
         correo = request.POST.get('correo')
         telefono = request.POST.get('telefono')
-        edad = request.POST.get('edad')
+        fecha_nacimiento = request.POST.get('datebirth')
 
-        Alumno.objects.create(usuario=usuario, nombre=nombre, apellido=apellido, correo=correo, telefono=telefono, edad=edad)
+        Alumno.objects.create(nombre=nombre, apellido=apellido, correo=correo, telefono=telefono, fecha_nacimiento=fecha_nacimiento)
          
-        messages.add_message(request, messages.INFO, f'El alumno {nombre} se ha actualizado éxitosamente')
+        messages.add_message(request, messages.INFO, f'El alumno {nombre} se ha agregado éxitosamente')
 
     q = request.GET.get('q')
 
@@ -27,8 +24,6 @@ def alumnos(request):
         alumnos = Alumno.objects.filter(nombre__contains=q).order_by('nombre')
     else: 
         alumnos = Alumno.objects.all()
-   
-   
     
     ctx = {
         'activo': 'alumnos',
@@ -39,21 +34,19 @@ def alumnos(request):
 
 
 def eliminar_alumnos(request, id):
-    messages.add_message(request, messages.INFO, f'El Alumno se ha eliminado éxitosamente')
+    messages.add_message(request, messages.INFO, f'El alumno se ha eliminado éxitosamente')
     Alumno.objects.get(pk=id).delete()
     return redirect(reverse('alumnos'))
 
 def editar_alumnos(request, id):
     if request.method=='POST':
-        usuario = request.POST.get('usuario')
         nombre  = request.POST.get('nombre')
         apellido  = request.POST.get('apellido')
         correo = request.POST.get('correo')
         telefono = request.POST.get('telefono')
-        edad = request.POST.get('edad')
+        fecha_nacimiento = request.POST.get('datebirth')
 
-
-        Alumno.objects.filter(pk=id).update(usuario=usuario, nombre=nombre, apellido=apellido, correo=correo, telefono=telefono, edad=edad)
+        Alumno.objects.filter(pk=id).update(nombre=nombre, apellido=apellido, correo=correo, telefono=telefono, fecha_nacimiento=fecha_nacimiento)
 
         messages.add_message(request, messages.INFO, f'El alumno {nombre} se ha actualizado éxitosamente')
 
@@ -69,7 +62,6 @@ def editar_alumnos(request, id):
         'alumnos': alumnos,
         'alumno':get_object_or_404(Alumno,pk=id)
     }
-    
 
     return render(request, 'academico/alumnos.html', ctx)
 
@@ -214,7 +206,6 @@ def agregar_periodo(request):
 
     return redirect(reverse('periodosAdmin'))
 
-
 def asignaturas(request):
     if request.method == 'POST':
         nombre = request.POST.get('nombre')
@@ -241,12 +232,10 @@ def asignaturas(request):
 
     return render(request, 'academico/asignaturas.html', ctx)
 
-
 def eliminar_asignatura(request, id):
     Asignatura.objects.get(pk=id).delete()
     messages.add_message(request, messages.INFO, f'La asignatura se ha eliminado éxitosamente')
     return redirect(reverse('asignaturas'))
-
 
 def editar_asignatura(request, id):
     asig = get_object_or_404(Asignatura, pk=id)
@@ -270,7 +259,6 @@ def editar_asignatura(request, id):
 
     return render(request, 'academico/asignaturas.html', ctx)
 
-
 def docente_admin(request):
     if request.method == 'POST':
         Docente.objects.create(nombre=request.POST.get('nombre'), apellido=request.POST.get('apellido'),
@@ -289,7 +277,6 @@ def docente_admin(request):
     }
 
     return render(request, 'academico/docenteAdmin.html', ctx)
-
 
 def editar_docente(request, id):
     if request.method == 'POST':
