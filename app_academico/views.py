@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
 from django.urls import reverse
-from .models import Clase, Asignatura, OfertaAcademica, Alumnos
+from .models import Clase, Asignatura, OfertaAcademica, Alumno
 from django.http import HttpResponse
 
 
@@ -16,24 +16,30 @@ def alumnos(request):
         telefono = request.POST.get('telefono')
         edad = request.POST.get('edad')
 
-        Alumnos.objects.create(usuario=usuario, nombre=nombre, apellido=apellido, correo=correo, telefono=telefono, edad=edad)
+        Alumno.objects.create(usuario=usuario, nombre=nombre, apellido=apellido, correo=correo, telefono=telefono, edad=edad)
          
         messages.add_message(request, messages.INFO, f'El alumno {nombre} se ha actualizado éxitosamente')
 
-    alumnos = Alumnos.objects.all().order_by('nombre')
+    q = request.GET.get('q')
+
+    if q:
+        alumnos = Alumno.objects.filter(nombre__contains=q).order_by('nombre')
+    else: 
+        alumnos = Alumno.objects.all()
+   
    
     
     ctx = {
-        'activo': 'alumnado',
-        'alumnos': alumnos
+        'activo': 'alumnos',
+        'alumnos': alumnos,
     }
 
     return render(request, 'academico/alumnos.html', ctx)
 
 
 def eliminar_alumnos(request, id):
-    messages.add_message(request, messages.INFO, f'La clase se ha eliminado éxitosamente')
-    Alumnos.objects.get(pk=id).delete()
+    messages.add_message(request, messages.INFO, f'El Alumno se ha eliminado éxitosamente')
+    Alumno.objects.get(pk=id).delete()
     return redirect(reverse('alumnos'))
 
 def editar_alumnos(request, id):
@@ -45,14 +51,22 @@ def editar_alumnos(request, id):
         telefono = request.POST.get('telefono')
         edad = request.POST.get('edad')
 
-        Alumnos.objects.filter(pk=id).update(usuario=usuario, nombre=nombre, apellido=apellido, correo=correo, telefono=telefono, edad=edad)
 
-        messages.add_message(request, messages.INFO, f'El alumno {alumnos.nombre} se ha actualizado éxitosamente')
+        Alumno.objects.filter(pk=id).update(usuario=usuario, nombre=nombre, apellido=apellido, correo=correo, telefono=telefono, edad=edad)
 
-    alumno = Alumnos.objects.all().order_by('nombre')
+        messages.add_message(request, messages.INFO, f'El alumno {nombre} se ha actualizado éxitosamente')
+
+    q = request.GET.get('q')
+
+    if q:
+        alumnos = Alumno.objects.filter(nombre__contains=q).order_by('nombre')
+    else: 
+        alumnos = Alumno.objects.all()
+
     ctx = {
-        'activo': 'alumnado',
-        'alumnos': alumno,
+        'activo': 'alumnos',
+        'alumnos': alumnos,
+        'alumno':get_object_or_404(Alumno,pk=id)
     }
     
 

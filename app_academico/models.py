@@ -1,7 +1,7 @@
 from django.db import models
 from datetime import datetime
 
-class Alumnos(models.Model):
+class Alumno(models.Model):
     usuario = models.CharField(max_length=25)
     nombre = models.CharField(max_length=25)
     apellido = models.CharField(max_length=25)
