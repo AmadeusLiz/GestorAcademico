@@ -52,7 +52,8 @@ class Clase(models.Model):
     fecha_inicio = models.DateField(null=True)
     fecha_finalizacion = models.DateField(null=True)
     docente = models.ForeignKey(Docente, on_delete=models.CASCADE, null=True, blank=True)
-    alumnos = models.ManyToManyField(Alumno, null=True, blank=True)
+    alumnos = models.ManyToManyField(Alumno, blank=True)
+    finalizada = models.BooleanField(default=False)
 
     def __str__(self):
         return f'{self.asignatura} | {self.seccion} '

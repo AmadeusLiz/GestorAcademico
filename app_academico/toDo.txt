@@ -1,0 +1,12 @@
+--Esther y Cristian
+Editar perfil para docente y alumno.
+Pantallas principales para docente (opciones-ver clases que dará, asignar notas a alumnos, editar sus datos) y para alumno (opciones-ver clases que tiene matriculadas, ver sus notas, editar sus datos).
+Pantalla de clases asignadas en el periodo activo para docente (checkbox para marcar una clase como finalizada) (listar clases que el docente tiene asignadas). 
+
+--Eduardo Josue
+Pantalla de clases matriculadas del periodo para alumno (Tipo modulo aula virtual UNICAH) josue
+Pantallas de notas para docente (debe poder editar las notas del alumno) y para alumno (solo debe verlas).
+
+----- Kenia y Lizzie
+Pantalla de oferta academica para alumno, con opción de (des)matrícula (visualiza los cupos de las clases).
+Pantalla de clases matriculadas del periodo para alumno. (En parte de registro)
