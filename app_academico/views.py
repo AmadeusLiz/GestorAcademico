@@ -1,14 +1,80 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.urls import reverse
-from .models import Clase, Asignatura, OfertaAcademica, Docente
+from .models import Clase, Asignatura, OfertaAcademica, Docente, Alumno
 
 
 def index(request):
     return render(request, 'academico/index.html')
 
 
-def clases_admin(request):
+def alumnos(request):
+    if request.method=='POST':
+        usuario = request.POST.get('usuario')
+        nombre  = request.POST.get('nombre')
+        apellido  = request.POST.get('apellido')
+        correo = request.POST.get('correo')
+        telefono = request.POST.get('telefono')
+        edad = request.POST.get('edad')
+
+        Alumno.objects.create(usuario=usuario, nombre=nombre, apellido=apellido, correo=correo, telefono=telefono, edad=edad)
+         
+        messages.add_message(request, messages.INFO, f'El alumno {nombre} se ha actualizado éxitosamente')
+
+    q = request.GET.get('q')
+
+    if q:
+        alumnos = Alumno.objects.filter(nombre__contains=q).order_by('nombre')
+    else: 
+        alumnos = Alumno.objects.all()
+   
+   
+    
+    ctx = {
+        'activo': 'alumnos',
+        'alumnos': alumnos,
+    }
+
+    return render(request, 'academico/alumnos.html', ctx)
+
+
+def eliminar_alumnos(request, id):
+    messages.add_message(request, messages.INFO, f'El Alumno se ha eliminado éxitosamente')
+    Alumno.objects.get(pk=id).delete()
+    return redirect(reverse('alumnos'))
+
+def editar_alumnos(request, id):
+    if request.method=='POST':
+        usuario = request.POST.get('usuario')
+        nombre  = request.POST.get('nombre')
+        apellido  = request.POST.get('apellido')
+        correo = request.POST.get('correo')
+        telefono = request.POST.get('telefono')
+        edad = request.POST.get('edad')
+
+
+        Alumno.objects.filter(pk=id).update(usuario=usuario, nombre=nombre, apellido=apellido, correo=correo, telefono=telefono, edad=edad)
+
+        messages.add_message(request, messages.INFO, f'El alumno {nombre} se ha actualizado éxitosamente')
+
+    q = request.GET.get('q')
+
+    if q:
+        alumnos = Alumno.objects.filter(nombre__contains=q).order_by('nombre')
+    else: 
+        alumnos = Alumno.objects.all()
+
+    ctx = {
+        'activo': 'alumnos',
+        'alumnos': alumnos,
+        'alumno':get_object_or_404(Alumno,pk=id)
+    }
+    
+
+    return render(request, 'academico/alumnos.html', ctx)
+
+
+def clasesAdmin(request):
     asignaturas = Asignatura.objects.all().order_by('nombre')
 
     if request.method == 'POST':

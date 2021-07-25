@@ -3,6 +3,20 @@ from datetime import datetime
 from phone_field import PhoneField
 
 
+class Alumno(models.Model):
+    usuario = models.CharField(max_length=25)
+    nombre = models.CharField(max_length=25)
+    apellido = models.CharField(max_length=25)
+    correo = models.EmailField()
+    telefono = models.IntegerField(null=True, blank=True)
+    edad = models.IntegerField(null=True, blank=True)
+
+    def __str__(self):
+        return f'{self.nombre} {self.apellido}'
+
+
+
+
 class Asignatura(models.Model):
     nombre = models.CharField(max_length=30)
     descripcion = models.TextField(null=True, blank=True)
