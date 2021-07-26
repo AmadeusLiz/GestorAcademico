@@ -67,6 +67,10 @@
                             <td colspan="7" class="text-danger text-center fw-bold">NO HAY CLASES OFERTADAS</td>
                         </tr>
                     {% endfor %}
+                {% empty %}
+                <tr>
+                    <td colspan="7" class="text-danger text-center fw-bold">NO HAY ASIGNATURAS AUN</td>
+                </tr>
             {% endfor %}
             </tbody>
         </table>
