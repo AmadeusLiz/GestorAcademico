@@ -4,29 +4,45 @@
     Notas
 {% endblock %}
 
-{% block container %}    
-    
-    <h1>Notas</h1>
-
+{% block container %}
     <div class="row">
+    {% if otro %}
+        <form action="" method="">
+        {% csrf_token %}
+            <div class="mb-2">
+                <label class="mb-2" for="clase">Clase</label>
+                    <select name="clase" id="clase" class="form-select form-select-sm">
+                        {% for o in otro %}<option value="{{ o.id }}">{{ o }}</option>{% endfor %}
+                    </select>
+            </div>
+            <input type ="submit" class="btn text-white orange" value="Ver clase">
+        </form>
+    {% endif %}
+    <h1>Notas de {% if otro %}{{ notas.first.clase}}
+    {% else %}{{ notas.first}}
+    {% endif %}</h1>
+
+
         <table class="table table-hover">
                 <thead>
                     <tr>
-                        <th>Clase</th>
+                        <th>{% if otro %}Alumno{% else %}Clase{% endif %}</th>
                         <th>Parcial 1</th>
                         <th>Parcial 2</th>
                         <th>Parcial 3</th>
-                        {% if d %}<th>Acciones</th>{% endif %}
+                        {% if otro %}<th>Acciones</th>{% endif %}
                     </tr>
                 </thead>
                 <tbody>
-                    {% for c in docentes %}
+                    {% for c in notas %}
                         <tr>
-                            <td>{{ c.clase }}</td>
+                            <td>{% if otro %}{{ c.alumno}}
+    {% else %}{{ c.clase}}
+    {% endif %}</td>
                             <td>{{ c.parcial1 }}</td>
                             <td>{{ c.parcial2 }}</td>
                             <td>{{ c.parcial3}}</td>
-                            {% if d %}
+                            {% if otro %}
                             <td>
                                 <a href="{% url 'editar_docente' c.id %}" class="edit"><span class="fas fa-edit"></span></a>&nbsp
                                 <a onclick="if (!confirm('Confirme la eliminacion')) return false;" href="{% url 'eliminar_docente' c.id %}" class="delete"><span class="fas fa-trash-alt"></span></a>

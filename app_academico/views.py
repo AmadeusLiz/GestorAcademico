@@ -315,18 +315,23 @@ def eliminar_docente(request, id):
 
 def notas(request):
     #TODO: crear vista para que el alumno vea sus notas
-
+    datos = None
     if request.user.groups.exists():
         if request.user.groups.all()[0].name == 'Alumno':
-            pass
+            datos=NotasClase.objects.all().filter(alumno__user=request.user.id)
         # TODO: crear vista para que el docente vea las notas y pueda editarlas
         elif request.user.groups.all()[0].name == 'Docente':
-            print('aaaaaaaaaaaa')
-        else:
-            pass
+            otro = Clase.objects.all().filter(docente__user=request.user.id)
+            if request.GET.get('clase'):
+                datos = NotasClase.objects.all().filter(clase=request.GET.get('clase'),clase__docente__user_id=request.user.id)
+            print(otro)
+    else:
+        return redirect(reverse('index'))
+
     ctx = {
-        'activo': 'docentes',
-        'docentes': NotasClase.objects.all().filter(alumno__user=request.user.id),
+        'activo': 'notas',
+        'notas': datos,
+        'otro':otro,
     }
 
     return render(request, 'academico/notas.html',ctx)

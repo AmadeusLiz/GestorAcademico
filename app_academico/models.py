@@ -82,5 +82,5 @@ class NotasClase(models.Model):
     parcial3 = models.IntegerField(null=True, default=0, blank=True)
 
     def __str__(self):
-        return f'{self.clase.asignatura} {self.alumno.nombre}'
+        return f'{self.alumno.nombre}'
 
