@@ -3,28 +3,31 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.urls import reverse
 
+
 def index(request):
     return render(request, 'academico/index.html')
 
+
 def alumnos(request):
-    if request.method=='POST':
-        nombre  = request.POST.get('nombre')
-        apellido  = request.POST.get('apellido')
+    if request.method == 'POST':
+        nombre = request.POST.get('nombre')
+        apellido = request.POST.get('apellido')
         correo = request.POST.get('correo')
         telefono = request.POST.get('telefono')
         fecha_nacimiento = request.POST.get('datebirth')
 
-        Alumno.objects.create(nombre=nombre, apellido=apellido, correo=correo, telefono=telefono, fecha_nacimiento=fecha_nacimiento)
-         
+        Alumno.objects.create(nombre=nombre, apellido=apellido, correo=correo, telefono=telefono,
+                              fecha_nacimiento=fecha_nacimiento)
+
         messages.add_message(request, messages.INFO, f'El alumno {nombre} se ha agregado éxitosamente')
 
     q = request.GET.get('q')
 
     if q:
         alumnos = Alumno.objects.filter(nombre__contains=q).order_by('nombre')
-    else: 
+    else:
         alumnos = Alumno.objects.all()
-    
+
     ctx = {
         'activo': 'alumnos',
         'alumnos': alumnos,
@@ -38,15 +41,17 @@ def eliminar_alumnos(request, id):
     Alumno.objects.get(pk=id).delete()
     return redirect(reverse('alumnos'))
 
+
 def editar_alumnos(request, id):
-    if request.method=='POST':
-        nombre  = request.POST.get('nombre')
-        apellido  = request.POST.get('apellido')
+    if request.method == 'POST':
+        nombre = request.POST.get('nombre')
+        apellido = request.POST.get('apellido')
         correo = request.POST.get('correo')
         telefono = request.POST.get('telefono')
         fecha_nacimiento = request.POST.get('datebirth')
 
-        Alumno.objects.filter(pk=id).update(nombre=nombre, apellido=apellido, correo=correo, telefono=telefono, fecha_nacimiento=fecha_nacimiento)
+        Alumno.objects.filter(pk=id).update(nombre=nombre, apellido=apellido, correo=correo, telefono=telefono,
+                                            fecha_nacimiento=fecha_nacimiento)
 
         messages.add_message(request, messages.INFO, f'El alumno {nombre} se ha actualizado éxitosamente')
 
@@ -54,13 +59,13 @@ def editar_alumnos(request, id):
 
     if q:
         alumnos = Alumno.objects.filter(nombre__contains=q).order_by('nombre')
-    else: 
+    else:
         alumnos = Alumno.objects.all()
 
     ctx = {
         'activo': 'alumnos',
         'alumnos': alumnos,
-        'alumno':get_object_or_404(Alumno,pk=id)
+        'alumno': get_object_or_404(Alumno, pk=id)
     }
 
     return render(request, 'academico/alumnos.html', ctx)
@@ -206,6 +211,7 @@ def agregar_periodo(request):
 
     return redirect(reverse('periodosAdmin'))
 
+
 def asignaturas(request):
     if request.method == 'POST':
         nombre = request.POST.get('nombre')
@@ -232,10 +238,12 @@ def asignaturas(request):
 
     return render(request, 'academico/asignaturas.html', ctx)
 
+
 def eliminar_asignatura(request, id):
     Asignatura.objects.get(pk=id).delete()
     messages.add_message(request, messages.INFO, f'La asignatura se ha eliminado éxitosamente')
     return redirect(reverse('asignaturas'))
+
 
 def editar_asignatura(request, id):
     asig = get_object_or_404(Asignatura, pk=id)
@@ -259,6 +267,7 @@ def editar_asignatura(request, id):
 
     return render(request, 'academico/asignaturas.html', ctx)
 
+
 def docente_admin(request):
     if request.method == 'POST':
         Docente.objects.create(nombre=request.POST.get('nombre'), apellido=request.POST.get('apellido'),
@@ -277,6 +286,7 @@ def docente_admin(request):
     }
 
     return render(request, 'academico/docenteAdmin.html', ctx)
+
 
 def editar_docente(request, id):
     if request.method == 'POST':
@@ -308,30 +318,56 @@ def editar_docente(request, id):
 
     return render(request, 'academico/docenteAdmin.html', ctx)
 
+
 def eliminar_docente(request, id):
     messages.add_message(request, messages.INFO, f'El docente se ha eliminado éxitosamente')
     Docente.objects.get(pk=id).delete()
     return redirect(reverse('docenteAdmin'))
 
+
 def notas(request):
-    #TODO: crear vista para que el alumno vea sus notas
+    # TODO: crear vista para que el alumno vea sus notas
     datos = None
     if request.user.groups.exists():
         if request.user.groups.all()[0].name == 'Alumno':
-            datos=NotasClase.objects.all().filter(alumno__user=request.user.id)
+            datos = NotasClase.objects.all().filter(alumno__user=request.user.id)
         # TODO: crear vista para que el docente vea las notas y pueda editarlas
         elif request.user.groups.all()[0].name == 'Docente':
-            otro = Clase.objects.all().filter(docente__user=request.user.id)
             if request.GET.get('clase'):
                 datos = NotasClase.objects.all().filter(clase=request.GET.get('clase'),clase__docente__user_id=request.user.id)
-            print(otro)
+            otro = Clase.objects.all().filter(docente__user=request.user.id)
+
     else:
         return redirect(reverse('index'))
 
     ctx = {
         'activo': 'notas',
         'notas': datos,
-        'otro':otro,
+        'otro': otro,
     }
 
-    return render(request, 'academico/notas.html',ctx)
+    return render(request, 'academico/notas.html', ctx)
+
+
+def editar_nota(request, id):
+    alumno = None
+    try:
+        if request.method == 'POST':
+            NotasClase.objects.filter(pk=id).update(parcial1=request.POST.get('parcial1'),parcial2=request.POST.get('parcial2'),parcial3=request.POST.get('parcial3'))
+
+        #messages.add_message(request, messages.INFO, f'La nota se ha actualizado éxitosamente')
+
+        alumno = get_object_or_404(NotasClase, pk=id)
+    except:
+        pass
+
+    datos = NotasClase.objects.all().filter( clase__docente__user_id=request.user.id)
+    print(datos)
+    ctx = {
+        'activo': 'notas',
+        'notas': datos,
+        'c': alumno,
+        'otro': Clase.objects.all().filter(docente__user=request.user.id),
+    }
+
+    return render(request, 'academico/notas.html', ctx)

@@ -5,10 +5,45 @@
 {% endblock %}
 
 {% block container %}
+
+    <div class="row ">
+    {% if notas %}
+        <div >
+        {% if c %}
+            <h2>Estudiante {{ c.alumno }}</h2>
+            <form  action="{% url 'editar_nota' c.id %}" method="POST">
+            {% csrf_token %}
+                <div class="d-inline-block col-2">
+                    <label class="mb-3" for="parcial1">Parcial 1</label>
+                    <input type="number" value="{{ c.parcial1 }}" name="parcial1" id="parcial1" class="form-control" placeholder="70"  required>
+                </div>
+                <div class="d-inline-block col-2">
+                    <label class="mb-3" for="parcial2">Parcial 2</label>
+                    <input type="number" value="{{ c.parcial2 }}" name="parcial2" id="parcial2" class="form-control" placeholder="70"  required>
+                </div>
+                <div class="d-inline-block col-2">
+                    <label class="mb-3" for="parcial3">Parcial 3</label>
+                    <input type="number" value="{{ c.parcial3 }}" name="parcial3" id="parcial3" class="form-control" placeholder="70"  required>
+                </div>
+
+
+                <div class="mb-3 d-inline-block">
+                {% if c %}
+                    <input onclick="if (!confirm('¿Desea actualizar {{o.alumno}}?')) return false;"  type ="submit" class="btn text-white orange" value="Actualizar nota">
+                {% else %}
+                    <input type ="submit" class="btn text-white orange" value="Registrar Nota">
+                {% endif %}
+                </div>
+            </form>
+        </div>
+
+        {% endif %}
+
+    {% endif %}
     <div class="row">
     {% if otro %}
-        <form action="" method="">
-        {% csrf_token %}
+        <div class="col-12">
+            <form action="{% url 'notas' %}" method="">
             <div class="mb-2">
                 <label class="mb-2" for="clase">Clase</label>
                     <select name="clase" id="clase" class="form-select form-select-sm">
@@ -17,12 +52,16 @@
             </div>
             <input type ="submit" class="btn text-white orange" value="Ver clase">
         </form>
+        </div>
+
     {% endif %}
-    <h1>Notas de {% if otro %}{{ notas.first.clase}}
+    </div>
+
+        <h1>Notas de {% if otro %}{{ notas.first.clase}}
     {% else %}{{ notas.first}}
     {% endif %}</h1>
-
-
+        <div class="row">
+        <div class="col-12">
         <table class="table table-hover">
                 <thead>
                     <tr>
@@ -36,16 +75,13 @@
                 <tbody>
                     {% for c in notas %}
                         <tr>
-                            <td>{% if otro %}{{ c.alumno}}
-    {% else %}{{ c.clase}}
-    {% endif %}</td>
+                            <td>{% if otro %}{{ c.alumno}}{% else %}{{ c.clase}}{% endif %}</td>
                             <td>{{ c.parcial1 }}</td>
                             <td>{{ c.parcial2 }}</td>
                             <td>{{ c.parcial3}}</td>
                             {% if otro %}
                             <td>
-                                <a href="{% url 'editar_docente' c.id %}" class="edit"><span class="fas fa-edit"></span></a>&nbsp
-                                <a onclick="if (!confirm('Confirme la eliminacion')) return false;" href="{% url 'eliminar_docente' c.id %}" class="delete"><span class="fas fa-trash-alt"></span></a>
+                                <a href="{% url 'editar_nota' c.id %}" class="edit"><span class="fas fa-edit"></span></a>
                             </td>
                         {% endif %}
                         </tr>
@@ -56,7 +92,8 @@
                     {% endfor %}
                 </tbody>
             </table>
-
+    </div>
     </div>
 
 {% endblock %}
+<!-- Este Html es un desastre T-T-->
