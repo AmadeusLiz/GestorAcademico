@@ -1,4 +1,4 @@
-from .models import Clase, Asignatura, OfertaAcademica, Docente, Alumno
+from .models import Clase, Asignatura, OfertaAcademica, Docente, Alumno, NotasClase
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.urls import reverse
@@ -308,8 +308,25 @@ def editar_docente(request, id):
 
     return render(request, 'academico/docenteAdmin.html', ctx)
 
-
 def eliminar_docente(request, id):
     messages.add_message(request, messages.INFO, f'El docente se ha eliminado éxitosamente')
     Docente.objects.get(pk=id).delete()
     return redirect(reverse('docenteAdmin'))
+
+def notas(request):
+    #TODO: crear vista para que el alumno vea sus notas
+
+    if request.user.groups.exists():
+        if request.user.groups.all()[0].name == 'Alumno':
+            pass
+        # TODO: crear vista para que el docente vea las notas y pueda editarlas
+        elif request.user.groups.all()[0].name == 'Docente':
+            print('aaaaaaaaaaaa')
+        else:
+            pass
+    ctx = {
+        'activo': 'docentes',
+        'docentes': NotasClase.objects.all().filter(alumno__user=request.user.id),
+    }
+
+    return render(request, 'academico/notas.html',ctx)

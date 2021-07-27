@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Notas
+{% endblock %}
+
+{% block container %}    
+    
+    <h1>Notas</h1>
+
+    <div class="row">
+        <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Clase</th>
+                        <th>Parcial 1</th>
+                        <th>Parcial 2</th>
+                        <th>Parcial 3</th>
+                        {% if d %}<th>Acciones</th>{% endif %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for c in docentes %}
+                        <tr>
+                            <td>{{ c.clase }}</td>
+                            <td>{{ c.parcial1 }}</td>
+                            <td>{{ c.parcial2 }}</td>
+                            <td>{{ c.parcial3}}</td>
+                            {% if d %}
+                            <td>
+                                <a href="{% url 'editar_docente' c.id %}" class="edit"><span class="fas fa-edit"></span></a>&nbsp
+                                <a onclick="if (!confirm('Confirme la eliminacion')) return false;" href="{% url 'eliminar_docente' c.id %}" class="delete"><span class="fas fa-trash-alt"></span></a>
+                            </td>
+                        {% endif %}
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="8" class="text-danger text-center fw-bold">NO SE ENCONTRARON RESULTADOS</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+    </div>
+
+{% endblock %}
