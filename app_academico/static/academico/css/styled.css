@@ -2,6 +2,11 @@
     background-color: #fd7e14;
     background: radial-gradient(circle, rgba(253,152,67,1) 0%, rgba(253,126,20,1) 100%);
 }
+
+.orangeRows {
+    background-color: #fecba1;
+}
+
 .gray {
     background-color: #495057;
 }

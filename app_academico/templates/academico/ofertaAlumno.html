@@ -16,6 +16,22 @@
 
         <h2 class="fw-bold mb-5">Bienvenidx, NOMBRE ALUMNO</h2>
 
+        <table id="clasesMtr" class="table table-hover">
+            <thead>
+                <tr>
+                    <th class="text-center">SECCIÓN</th>
+                    <th>FECHAS</th>
+                    <th>HORARIO</th>
+                    <th>DÍAS</th>
+                    <th>AULA</th>
+                    <th class="text-center">CUPOS</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+
         <table class="table table-hover">
             <thead>
                 <tr>
@@ -33,7 +49,7 @@
                 <tr><td class="pb-0 fw-bold text-white gray" colspan="7"><h5 class="card-header fw-bold text-white gray">{{a}}</h5></td></tr>
                     {% for c in clasesOfertadas %}
                         {% if a == c.asignatura.nombre %}
-                        <tr>
+                        <tr id="tr-{{c.id}}">
                             <td class="text-center">{{ c.seccion }}</td>
                             <td>{{ c.asignatura.nombre }}</td>
                             <td>{{ c.hora }}</td>
@@ -41,24 +57,17 @@
                             <td>{{ c.aula}}</td>
                             <td class="text-center">{{ c.cupos}}</td>
                             {% comment %}Conficionar el nombre del icono src dependiendo cuando le de click o no {% endcomment %}
-                            <td>
+                            <td onclick="agregarQuitar({{c.id}}, {{c.asignatura.id}})">
                                 <lord-icon
-                                    id="lordicon"
-                                    src="https://cdn.lordicon.com/mecwbjnp.json"
+                                    id="lordicon{{c.id}}"
+                                    class="icon {{c.asignatura.id}}"
+                                    src=''
                                     trigger="click"
+                                    seleccionado = "False"
                                     colors="primary:#121331,secondary:#fb743e"
                                     stroke="80"
                                     style="width:2em;height:2em; cursor:pointer">
                                 </lord-icon>
-                                <lord-icon
-                                    id="lordicon2"
-                                    src="https://cdn.lordicon.com/rivoakkk.json"
-                                    trigger="click"
-                                    colors="primary:#121331,secondary:#fb743e"
-                                    stroke="80"
-                                    style="width:2em;height:2em; cursor:pointer">
-                                </lord-icon>
-                            
                             </td>
                         </tr>
                         {% endif %}
@@ -80,23 +89,45 @@
 
 {% block js %}
     <script>   
+    //"https://cdn.lordicon.com/mecwbjnp.json" +
+    //"https://cdn.lordicon.com/rivoakkk.json" -
         $(function () {
                 setTimeout(() => {
                 $('.alert').slideUp(function () { 
                     $(this).remove();
                 });
             }, 3000)
+            
+            //colocar por defecto el +, para ello se les aplico la clase icon
+            $(".icon").attr("src","https://cdn.lordicon.com/mecwbjnp.json")
         });
 
-        $(function(){
+        async function agregarQuitar(idClase, idAsignatura){
+            //https://stackoverflow.com/questions/951021/what-is-the-javascript-version-of-sleepobtener a
+            await new Promise(r => setTimeout(r, 998)); //pausa para ver el efecto de cambio de icono
+            lordicon = $(`#lordicon${idClase}`)
+            srcPlus = "https://cdn.lordicon.com/mecwbjnp.json"
+            srcMin = "https://cdn.lordicon.com/rivoakkk.json"
+            asignatura = $(`.icon.${idAsignatura}`)
+            fila = $(`#tr-${idClase}`)
+            //https://www.anerbarrena.com/jquery-attr-4948/, obtener el atributo src, donde se encuentra el nombre del icono lordicon
+            if (lordicon.attr("src") == srcPlus) { //Icono + es el que esta actualmente, debe cambiar a -
+                if (lordicon.attr("seleccionado") == "True"){
+                    alert("Ya esta matriculada esta clase en una seccion")
+                    //verificar si ya hay un seleccionado con true en los lordicons que tengan el mismo idAsignatura
+                } else {
+                    $(lordicon).attr("src", srcMin)
+                    asignatura.attr("seleccionado", "True") // Marcar como seleccionado el attr de las demas secciones de esa clase
+                    fila.attr("class","orangeRows") // Colocar color a la fila 
+                    $(`#clasesMtr tbody`).append(fila.clone().removeAttr("id").attr("id",`#mtr-${idClase}`)).fadeIn("slow"); // Agregar la fila a la tabla de las clases seleccionadas para matricular
 
-            $("#lordicon").click(function(){
-                //hacer espera en la vista para terminar de ver el movimiento
-                $("#lordicon").attr("src","width=250px;height:250px")
-            });
-            $("#lordicon2").click(function(){
-                alert('Evento click2');
-            });
-        });
+                }
+            } else { //Icono - es el que esta actualmente, debe cambiar a +
+                asignatura.attr("seleccionado", "False") //quitar seleccionado del attr de las demas secciones de esa clase
+                $(lordicon).attr("src",srcPlus)
+                fila.removeAttr("class") // Remover color a la fila 
+                $(`#mtr-${idClase}`).remove(); // Agregar la fila a la tabla de las clases seleccionadas para matricular
+            }
+        }
     </script> 
 {% endblock  %}
