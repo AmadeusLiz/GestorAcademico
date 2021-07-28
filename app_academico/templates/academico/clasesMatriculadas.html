@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Clases Matriculadas
+{% endblock %}
+
+{% block container %}
+{% if c %}
+            <form action="{% url 'editar_clase' c.id %}" method="POST">
+        {% else %}
+            <form action="{% url 'clasesAdmin' %}" method="POST">
+        {% endif %}
+                {% csrf_token %}
+{% for c in clases %} 
+<style>
+
+#c{
+        margin: 0 auto; /* Added */
+        float: none; /* Added */
+        margin-bottom: 10px;
+}
+
+
+a .card-link{
+  width:2000px;
+}
+
+h2 {
+  background-color: black;
+  color: white;
+}
+.card-body {
+  background-color: orange;
+  border-radius: 10px;
+}
+   
+</style>
+
+<div id="c" class="cards" >             
+  <div class="card-body" style="width: 30rem;" style=”text-align: justify;” id="c">
+    <div class="mb-2" id="c">
+    <h1><td id="c">{{ c.asignatura }}</td></h1>
+       <table class="table table-hover" id="c">
+                <thead>
+                    <tr>
+                        <th>SECCIÓN</th>
+                        <th>HORA</th>
+                        <th>DIAS</th>
+                        <th>AULA</th>
+                    </tr>
+                </thead>
+                <tbody>
+                        <tr>
+                            <td>{{ c.seccion }}</td>
+                            <td>{{ c.hora }}</td>
+                            <td>{{ c.dias}}</td>
+                            <td>{{ c.aula}}</td>
+                            <td class="text-center"> 
+                        </tr>
+                </tbody>       
+        </table>  
+      <br>
+    <a href="#" class="card-link"><img src="https://img.icons8.com/color/48/000000/zoom.png"/></a>
+  </div>
+</div>
+<br>    
+                           
+    {% endfor %}           
+     
+{% endblock %}
+
+{% block js %}
+    
+{% endblock  %}
