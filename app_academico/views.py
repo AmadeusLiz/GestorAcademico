@@ -6,6 +6,7 @@ from django.urls import reverse
 def index(request):
     return render(request, 'academico/index.html')
 
+<<<<<<< Updated upstream
 def clasesMatricula(request):
     asignaturas = Asignatura.objects.all().order_by('nombre')
 
@@ -32,6 +33,31 @@ def clasesMatricula(request):
         'activo': 'clases',
         'clases': clases,
         'asignaturas': asignaturas,
+=======
+def claseMatricula(request, id):
+   if request.method=='POST':
+        nombre  = request.POST.get('nombre')
+        apellido  = request.POST.get('apellido')
+        correo = request.POST.get('correo')
+        telefono = request.POST.get('telefono')
+        fecha_nacimiento = request.POST.get('datebirth')
+
+        Alumno.objects.filter(pk=id).update(nombre=nombre, apellido=apellido, correo=correo, telefono=telefono, fecha_nacimiento=fecha_nacimiento)
+
+        
+
+ q = request.GET.get('q')
+
+    if q:
+        alumnos = Alumno.objects.filter(nombre__contains=q).order_by('nombre')
+    else: 
+        alumnos = Alumno.objects.all()
+
+    ctx = {
+        'activo': 'clasesM',
+        'alumnos': alumnos,
+        'alumno':get_object_or_404(Alumno,pk=id)
+>>>>>>> Stashed changes
     }
 
     return render(request, 'academico/clasesMatriculadas.html', ctx)

@@ -25,7 +25,11 @@ urlpatterns = [
     path('alumnos_admin/', views.alumnos, name="alumnos"),
     path('alumnos_admin/<int:id>/editar/', views.editar_alumnos, name='editar_alumnos'),
     path('alumnos_admin/<int:id>/eliminar/', views.eliminar_alumnos, name='eliminar_alumnos'),
+<<<<<<< Updated upstream
     path('clases_matriculadas/', views.clasesMatricula, name='clasesMatricula'),
+=======
+    path('clases_matriculadas/', views.claseMatricula, name='claseMatricula'),
+>>>>>>> Stashed changes
     path('clases_admin/', views.clasesAdmin, name='clasesAdmin'),
     path('clases_admin/<int:id>/eliminar/', views.eliminar_clase, name='eliminar_clase'),
     path('clases_admin/<int:id>/editar/', views.editar_clase, name='editar_clase'),

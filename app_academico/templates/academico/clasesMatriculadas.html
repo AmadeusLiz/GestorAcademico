@@ -1,16 +1,28 @@
 {% extends "base.html" %}
 
 {% block title %}
+<<<<<<< Updated upstream
     Clases Matriculadas
 {% endblock %}
 
 {% block container %}
 {% if c %}
+=======
+    Clases
+{% endblock %}
+
+{% block container %}
+    <div class="row">
+
+        <div class="col-3">
+        {% if c %}
+>>>>>>> Stashed changes
             <form action="{% url 'editar_clase' c.id %}" method="POST">
         {% else %}
             <form action="{% url 'clasesAdmin' %}" method="POST">
         {% endif %}
                 {% csrf_token %}
+<<<<<<< Updated upstream
 {% for c in clases %} 
 <style>
 
@@ -51,10 +63,91 @@ h2 {
                 </thead>
                 <tbody>
                         <tr>
+=======
+                <div class="mb-2">
+                    <label class="mb-2" for="asignatura">Asignatura</label>
+                    {% comment %} <input type="text" value="{{ c.asignatura }}" name="asignatura" id="asignatura" class="form-control"> {% endcomment %}
+                    <select name="asignatura" id="asignatura" class="form-select">
+                        {% for a in  asignaturas %}
+                            {% if c and c.asignatura.id == a.id %}
+                                <option value="{{a.id}}" selected>{{ a.nombre }}</option>>
+                            {% endif %}
+                            <option value="{{a.id}}">{{ a.nombre }}</option>
+                        {% endfor %}
+                    </select> 
+                </div>
+
+                <div class="mb-2">
+                    <label class="mb-2" for="seccion">Seccion</label>
+                    <input type="text" value="{{ c.seccion }}" name="seccion" id="seccion" class="form-control" placeholder="1201" required>
+                </div>
+
+                <div class="mb-2">
+                    <label class="mb-2" for="hora">Hora</label>
+                    <input type="time" value="{{ c.hora}}" name="hora" id="hora" class="form-control" min="07:00" required>
+                </div>
+
+                <div class="mb-2">
+                    <label class="mb-2" for="dias">Dias</label>
+                    <input type="text"  value="{{ c.dias }}" name="dias" id="dias" class="form-control" placeholder="L, M, X, J, V" required>
+                </div>
+
+                <div class="mb-2">
+                    <label class="mb-2" for="aula">Aula</label>
+                    <input type="text"  value="{{ c.aula }}" name="aula" id="aula" class="form-control" placeholder="C303" required>
+                </div>
+
+                <div class="mb-2">
+                    <label for="cupos">Cupos</label>
+                    <input type="number"  value="{{ c.cupos }}" name="cupos" id="cupos" class="form-control" min="10" placeholder="10" required>
+                </div>
+
+                <div class="mb-2">
+                {% if c %}
+                    <input onclick="if (!confirm('¿Desea actualizar {{c.asignatura}} {{c.seccion}}?')) return false;"  type ="submit" class="btn text-white orange" value="Actualizar Asignatura">
+                {% else %}
+                    <input type ="submit" class="btn text-white orange" value="Registrar Asignatura">
+                {% endif %}
+                </div>
+            </form>
+        </div>
+
+        <div class="col-9">
+            {% if messages %}
+                <div class="alert alert-success mb-3">
+                    {% for message in messages %}
+                        {{ message | safe }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <form action="" method="GET">
+                <input name="q" value="{{ q | default_if_none:''}}" type="search" class="form-control" placeholder="Buscar clases">
+            </form>
+
+            <h5 class="mt-3 mb-3 fw-bold">Clases {{ clases.count }}</h5>
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>ASIGNATURA</th>
+                        <th>SECCIÓN</th>
+                        <th>HORA</th>
+                        <th>DÍAS</th>
+                        <th>AULA</th>
+                        <th>CUPOS</th>
+                        <th>ACCIONES</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for c in clases %}
+                        <tr>
+                            <td>{{ c.asignatura }}</td>
+>>>>>>> Stashed changes
                             <td>{{ c.seccion }}</td>
                             <td>{{ c.hora }}</td>
                             <td>{{ c.dias}}</td>
                             <td>{{ c.aula}}</td>
+<<<<<<< Updated upstream
                             <td class="text-center"> 
                         </tr>
                 </tbody>       
@@ -71,4 +164,33 @@ h2 {
 
 {% block js %}
     
+=======
+                            <td>{{ c.cupos}}</td>
+                            <td class="text-center">
+                                <a href="{% url 'editar_clase' c.id %}" class="edit"><span class="fas fa-edit"></span></a>&nbsp
+                                <a onclick="if (!confirm('¿Desea eliminar {{c.asignatura}} {{c.seccion}}?')) return false;" href="{% url 'eliminar_clase' c.id %}" class="delete"> <span class="fas fa-trash-alt"></span></a>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="7" class="text-danger text-center fw-bold">NO SE ENCONTRARON RESULTADOS</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
+
+{% block js %}
+    <script>   
+        $(function () {
+                setTimeout(() => {
+                $('.alert').slideUp(function () { 
+                    $(this).remove();
+                });
+            }, 3000)
+        });
+    </script> 
+>>>>>>> Stashed changes
 {% endblock  %}
