@@ -11,6 +11,11 @@
     background-color: #495057;
 }
 
+.textGray {
+    color: #495057;
+}
+
+
 .delete {
     color: #e35d6a;
 }
@@ -25,6 +30,14 @@
 
 .edit:hover {
     color: #fd7e14;
+}
+
+.textOrange {
+    color: #fd7e14;
+}
+
+.textOrangeDark {
+    color: #984c0c;
 }
 
 .form-check-input:checked {

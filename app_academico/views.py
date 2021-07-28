@@ -1,13 +1,15 @@
 from .models import Clase, Asignatura, OfertaAcademica, Docente, Alumno, NotasClase
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
+from django.http import JsonResponse
 from django.urls import reverse
+from django.core import serializers # https://docs.djangoproject.com/en/3.2/topics/serialization/
 
 
 def index(request):
     return render(request, 'academico/index.html')
 
-
+# ---------------------------------------------------------------ALUMNOS-------------------------------------------------------------------------
 def alumnos(request):
     if request.method == 'POST':
         nombre = request.POST.get('nombre')
@@ -71,6 +73,7 @@ def editar_alumnos(request, id):
     return render(request, 'academico/alumnos.html', ctx)
 
 
+# ---------------------------------------------------------------CLASES-------------------------------------------------------------------------
 def clasesAdmin(request):
     asignaturas = Asignatura.objects.all().order_by('nombre')
 
@@ -138,6 +141,7 @@ def eliminar_clase(request, id):
     return redirect(reverse('clasesAdmin'))
 
 
+# ---------------------------------------------------------------OFERTA PERIODOS-------------------------------------------------------------------------
 def periodos_admin(request):
     periodos = OfertaAcademica.objects.all().order_by('-anio', '-periodo')
 
@@ -212,6 +216,7 @@ def agregar_periodo(request):
     return redirect(reverse('periodosAdmin'))
 
 
+# ---------------------------------------------------------------ASIGNATURAS-------------------------------------------------------------------------
 def asignaturas(request):
     if request.method == 'POST':
         nombre = request.POST.get('nombre')
@@ -372,8 +377,10 @@ def editar_nota(request, id):
 
     return render(request, 'academico/notas.html', ctx)
     
+# -------------------------------------------------------------OFERTA ALUMNO-------------------------------------------------------------------------
 def ofertaAlumno(request):
     oferta = OfertaAcademica.objects.get(pk=1) # Obtener TODAS las clases ofertadas del periodo activo
+    clasesMtr = Clase.objects.filter(alumnos=request.user.alumno.id) # Clases en las que el alumno esta matriculado actualmente
     asignaturas = [] 
 
     # Bucle que ingresa a la lista de asignaturas, unicamente los nombres de las asignaturas ofertadas
@@ -381,19 +388,28 @@ def ofertaAlumno(request):
         if not c.asignatura.nombre in asignaturas:
             asignaturas.append(c.asignatura.nombre)
 
-    # for a in asignaturas: # Recorrer Asignaturas
-    #     for c in clasesOfertadas: # Recorrer Clases Ofertadas en el periodo
-    #         if a.id == c.asignatura.id: # Verificar si coincide la asignatura con la clase ofertada
-    #             clasesAgrupadas.append({
-    #                 'idAsignatura': a.id,
-    #                 'idClase': c.id,
-    #                 'nombreAsignatura': a.nombre,
-    #                 'seccion': c.seccion,
-    #             })
+    if request.method == 'POST' and request.is_ajax():
+        clases = Clase.objects.all().order_by('asignatura')
+        clasesAlumno = request.POST.getlist('clases[]')
+    
+        # Matricular el alumno en las clases con los ids ya obtenidos
+        for c in clases:
+            if f'{c.id}' in clasesAlumno:  # https://parzibyte.me/blog/2018/04/17/python-comprobar-elemento-valor-existe-lista-arreglo/
+                c.alumnos.add(request.user.alumno.id) # Si el id de la clase existe en las clases que el alumno matriculo, se añade el alumno
+            else:
+                c.alumnos.remove(request.user.alumno.id) # Sino se remueve, en caso de que estuviese matriculado antes y esta vez quitó la clase
+        
+        return JsonResponse({'clasesAlumno':serializers.serialize("json",clases)}) # https://living-sun.com/es/python/713273-sending-json-data-from-view-in-django-python-json-django.html
+    
+    # GET
     ctx = {
+        'activo': 'matricula',
         'oferta': oferta,
         'asignaturas': asignaturas,
-        'clasesOfertadas': oferta.clases.order_by('asignatura', 'seccion') # Clases de la oferta ordenadas por asignatura y seccion
+        'clasesOfertadas': oferta.clases.order_by('asignatura', 'seccion'), # Clases de la oferta ordenadas por asignatura y seccion
+        'clasesAlumno': clasesMtr,
+        'srcMin': 'https://cdn.lordicon.com/rivoakkk.json',
+        'srcPlus': 'https://cdn.lordicon.com/mecwbjnp.json'
     }
 
     return render(request, 'academico/ofertaAlumno.html', ctx)

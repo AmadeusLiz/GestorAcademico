@@ -1,5 +1,5 @@
 from django.db import models
-from datetime import datetime
+from datetime import datetime, timedelta
 from django.contrib.auth.models import User
 from phone_field import PhoneField
 
@@ -65,6 +65,16 @@ class Clase(models.Model):
     docente = models.ForeignKey(Docente, on_delete=models.CASCADE, null=True, blank=True)
     alumnos = models.ManyToManyField(Alumno, blank=True, through='NotasClase')
     finalizada = models.BooleanField(default=False)
+
+    @property
+    def cupos_disponibles(self):
+        matriculados = self.alumnos.count()
+        return self.cupos - matriculados
+
+    @property
+    def hora_finalizacion(self):
+        start = timedelta(hours=self.hora.hour, minutes = self.hora.minute)
+        return start + timedelta(hours=self.duracion) # https://www.lawebdelprogramador.com/foros/Python/1578062-Consulta-con-Suma-y-Resta-de-Horas.html
 
     def __str__(self):
         return f'{self.asignatura} | {self.seccion} '
