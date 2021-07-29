@@ -41,5 +41,6 @@ urlpatterns = [
     path('notas/', views.notas, name="notas"),
     path('notas/<int:id>/editar', views.editar_nota, name="editar_nota"),
     path('oferta/', views.ofertaAlumno, name='ofertaAlumno'),
+    path('boleta_alumno/', views.boletaAlumno, name='boletaAlumno'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 

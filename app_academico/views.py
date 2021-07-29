@@ -425,3 +425,15 @@ def ofertaAlumno(request):
     }
 
     return render(request, 'academico/ofertaAlumno.html', ctx)
+
+
+# -------------------------------------------------------------BOLETA ALUMNO-------------------------------------------------------------------------
+def boletaAlumno(request):
+    data = Clase.objects.filter(alumnos=request.user.alumno.id)
+    
+    ctx = {
+        'boleta': 'boleta',
+        'data': data
+    }
+    
+    return render(request, 'academico/boletaAlumno.html',ctx)
