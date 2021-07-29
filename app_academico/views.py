@@ -356,15 +356,25 @@ def notas(request):
 
 def editar_nota(request, id):
     alumno = None
+
     try:
         if request.method == 'POST':
-            NotasClase.objects.filter(pk=id).update(parcial1=request.POST.get('parcial1'),parcial2=request.POST.get('parcial2'),parcial3=request.POST.get('parcial3'))
+            parcial1, parcial2, parcial3 = int(request.POST.get('parcial1')), int(request.POST.get('parcial2')), int(request.POST.get(
+                'parcial3'))
 
-        #messages.add_message(request, messages.INFO, f'La nota se ha actualizado éxitosamente')
+            if parcial1 < 101 and parcial2 < 101 and  parcial3 < 101 and parcial1 > -1 and parcial2 > -1 and  parcial3 > -1:
+                NotasClase.objects.filter(pk=id).update(parcial1=request.POST.get('parcial1'),parcial2=request.POST.get('parcial2'),parcial3=request.POST.get('parcial3'))
+                messages.add_message(request, messages.SUCCESS, f'La nota se ha actualizado éxitosamente')
+                print('EXITO')
+            else:
+                messages.add_message(request, messages.ERROR, f'No puede haber notas menores a 0 ni mayores a 100')
+
+
 
         alumno = get_object_or_404(NotasClase, pk=id)
     except:
         pass
+
 
     datos = NotasClase.objects.all().filter( clase__docente__user_id=request.user.id)
 
