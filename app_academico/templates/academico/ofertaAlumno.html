@@ -109,10 +109,8 @@
                 });
             }, 3000)
             
-            //colocar por defecto el +, para ello se les aplico la clase icon
-            $(".icon").attr("src",`{{srcPlus}}`)
-            
-            console.log()
+            $(".icon").attr("src",`{{srcPlus}}`) //colocar por defecto el +, para ello se les aplico la clase icon
+
             // Llenar y modificar las tablas segun los datos que vienen de la bd
             btnMtr = $("#btnMtr")
             clasesMtr = $("#clasesMtr tbody")
@@ -137,7 +135,7 @@
                                         style="width:2em;height:2em; cursor:pointer">
                                     </lord-icon>`
                 }
-                console.log({{clase.cupos}})
+
                 $(`#clasesMtr tbody #mtr-${idClase} lord-icon`).attr("id",`#mtrLordicon${idClase}`) //Remover el id del lordIcon para evitar conflictos al quitar clase desde la tabla de arriba
                 filas++; //se suma una fila y se agrega el nuevo dato al attr
                 $("#clasesMtr").attr("filas", filas)     
@@ -212,7 +210,7 @@
                     filaMtr = $(`#clasesMtr tbody tr#mtr-${clase.pk} td`) //actualizar cupos de tabla de clases matriculadas
                     filaOferta = $(`#ofertaMtr tbody tr#tr-${clase.pk} td`) //actualizar cupos de tabla de clases ofertadas
                     //existen filas con ese id, actualizar columna de cupos
-                    cupos = clase.fields.cupos - clase.fields.alumnos.length
+                    cupos = response.cupos[index] //vienen en el mismo orden de las clases en oferta
                     if(filaMtr.length) filaMtr[6].textContent = cupos
                     if(filaOferta.length) {
                         if (cupos > 0 && filaOferta[6].textContent == 0){ //esos cupos estaban en 0 antes pero ahora hay cupo, se debe permitir agregar
@@ -227,7 +225,7 @@
                                         stroke="80"
                                         style="width:2em;height:2em; cursor:pointer">
                                     </lord-icon>`
-                        }
+                        } else if(!cupos) filaOferta[7].innerHTML = `<span class="fw-bold ">SIN CUPO</span>`
                         filaOferta[6].textContent = cupos //cambiar a nueva cantidad
                     }
                 })

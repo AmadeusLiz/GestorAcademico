@@ -367,7 +367,7 @@ def editar_nota(request, id):
         pass
 
     datos = NotasClase.objects.all().filter( clase__docente__user_id=request.user.id)
-    print(datos)
+
     ctx = {
         'activo': 'notas',
         'notas': datos,
@@ -379,7 +379,7 @@ def editar_nota(request, id):
     
 # -------------------------------------------------------------OFERTA ALUMNO-------------------------------------------------------------------------
 def ofertaAlumno(request):
-    oferta = OfertaAcademica.objects.get(pk=1) # Obtener TODAS las clases ofertadas del periodo activo
+    oferta = OfertaAcademica.objects.get(estado=1) # Obtener TODAS las clases ofertadas del periodo activo
     clasesMtr = Clase.objects.filter(alumnos=request.user.alumno.id) # Clases en las que el alumno esta matriculado actualmente
     asignaturas = [] 
 
@@ -387,19 +387,21 @@ def ofertaAlumno(request):
     for c in oferta.clases.all().order_by('asignatura'):
         if not c.asignatura.nombre in asignaturas:
             asignaturas.append(c.asignatura.nombre)
-
-    if request.method == 'POST' and request.is_ajax():
-        clases = Clase.objects.all().order_by('asignatura')
-        clasesAlumno = request.POST.getlist('clases[]')
     
+    if request.method == 'POST' and request.is_ajax():
+        # clases = Clase.objects.all().order_by('asignatura')
+        clasesAlumno = request.POST.getlist('clases[]')
+        cuposClases = []
         # Matricular el alumno en las clases con los ids ya obtenidos
-        for c in clases:
+        for c in oferta.clases.all():
             if f'{c.id}' in clasesAlumno:  # https://parzibyte.me/blog/2018/04/17/python-comprobar-elemento-valor-existe-lista-arreglo/
                 c.alumnos.add(request.user.alumno.id) # Si el id de la clase existe en las clases que el alumno matriculo, se añade el alumno
             else:
                 c.alumnos.remove(request.user.alumno.id) # Sino se remueve, en caso de que estuviese matriculado antes y esta vez quitó la clase
-        
-        return JsonResponse({'clasesAlumno':serializers.serialize("json",clases)}) # https://living-sun.com/es/python/713273-sending-json-data-from-view-in-django-python-json-django.html
+            
+            cuposClases.append(c.cupos_disponibles) # estaran en el mismo orden de las clases en oferta
+
+        return JsonResponse({'clasesAlumno':serializers.serialize("json",oferta.clases.all()),'cupos': cuposClases}) # https://living-sun.com/es/python/713273-sending-json-data-from-view-in-django-python-json-django.html
     
     # GET
     ctx = {
