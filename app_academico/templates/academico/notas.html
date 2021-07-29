@@ -15,29 +15,40 @@
             {% csrf_token %}
                 <div class="d-inline-block col-2">
                     <label class="mb-3" for="parcial1">Parcial 1</label>
-                    <input type="number" value="{{ c.parcial1 }}" name="parcial1" id="parcial1" class="form-control" placeholder="70"  required>
+                    <input type="number" value="{{ c.parcial1 }}" name="parcial1" id="parcial1" class="form-control" placeholder="70" pattern="^(?!\D)\d+" required>
                 </div>
                 <div class="d-inline-block col-2">
                     <label class="mb-3" for="parcial2">Parcial 2</label>
-                    <input type="number" value="{{ c.parcial2 }}" name="parcial2" id="parcial2" class="form-control" placeholder="70"  required>
+                    <input type="number" value="{{ c.parcial2 }}" name="parcial2" id="parcial2" class="form-control" placeholder="70" pattern="^(?!\D)\d+" required>
                 </div>
                 <div class="d-inline-block col-2">
                     <label class="mb-3" for="parcial3">Parcial 3</label>
-                    <input type="number" value="{{ c.parcial3 }}" name="parcial3" id="parcial3" class="form-control" placeholder="70"  required>
+                    <input type="number" value="{{ c.parcial3 }}" name="parcial3" id="parcial3" class="form-control" placeholder="70" pattern="^(?!\D)\d+" required>
                 </div>
 
 
                 <div class="mb-3 d-inline-block">
-                {% if c %}
-                    <input onclick="if (!confirm('¿Desea actualizar {{o.alumno}}?')) return false;"  type ="submit" class="btn text-white orange" value="Actualizar nota">
-                {% else %}
-                    <input type ="submit" class="btn text-white orange" value="Registrar Nota">
-                {% endif %}
+
+                    <input   type ="submit" class="btn text-white orange" value="Actualizar nota">
+
                 </div>
             </form>
         </div>
 
         {% endif %}
+        {% if messages %}
+    {% for message in messages %}
+        {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+        <div class="alert alert-danger fallo">
+        {{ message }}
+        </div>
+        {% elif message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+            <div class="alert alert-success fallo">
+            {{ message }}
+            </div>
+        {% endif %}
+    {% endfor %}
+{% endif %}
 
     {% endif %}
     <div class="row">
