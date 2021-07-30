@@ -17,9 +17,11 @@ def alumnos(request):
         correo = request.POST.get('correo')
         telefono = request.POST.get('telefono')
         fecha_nacimiento = request.POST.get('datebirth')
+        facultad = request.POST.get('facultad')
 
         Alumno.objects.create(nombre=nombre, apellido=apellido, correo=correo, telefono=telefono,
-                              fecha_nacimiento=fecha_nacimiento)
+                              fecha_nacimiento=fecha_nacimiento, facultad=facultad)
+
 
         messages.add_message(request, messages.INFO, f'El alumno {nombre} se ha agregado éxitosamente')
 
@@ -51,9 +53,10 @@ def editar_alumnos(request, id):
         correo = request.POST.get('correo')
         telefono = request.POST.get('telefono')
         fecha_nacimiento = request.POST.get('datebirth')
+        facultad = request.POST.get('facultad')
 
         Alumno.objects.filter(pk=id).update(nombre=nombre, apellido=apellido, correo=correo, telefono=telefono,
-                                            fecha_nacimiento=fecha_nacimiento)
+                                            fecha_nacimiento=fecha_nacimiento, facultad=facultad)
 
         messages.add_message(request, messages.INFO, f'El alumno {nombre} se ha actualizado éxitosamente')
 
@@ -84,8 +87,9 @@ def clasesAdmin(request):
         dias = request.POST.get('dias')
         aula = request.POST.get('aula')
         cupos = request.POST.get('cupos')
+        room = request.POST.get('room')
 
-        Clase.objects.create(asignatura=asignatura, seccion=seccion, hora=hora, dias=dias, aula=aula, cupos=cupos)
+        Clase.objects.create(asignatura=asignatura, seccion=seccion, hora=hora, dias=dias, aula=aula, cupos=cupos, room=room)
 
         messages.add_message(request, messages.INFO, f'La clase {asignatura.nombre} ha sido agregada con éxito')
 

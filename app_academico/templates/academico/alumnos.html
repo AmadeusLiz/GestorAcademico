@@ -40,6 +40,76 @@
                 </div>
 
                 <div class="mb-2">
+                    <label class="mb-2" for="facultad">Facultad</label>
+                    <select name="facultad" id="facultad" class="form-select form-select-sm" aria-selected="{{ alumno.facultad }}">
+                        
+                        {% if alumno.facultad == '1' %}
+                            <option value="1" selected>Ingeniería en Ciencias de la Computación</option>
+                            <option value="2">Ingeniería Industrial</option>
+                            <option value="3">Ingeniería Civil</option>
+                            <option value="4">Medicina y Cirugía</option>
+                            <option value="5">Odontología</option>
+                            <option value="6">Enfermería</option>
+                            <option value="7">Psicología</option>
+
+                        {% elif alumno.facultad == '2' %}
+                            <option value="1">Ingeniería en Ciencias de la Computación</option>
+                            <option value="2" selected>Ingeniería Industrial</option>
+                            <option value="3">Ingeniería Civil</option>
+                            <option value="4">Medicina y Cirugía</option>
+                            <option value="5">Odontología</option>
+                            <option value="6">Enfermería</option>
+                            <option value="7">Psicología</option>
+
+                        {% elif alumno.facultad == '3' %}
+                            <option value="1">Ingeniería en Ciencias de la Computación</option>
+                            <option value="2">Ingeniería Industrial</option>
+                            <option value="3" selected>Ingeniería Civil</option>
+                            <option value="4">Medicina y Cirugía</option>
+                            <option value="5">Odontología</option>
+                            <option value="6">Enfermería</option>
+                            <option value="7">Psicología</option>
+
+                        {% elif alumno.facultad == '4' %}
+                            <option value="1">Ingeniería en Ciencias de la Computación</option>
+                            <option value="2">Ingeniería Industrial</option>
+                            <option value="3">Ingeniería Civil</option>
+                            <option value="4" selected>Medicina y Cirugía</option>
+                            <option value="5">Odontología</option>
+                            <option value="6">Enfermería</option>
+                            <option value="7">Psicología</option>
+                        
+                        {% elif alumno.facultad == '5' %}
+                            <option value="1">Ingeniería en Ciencias de la Computación</option>
+                            <option value="2">Ingeniería Industrial</option>
+                            <option value="3">Ingeniería Civil</option>
+                            <option value="4">Medicina y Cirugía</option>
+                            <option value="5" selected>Odontología</option>
+                            <option value="6">Enfermería</option>
+                            <option value="7">Psicología</option>
+
+                        {% elif alumno.facultad == '6' %}
+                            <option value="1">Ingeniería en Ciencias de la Computación</option>
+                            <option value="2">Ingeniería Industrial</option>
+                            <option value="3">Ingeniería Civil</option>
+                            <option value="4">Medicina y Cirugía</option>
+                            <option value="5">Odontología</option>
+                            <option value="6" selected>Enfermería</option>
+                            <option value="7">Psicología</option>
+
+                        {% else %}
+                            <option value="1">Ingeniería en Ciencias de la Computación</option>
+                            <option value="2">Ingeniería Industrial</option>
+                            <option value="3">Ingeniería Civil</option>
+                            <option value="4">Medicina y Cirugía</option>
+                            <option value="5">Odontología</option>
+                            <option value="6">Enfermería</option>
+                            <option value="7" selected>Psicología</option>
+                        {% endif %}
+                    </select>
+                </div>
+
+                <div class="mb-2">
                 {% if alumno %}
                     <input onclick="if (!confirm('¿Desea actualizar {{alumno.nombre}}?')) return false;"  type ="submit" class="btn text-white orange" value="Actualizar Alumno">
                 {% else %}
@@ -66,12 +136,13 @@
             <table class="table table-hover">
                 <thead>
                     <tr>
-                        <th>NOMBRE</th>
-                        <th>APELLIDO</th>
-                        <th>CORREO</th>
-                        <th>TELEFONO</th>
-                        <th>EDAD</th>
-                        <th>ACCIONES</th>
+                        <th class="textOrangeDark">NOMBRE</th>
+                        <th class="textOrangeDark">APELLIDO</th>
+                        <th class="textOrangeDark">CORREO</th>
+                        <th class="textOrangeDark">TELEFONO</th>
+                        <th class="textOrangeDark">FECHA NACIMIENTO</th>
+                        <th class="textOrangeDark">FACULTAD</th>
+                        <th class="textOrangeDark">ACCIONES</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -82,6 +153,23 @@
                             <td>{{ a.correo}}</td>
                             <td>{{ a.telefono}}</td>
                             <td>{{ a.fecha_nacimiento}}</td>
+
+                            {% if a.facultad == '1' %}
+                                <td>Ingeniería en Ciencias de la Computación</td>
+                            {% elif a.facultad == '2' %}
+                                <td>Ingeniería Industrial</td>
+                            {% elif a.facultad == '3' %}
+                                <td>Ingeniería Civil</td>
+                            {% elif a.facultad == '4' %}
+                                <td>Medicina y Cirugía</td>
+                            {% elif a.facultad == '5' %}
+                                <td>Odontología</td>
+                            {% elif a.facultad == '6' %}
+                                <td>Enfermería</td>
+                            {% else %}
+                                <td>Psicología</td>
+                            {% endif %}
+                            
                             <td class="text-center">
                                 <a href="{% url 'editar_alumnos' a.id %}" class="edit"><span class="fas fa-edit"></span></a>
                                 <a onclick="if (!confirm('¿Desea eliminar {{a.alumnos}}?')) return false;" href="{% url 'eliminar_alumnos' a.id %}" class="delete"> <span class="fas fa-trash-alt"></span></a>
