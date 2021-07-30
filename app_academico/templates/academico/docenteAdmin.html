@@ -57,6 +57,10 @@
                         {% endif %}
                     </select>
                 </div>
+                <div class="mb-2">
+                    <label for="dir">Dirección</label>
+                    <textarea name="dir" id="dir" class="form-control" required rows="7" style="width:100%" required>{{ c.direccion }}</textarea>
+                </div>
 
                 <div class="mb-2">
                     <label class="mb-2" for="datebirth">Fecha de nacimiento</label>
@@ -100,6 +104,7 @@
                         <th>Telefono</th>
                         <th>Correo</th>
                         <th>Genero</th>
+                        <th>Dirección</th>
                         <th>Fecha Nacimiento</th>
                         <th>Fecha Contratacion</th>
                         <th>Acciones</th>
@@ -114,6 +119,7 @@
                             <td>{{ c.telefono }}</td>
                             <td>{{ c.correo}}</td>
                             <td>{% if c.genero == '1' %}Mujer{% elif c.genero == '2' %}Hombre{% else %}Otro{% endif %}</td>
+                            <td>{{ c.direccion}}</td>
                             <td>{{ c.fecha_nacimiento}}</td>
                             <td>{{ c.fecha_contratacion}}</td>
                             <td>

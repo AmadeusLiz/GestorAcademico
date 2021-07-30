@@ -19,6 +19,7 @@ class Alumno(models.Model):
     apellido = models.CharField(max_length=25)
     correo = models.EmailField()
     telefono = PhoneField(blank=True, help_text='Numero de teléfono')
+    direccion = models.TextField(default="Dirección pendiente")
     fecha_nacimiento = models.DateField()
     facultad = models.CharField(max_length=1, choices=FACULTAD, default='1')
 
@@ -44,6 +45,7 @@ class Docente(models.Model):
     apellido = models.CharField(max_length=25)
     telefono = PhoneField(blank=True, help_text='Numero de teléfono')
     correo = models.EmailField()
+    direccion = models.TextField(default="Dirección pendiente")
     genero = models.CharField(max_length=1, choices=GENEROS, default='1')
     fecha_nacimiento = models.DateField()
     fecha_contratacion = models.DateField()

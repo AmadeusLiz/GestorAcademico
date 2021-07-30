@@ -11,128 +11,143 @@ def index(request):
 
 # ---------------------------------------------------------------ALUMNOS-------------------------------------------------------------------------
 def alumnos(request):
-    if request.method == 'POST':
-        nombre = request.POST.get('nombre')
-        apellido = request.POST.get('apellido')
-        correo = request.POST.get('correo')
-        telefono = request.POST.get('telefono')
-        fecha_nacimiento = request.POST.get('datebirth')
+    if request.user.is_superuser:
+        if request.method == 'POST':
+            nombre = request.POST.get('nombre')
+            apellido = request.POST.get('apellido')
+            correo = request.POST.get('correo')
+            telefono = request.POST.get('telefono')
+            fecha_nacimiento = request.POST.get('datebirth')
 
-        Alumno.objects.create(nombre=nombre, apellido=apellido, correo=correo, telefono=telefono,
-                              fecha_nacimiento=fecha_nacimiento)
+            Alumno.objects.create(nombre=nombre, apellido=apellido, correo=correo, telefono=telefono,
+                                  fecha_nacimiento=fecha_nacimiento,direccion=request.POST.get('dir'))
 
-        messages.add_message(request, messages.INFO, f'El alumno {nombre} se ha agregado éxitosamente')
+            messages.add_message(request, messages.INFO, f'El alumno {nombre} se ha agregado éxitosamente')
 
-    q = request.GET.get('q')
+        q = request.GET.get('q')
 
-    if q:
-        alumnos = Alumno.objects.filter(nombre__contains=q).order_by('nombre')
+        if q:
+            alumnos = Alumno.objects.filter(nombre__contains=q).order_by('nombre')
+        else:
+            alumnos = Alumno.objects.all()
+
+        ctx = {
+            'activo': 'alumnos',
+            'alumnos': alumnos,
+        }
+
+        return render(request, 'academico/alumnos.html', ctx)
     else:
-        alumnos = Alumno.objects.all()
-
-    ctx = {
-        'activo': 'alumnos',
-        'alumnos': alumnos,
-    }
-
-    return render(request, 'academico/alumnos.html', ctx)
+        return redirect(reverse('index'))
 
 
 def eliminar_alumnos(request, id):
-    messages.add_message(request, messages.INFO, f'El alumno se ha eliminado éxitosamente')
-    Alumno.objects.get(pk=id).delete()
-    return redirect(reverse('alumnos'))
+    if request.user.is_superuser:
+        messages.add_message(request, messages.INFO, f'El alumno se ha eliminado éxitosamente')
+        Alumno.objects.get(pk=id).delete()
+        return redirect(reverse('alumnos'))
+    else:
+        return redirect(reverse('index'))
 
 
 def editar_alumnos(request, id):
-    if request.method == 'POST':
-        nombre = request.POST.get('nombre')
-        apellido = request.POST.get('apellido')
-        correo = request.POST.get('correo')
-        telefono = request.POST.get('telefono')
-        fecha_nacimiento = request.POST.get('datebirth')
+    if request.user.is_superuser:
+        if request.method == 'POST':
+            nombre = request.POST.get('nombre')
+            apellido = request.POST.get('apellido')
+            correo = request.POST.get('correo')
+            telefono = request.POST.get('telefono')
+            fecha_nacimiento = request.POST.get('datebirth')
 
-        Alumno.objects.filter(pk=id).update(nombre=nombre, apellido=apellido, correo=correo, telefono=telefono,
-                                            fecha_nacimiento=fecha_nacimiento)
+            Alumno.objects.filter(pk=id).update(nombre=nombre, apellido=apellido, correo=correo, telefono=telefono,
+                                                fecha_nacimiento=fecha_nacimiento,direccion=request.POST.get('dir'))
 
-        messages.add_message(request, messages.INFO, f'El alumno {nombre} se ha actualizado éxitosamente')
+            messages.add_message(request, messages.INFO, f'El alumno {nombre} se ha actualizado éxitosamente')
 
-    q = request.GET.get('q')
+        q = request.GET.get('q')
 
-    if q:
-        alumnos = Alumno.objects.filter(nombre__contains=q).order_by('nombre')
+        if q:
+            alumnos = Alumno.objects.filter(nombre__contains=q).order_by('nombre')
+        else:
+            alumnos = Alumno.objects.all()
+
+        ctx = {
+            'activo': 'alumnos',
+            'alumnos': alumnos,
+            'alumno': get_object_or_404(Alumno, pk=id)
+        }
+
+        return render(request, 'academico/alumnos.html', ctx)
     else:
-        alumnos = Alumno.objects.all()
-
-    ctx = {
-        'activo': 'alumnos',
-        'alumnos': alumnos,
-        'alumno': get_object_or_404(Alumno, pk=id)
-    }
-
-    return render(request, 'academico/alumnos.html', ctx)
+        return redirect(reverse('index'))
 
 
 # ---------------------------------------------------------------CLASES-------------------------------------------------------------------------
 def clasesAdmin(request):
-    asignaturas = Asignatura.objects.all().order_by('nombre')
+    if request.user.is_superuser:
+        asignaturas = Asignatura.objects.all().order_by('nombre')
 
-    if request.method == 'POST':
-        asignatura = get_object_or_404(Asignatura, pk=request.POST.get('asignatura'))
-        seccion = request.POST.get('seccion')
-        hora = request.POST.get('hora')
-        dias = request.POST.get('dias')
-        aula = request.POST.get('aula')
-        cupos = request.POST.get('cupos')
+        if request.method == 'POST':
+            asignatura = get_object_or_404(Asignatura, pk=request.POST.get('asignatura'))
+            seccion = request.POST.get('seccion')
+            hora = request.POST.get('hora')
+            dias = request.POST.get('dias')
+            aula = request.POST.get('aula')
+            cupos = request.POST.get('cupos')
 
-        Clase.objects.create(asignatura=asignatura, seccion=seccion, hora=hora, dias=dias, aula=aula, cupos=cupos)
+            Clase.objects.create(asignatura=asignatura, seccion=seccion, hora=hora, dias=dias, aula=aula, cupos=cupos)
 
-        messages.add_message(request, messages.INFO, f'La clase {asignatura.nombre} ha sido agregada con éxito')
+            messages.add_message(request, messages.INFO, f'La clase {asignatura.nombre} ha sido agregada con éxito')
 
-    q = request.GET.get('q')
+        q = request.GET.get('q')
 
-    if q:
-        clases = Clase.objects.filter(asignatura__nombre__contains=q).order_by(
-            'asignatura')  # asignatura es unicamente un id, para acceder al nombre de la asignatura se usa doble guion bajo
+        if q:
+            clases = Clase.objects.filter(asignatura__nombre__contains=q).order_by(
+                'asignatura')  # asignatura es unicamente un id, para acceder al nombre de la asignatura se usa doble guion bajo
+        else:
+            clases = Clase.objects.all().order_by('asignatura')
+
+        ctx = {
+            'activo': 'clases',
+            'clases': clases,
+            'asignaturas': asignaturas,
+            'q': q
+        }
+
+        return render(request, 'academico/clasesAdmin.html', ctx)
     else:
-        clases = Clase.objects.all().order_by('asignatura')
-
-    ctx = {
-        'activo': 'clases',
-        'clases': clases,
-        'asignaturas': asignaturas,
-        'q': q
-    }
-
-    return render(request, 'academico/clasesAdmin.html', ctx)
+        return redirect(reverse('index'))
 
 
 def editar_clase(request, id):
-    if request.method == 'POST':
-        asignatura = get_object_or_404(Asignatura, pk=request.POST.get('asignatura'))
-        seccion = request.POST.get('seccion')
-        hora = request.POST.get('hora')
-        dias = request.POST.get('dias')
-        aula = request.POST.get('aula')
-        cupos = request.POST.get('cupos')
+    if request.user.is_superuser:
+        if request.method == 'POST':
+            asignatura = get_object_or_404(Asignatura, pk=request.POST.get('asignatura'))
+            seccion = request.POST.get('seccion')
+            hora = request.POST.get('hora')
+            dias = request.POST.get('dias')
+            aula = request.POST.get('aula')
+            cupos = request.POST.get('cupos')
 
-        Clase.objects.filter(pk=id).update(asignatura=asignatura, seccion=seccion, hora=hora, dias=dias, aula=aula,
-                                           cupos=cupos)
+            Clase.objects.filter(pk=id).update(asignatura=asignatura, seccion=seccion, hora=hora, dias=dias, aula=aula,
+                                               cupos=cupos)
 
-        messages.add_message(request, messages.INFO, f'La clase {asignatura.nombre} se ha actualizado éxitosamente')
+            messages.add_message(request, messages.INFO, f'La clase {asignatura.nombre} se ha actualizado éxitosamente')
 
-    clase = get_object_or_404(Clase, pk=id)
-    asignaturas = Asignatura.objects.all().order_by('nombre')
-    clases = Clase.objects.all().order_by('asignatura')
+        clase = get_object_or_404(Clase, pk=id)
+        asignaturas = Asignatura.objects.all().order_by('nombre')
+        clases = Clase.objects.all().order_by('asignatura')
 
-    ctx = {
-        'activo': 'clases',
-        'clases': clases,
-        'asignaturas': asignaturas,
-        'c': clase
-    }
+        ctx = {
+            'activo': 'clases',
+            'clases': clases,
+            'asignaturas': asignaturas,
+            'c': clase
+        }
 
-    return render(request, 'academico/clasesAdmin.html', ctx)
+        return render(request, 'academico/clasesAdmin.html', ctx)
+    else:
+        return redirect(reverse('index'))
 
 
 def eliminar_clase(request, id):
@@ -218,116 +233,134 @@ def agregar_periodo(request):
 
 # ---------------------------------------------------------------ASIGNATURAS-------------------------------------------------------------------------
 def asignaturas(request):
-    if request.method == 'POST':
-        nombre = request.POST.get('nombre')
-        descripcion = request.POST.get('descripcion')
-        creditos = request.POST.get('creditos')
+    if request.user.is_superuser:
+        if request.method == 'POST':
+            nombre = request.POST.get('nombre')
+            descripcion = request.POST.get('descripcion')
+            creditos = request.POST.get('creditos')
 
-        c = Asignatura(nombre=nombre, descripcion=descripcion, creditos=creditos)
-        c.save()
+            c = Asignatura(nombre=nombre, descripcion=descripcion, creditos=creditos)
+            c.save()
 
-        messages.add_message(request, messages.INFO, f'La asignatura {nombre}  ha sido registrado con éxito')
+            messages.add_message(request, messages.INFO, f'La asignatura {nombre}  ha sido registrado con éxito')
 
-    q = request.GET.get('q')
+        q = request.GET.get('q')
 
-    if q:
-        data = Asignatura.objects.filter(nombre__contains=q).order_by('nombre')
+        if q:
+            data = Asignatura.objects.filter(nombre__contains=q).order_by('nombre')
 
+        else:
+            data = Asignatura.objects.all().order_by('nombre')
+
+        ctx = {
+            'asignaturas': data,
+            'q': q
+        }
+        return render(request, 'academico/asignaturas.html', ctx)
     else:
-        data = Asignatura.objects.all().order_by('nombre')
-
-    ctx = {
-        'asignaturas': data,
-        'q': q
-    }
-
-    return render(request, 'academico/asignaturas.html', ctx)
+        return redirect(reverse('index'))
 
 
 def eliminar_asignatura(request, id):
-    Asignatura.objects.get(pk=id).delete()
-    messages.add_message(request, messages.INFO, f'La asignatura se ha eliminado éxitosamente')
-    return redirect(reverse('asignaturas'))
+    if request.user.is_superuser:
+        Asignatura.objects.get(pk=id).delete()
+        messages.add_message(request, messages.INFO, f'La asignatura se ha eliminado éxitosamente')
+        return redirect(reverse('asignaturas'))
+    else:
+        return redirect(reverse('index'))
 
 
 def editar_asignatura(request, id):
-    asig = get_object_or_404(Asignatura, pk=id)
+    if request.user.is_superuser:
+        asig = get_object_or_404(Asignatura, pk=id)
 
-    if request.method == 'POST':
-        nombre = request.POST.get('nombre')
-        descripcion = request.POST.get('descripcion')
-        creditos = request.POST.get('creditos')
+        if request.method == 'POST':
+            nombre = request.POST.get('nombre')
+            descripcion = request.POST.get('descripcion')
+            creditos = request.POST.get('creditos')
 
-        Asignatura.objects.filter(pk=id).update(nombre=nombre, descripcion=descripcion, creditos=creditos)
+            Asignatura.objects.filter(pk=id).update(nombre=nombre, descripcion=descripcion, creditos=creditos)
 
-        messages.add_message(request, messages.INFO, f'La clase {nombre} se ha actualizado éxitosamente')
+            messages.add_message(request, messages.INFO, f'La clase {nombre} se ha actualizado éxitosamente')
 
-    data = Asignatura.objects.all().order_by('nombre')
+        data = Asignatura.objects.all().order_by('nombre')
 
-    ctx = {
-        'activo': 'asignaturas',
-        'asignaturas': data,
-        'c': asig
-    }
+        ctx = {
+            'activo': 'asignaturas',
+            'asignaturas': data,
+            'c': asig
+        }
 
-    return render(request, 'academico/asignaturas.html', ctx)
+        return render(request, 'academico/asignaturas.html', ctx)
+    else:
+        return redirect(reverse('index'))
 
 
 def docente_admin(request):
-    if request.method == 'POST':
-        Docente.objects.create(nombre=request.POST.get('nombre'), apellido=request.POST.get('apellido'),
-                               telefono=request.POST.get('telefono'), correo=request.POST.get('correo'),
-                               genero=request.POST.get('genero'), fecha_nacimiento=request.POST.get('datebirth'),
-                               fecha_contratacion=request.POST.get('datecon'))
+    if request.user.is_superuser:
+        if request.method == 'POST':
+            Docente.objects.create(nombre=request.POST.get('nombre'), apellido=request.POST.get('apellido'),
+                                   telefono=request.POST.get('telefono'), correo=request.POST.get('correo'),
+                                   genero=request.POST.get('genero'), fecha_nacimiento=request.POST.get('datebirth'),
+                                   fecha_contratacion=request.POST.get('datecon'),direccion=request.POST.get('dir'))
 
-    if request.GET.get('q'):
-        docentes = Docente.objects.filter(nombre__contains=request.GET.get('q')).order_by('nombre')
+        if request.GET.get('q'):
+            docentes = Docente.objects.filter(nombre__contains=request.GET.get('q')).order_by('nombre')
+        else:
+            docentes = Docente.objects.all()
+
+        ctx = {
+            'activo': 'docentes',
+            'docentes': docentes,
+        }
+
+        return render(request, 'academico/docenteAdmin.html', ctx)
     else:
-        docentes = Docente.objects.all()
+        return redirect(reverse('index'))
 
-    ctx = {
-        'activo': 'docentes',
-        'docentes': docentes,
-    }
-
-    return render(request, 'academico/docenteAdmin.html', ctx)
 
 
 def editar_docente(request, id):
-    if request.method == 'POST':
-        nombre = request.POST.get('nombre')
-        apellido = request.POST.get('apellido')
-        telefono = request.POST.get('telefono')
-        correo = request.POST.get('correo')
-        genero = request.POST.get('genero')
-        fecha_nacimiento = request.POST.get('datebirth')
-        fecha_contratacion = request.POST.get('datecon')
+    if request.user.is_superuser:
+        if request.method == 'POST':
+            nombre = request.POST.get('nombre')
+            apellido = request.POST.get('apellido')
+            telefono = request.POST.get('telefono')
+            correo = request.POST.get('correo')
+            genero = request.POST.get('genero')
+            fecha_nacimiento = request.POST.get('datebirth')
+            fecha_contratacion = request.POST.get('datecon')
+            dir=request.POST.get('dir')
+            Docente.objects.filter(pk=id).update(nombre=nombre, apellido=apellido, telefono=telefono, correo=correo,
+                                                 genero=genero, fecha_nacimiento=fecha_nacimiento,
+                                                 fecha_contratacion=fecha_contratacion,direccion=dir)
 
-        Docente.objects.filter(pk=id).update(nombre=nombre, apellido=apellido, telefono=telefono, correo=correo,
-                                             genero=genero, fecha_nacimiento=fecha_nacimiento,
-                                             fecha_contratacion=fecha_contratacion)
+            messages.add_message(request, messages.INFO, f'El docente {nombre} se ha actualizado éxitosamente')
 
-        messages.add_message(request, messages.INFO, f'El docente {nombre} se ha actualizado éxitosamente')
+        if request.GET.get('q'):
+            docentes = Docente.objects.filter(nombre__startswith=request.GET.get('q')).order_by('nombre')
+        else:
+            docentes = Docente.objects.all()
+        docente = get_object_or_404(Docente, pk=id)
 
-    if request.GET.get('q'):
-        docentes = Docente.objects.filter(nombre__startswith=request.GET.get('q')).order_by('nombre')
+        ctx = {
+            'activo': 'docentes',
+            'docentes': docentes,
+            'c': docente,
+        }
+
+        return render(request, 'academico/docenteAdmin.html', ctx)
     else:
-        docentes = Docente.objects.all()
-    docente = get_object_or_404(Docente, pk=id)
-
-    ctx = {
-        'activo': 'docentes',
-        'docentes': docentes,
-        'c': docente,
-    }
-
-    return render(request, 'academico/docenteAdmin.html', ctx)
+        return redirect(reverse('index'))
 
 
 def eliminar_docente(request, id):
-    messages.add_message(request, messages.INFO, f'El docente se ha eliminado éxitosamente')
-    Docente.objects.get(pk=id).delete()
-    return redirect(reverse('docenteAdmin'))
+    if request.user.is_superuser:
+        messages.add_message(request, messages.INFO, f'El docente se ha eliminado éxitosamente')
+        Docente.objects.get(pk=id).delete()
+        return redirect(reverse('docenteAdmin'))
+    else:
+        return redirect(reverse('index'))
 
 
 def notas(request):
@@ -356,37 +389,43 @@ def notas(request):
 
 
 def editar_nota(request, id):
-    alumno = None
-    
-    try:
-        if request.method == 'POST':
-            parcial1, parcial2, parcial3 = int(request.POST.get('parcial1')), int(request.POST.get('parcial2')), int(request.POST.get(
-                'parcial3'))
+    if request.user.groups.exists():
+        if request.user.groups.all()[0].name != 'Docente':
+            return redirect(reverse('notas'))
+        else:
+            alumno = None
 
-            if parcial1 < 101 and parcial2 < 101 and  parcial3 < 101 and parcial1 > -1 and parcial2 > -1 and  parcial3 > -1:
-                NotasClase.objects.filter(pk=id).update(parcial1=request.POST.get('parcial1'),parcial2=request.POST.get('parcial2'),parcial3=request.POST.get('parcial3'))
-                messages.add_message(request, messages.SUCCESS, f'La nota se ha actualizado éxitosamente')
-                print('EXITO')
-            else:
-                messages.add_message(request, messages.ERROR, f'No puede haber notas menores a 0 ni mayores a 100')
+            try:
+                if request.method == 'POST':
+                    parcial1, parcial2, parcial3 = int(request.POST.get('parcial1')), int(request.POST.get('parcial2')), int(request.POST.get(
+                        'parcial3'))
 
-
-
-        alumno = get_object_or_404(NotasClase, pk=id)
-    except:
-        pass
+                    if parcial1 < 101 and parcial2 < 101 and  parcial3 < 101 and parcial1 > -1 and parcial2 > -1 and  parcial3 > -1:
+                        NotasClase.objects.filter(pk=id).update(parcial1=request.POST.get('parcial1'),parcial2=request.POST.get('parcial2'),parcial3=request.POST.get('parcial3'))
+                        messages.add_message(request, messages.SUCCESS, f'La nota se ha actualizado éxitosamente')
+                        print('EXITO')
+                    else:
+                        messages.add_message(request, messages.ERROR, f'No puede haber notas menores a 0 ni mayores a 100')
 
 
-    datos = NotasClase.objects.all().filter( clase__docente__user_id=request.user.id)
 
-    ctx = {
-        'activo': 'notas',
-        'notas': datos,
-        'c': alumno,
-        'otro': Clase.objects.all().filter(docente__user=request.user.id),
-    }
+                alumno = get_object_or_404(NotasClase, pk=id)
+            except:
+                pass
 
-    return render(request, 'academico/notas.html', ctx)
+
+            datos = NotasClase.objects.all().filter( clase__docente__user_id=request.user.id)
+
+            ctx = {
+                'activo': 'notas',
+                'notas': datos,
+                'c': alumno,
+                'otro': Clase.objects.all().filter(docente__user=request.user.id),
+            }
+
+            return render(request, 'academico/notas.html', ctx)
+    else:
+        return redirect(reverse('index'))
     
 # -------------------------------------------------------------OFERTA ALUMNO-------------------------------------------------------------------------
 def ofertaAlumno(request):
