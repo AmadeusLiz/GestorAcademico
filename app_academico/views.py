@@ -333,6 +333,7 @@ def eliminar_docente(request, id):
 def notas(request):
     # TODO: crear vista para que el alumno vea sus notas
     datos = None
+    otro = None
     if request.user.groups.exists():
         if request.user.groups.all()[0].name == 'Alumno':
             datos = NotasClase.objects.all().filter(alumno__user=request.user.id)
@@ -356,7 +357,7 @@ def notas(request):
 
 def editar_nota(request, id):
     alumno = None
-
+    
     try:
         if request.method == 'POST':
             parcial1, parcial2, parcial3 = int(request.POST.get('parcial1')), int(request.POST.get('parcial2')), int(request.POST.get(
