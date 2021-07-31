@@ -1,0 +1,235 @@
+{% extends "base.html" %}
+
+{% block title %}
+    OFERTA ACADÉMICA
+{% endblock %}
+
+{% block container %}
+    <div class="container">
+        {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-{% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}danger{%else%}success{% endif %} mb-3">
+                {{ message|safe }}  
+            </div>
+            {% endfor %}
+        {% endif %}
+
+        <h2 class="fw-bold mb-5 textOrangeDark">Bienvenidx, {{request.user.alumno.nombre}} {{request.user.alumno.apellido}}</h2>
+
+        <h4 class="fw-bold mt-5">Clases a matricular</h3>
+        <table id="clasesMtr" class="table table-hover mb-5" filas=0>
+            <thead>
+                <tr>
+                    <th class="text-center textOrangeDark">SECCIÓN</th>
+                    <th class="textOrangeDark">CLASE</th>
+                    <th class="textOrangeDark">FECHAS</th>
+                    <th class="textOrangeDark">HORARIO</th>
+                    <th class="textOrangeDark">DÍAS</th>
+                    <th class="textOrangeDark">AULA</th>
+                    <th class="text-center textOrangeDark">CUPOS</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table> 
+        <div class="text-end">
+            <!-- al presionar boton debo verificar que clases se seleccionaron -->
+            <button id="btnMtr" data-csrf="{{ csrf_token }}" class="btn btn-sm orange text-white" onclick="if (!confirm('¿Deseas matricular las clases seleccionadas?')) return false; else matricular()" hidden>Matricular</button>
+        </div>
+
+        <h4 class="fw-bold mt-3">Oferta académica del periodo</h3>
+        <table id="ofertaMtr" class="table table-hover">
+            <thead>
+                <tr>
+                    <th class="text-center textOrangeDark">SECCIÓN</th>
+                    <th class="textOrangeDark">CLASE</th>
+                    <th class="textOrangeDark">FECHAS</th>
+                    <th class="textOrangeDark">HORARIO</th>
+                    <th class="textOrangeDark">DÍAS</th>
+                    <th class="textOrangeDark">AULA</th>
+                    <th class="text-center textOrangeDark">CUPOS</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for a in asignaturas %}
+                <tr><td class="pb-0 fw-bold text-white gray" colspan="8"><h5 class="card-header fw-bold text-white gray">{{a}}</h5></td></tr>
+                    {% for c in clasesOfertadas %}
+                        {% if a == c.asignatura.nombre %}
+                        <tr id="tr-{{c.id}}">
+                            <td class="text-center">{{ c.seccion }}</td>
+                            <td>{{ c.asignatura.nombre }}</td>
+                            <td>{{ c.fecha_inicio|date:'d/m/Y' }} - {{ c.fecha_finalizacion|date:'d/m/Y' }}</td>
+                            <td>{{ c.hora }} - {{ c.hora_finalizacion }}</td>
+                            <td>{{ c.dias}}</td>
+                            <td>{{ c.aula}}</td>
+                            <td class="text-center">{{ c.cupos_disponibles}}</td>
+
+                            <!--El nombre del icono src depende si esta seleccionada o no-->
+                            <td onclick="agregarQuitar({{c.id}}, {{c.asignatura.id}})" class="text-center">
+                            {% if c.cupos_disponibles > 0 %}  <!--Mostrar opcion de agregar solo si hay cupos-->
+                                <lord-icon
+                                    id="lordicon{{c.id}}"
+                                    class="icon {{c.asignatura.id}}"
+                                    src=''
+                                    trigger="click"
+                                    seleccionado = "False"
+                                    colors="primary:#121331,secondary:#fb743e"
+                                    stroke="80"
+                                    style="width:2em;height:2em; cursor:pointer">
+                                </lord-icon>
+                            {% else %}
+                                <span class="fw-bold ">SIN CUPO</span>
+                            {% endif %}
+                            </tr>
+                        {% endif %}
+                    {% empty %}
+                        <tr>
+                            <td colspan="8" class="text-danger text-center fw-bold">NO HAY CLASES OFERTADAS</td>
+                        </tr>
+                    {% endfor %}
+                {% empty %}
+                <tr>
+                    <td colspan="8" class="text-danger text-center fw-bold">NO HAY ASIGNATURAS AUN</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        
+    </div>
+{% endblock %}
+
+{% block js %}
+    <script>   
+        $(function () {
+            setTimeout(() => {
+                $('.alert').slideUp(function () { 
+                    $(this).remove();
+                });
+            }, 3000)
+            
+            $(".icon").attr("src",`{{srcPlus}}`) //colocar por defecto el +, para ello se les aplico la clase icon
+
+            // Llenar y modificar las tablas segun los datos que vienen de la bd
+            btnMtr = $("#btnMtr")
+            clasesMtr = $("#clasesMtr tbody")
+            filas = parseInt($("#clasesMtr").attr("filas")) 
+
+            {% for clase in clasesAlumno %}
+                idClase = {{clase.id}}
+                fila = $(`#tr-${idClase}`)
+                fila.attr("class","orangeRows") // poner color como seleccionadas
+                $(`#lordicon${idClase}`).attr("src",`{{srcMin}}`) //colocar icono de - a la clase matriculada
+                $(`.icon.{{clase.asignatura.id}}`).attr("seleccionado", "True") // Cambiar attr a todas las secciones de la clase
+                $(clasesMtr).append(fila.clone().attr("id",`mtr-${idClase}`)); // Agregar la fila a la tabla de las clases seleccionadas para matricular
+                if (!{{clase.cupos}} - 1){ //colocar icono de menos en lugar de "sin cupos"
+                    $(`#mtr-${idClase} td`)[7].innerHTML= `<lord-icon
+                                        id="lordicon{{idClase}}"
+                                        class="icon {{clase.asignatura.id}}"
+                                        src={{srcMin}}
+                                        trigger="click"
+                                        seleccionado = "True"
+                                        colors="primary:#121331,secondary:#fb743e"
+                                        stroke="80"
+                                        style="width:2em;height:2em; cursor:pointer">
+                                    </lord-icon>`
+                }
+
+                $(`#clasesMtr tbody #mtr-${idClase} lord-icon`).attr("id",`#mtrLordicon${idClase}`) //Remover el id del lordIcon para evitar conflictos al quitar clase desde la tabla de arriba
+                filas++; //se suma una fila y se agrega el nuevo dato al attr
+                $("#clasesMtr").attr("filas", filas)     
+            {% endfor %}
+
+            filas > 0 ? $(btnMtr).removeAttr("hidden") : $(btnMtr).attr("hidden","hidden")
+        });
+
+        async function agregarQuitar(idClase, idAsignatura){
+            await new Promise(r => setTimeout(r, 998)); //https://stackoverflow.com/questions/951021/what-is-the-javascript-version-of-sleepobtener pausa para ver el efecto de cambio de icono
+            lordicon = $(`#lordicon${idClase}`)
+            asignatura = $(`.icon.${idAsignatura}`)
+            fila = $(`#tr-${idClase}`)
+            clasesMtr = $("#clasesMtr tbody")
+            btnMtr = $("#btnMtr")
+
+            //no funciona determinar directamente contar las filas, por temas del fadeout no se actualiza rapido la cantidad, se asigna un attr que contenga la cantidad de filas
+            filas = parseInt($("#clasesMtr").attr("filas")) 
+            
+            //https://www.anerbarrena.com/jquery-attr-4948/, obtener el atributo src, donde se encuentra el nombre del icono lordicon
+            if (lordicon.attr("src") == `{{srcPlus}}`) { //Icono + es el que esta actualmente, debe cambiar a -
+                if (lordicon.attr("seleccionado") == "True"){  //verificar si ya hay un seleccionado con true en los lordicons que tengan el mismo idAsignatura
+                    alert("Ya esta matriculada esta clase en una seccion")
+                   
+                } else {
+                    $(lordicon).attr("src", `{{srcMin}}`)
+                    asignatura.attr("seleccionado", "True") // Marcar como seleccionado el attr de las demas secciones de esa clase
+                    fila.attr("class","orangeRows") // Colocar color a la fila 
+                    $(clasesMtr).fadeIn(()=> $(clasesMtr).append(fila.clone().attr("id",`mtr-${idClase}`))); // Agregar la fila a la tabla de las clases seleccionadas para matricular
+                    $(`#clasesMtr tbody #mtr-${idClase} lord-icon`).attr("id",`#mtrLordicon${idClase}`) //Remover el id del lordIcon para evitar conflictos al quitar clase desde la tabla de arriba
+                    
+                    filas++; //se suma una fila y se agrega el nuevo dato al attr
+                    $("#clasesMtr").attr("filas", filas) 
+                }
+
+            } else { //Icono - es el que esta actualmente, debe cambiar a +
+                $(`#mtr-${idClase}`).fadeOut(() => $(`#mtr-${idClase}`).remove()); // Agregar la fila a la tabla de las clases seleccionadas para matricular
+                fila.removeAttr("class") // Remover color a la fila 
+                asignatura.attr("seleccionado", "False") //quitar seleccionado del attr de las demas secciones de esa clase
+                $(lordicon).attr("src",`{{srcPlus}}`)
+
+                filas--; //se resta una fila y se agrega el nuevo dato al attr
+                $("#clasesMtr").attr("filas", filas) 
+            }
+            
+            (filas > 0) ? $(btnMtr).removeAttr("hidden") : $(btnMtr).attr("hidden","hidden")//tiene filas la tabla? se muestra el boton de matricular
+        }
+
+        function matricular(){
+            var csrfToken = $("#btnMtr").data('csrf');
+            clasesMtr = $("#clasesMtr tbody").children()
+            clases = []
+
+            //obtener los ids de las clases a matricular
+            $.each( clasesMtr, function( index, fila ) {
+                clases.push(fila.id.substring(4)) // extraer solo numero del id mtr-#
+            });
+
+            var ctx = {
+                'csrfmiddlewaretoken': csrfToken,
+                'clases[]': clases //https://es.stackoverflow.com/questions/49940/c%C3%B3mo-puedo-pasar-un-array-con-objetos-por-ajax-a-django
+            }
+
+            $.post('', ctx, function (response) {
+                alert("Matriculado")
+                clasesMtr = $("#clasesMtr tbody").children()
+
+                // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/parse, poner los datos en formato json
+                datos = JSON.parse(response.clasesAlumno)
+
+                $.each(datos, function( index, clase ) {
+                    filaMtr = $(`#clasesMtr tbody tr#mtr-${clase.pk} td`) //actualizar cupos de tabla de clases matriculadas
+                    filaOferta = $(`#ofertaMtr tbody tr#tr-${clase.pk} td`) //actualizar cupos de tabla de clases ofertadas
+                    //existen filas con ese id, actualizar columna de cupos
+                    cupos = response.cupos[index] //vienen en el mismo orden de las clases en oferta
+                    if(filaMtr.length) filaMtr[6].textContent = cupos
+                    if(filaOferta.length) {
+                        if (cupos > 0 && filaOferta[6].textContent == 0){ //esos cupos estaban en 0 antes pero ahora hay cupo, se debe permitir agregar
+                            seleccionado = $(`.icon.${clase.fields.asignatura}`).attr("seleccionado") //verificar si ya hay alguna clase seleccionada en mtr
+                            filaOferta[7].innerHTML = `<lord-icon
+                                        id="lordicon${clase.pk}"
+                                        class="icon ${clase.fields.asignatura}"
+                                        src={{srcPlus}}
+                                        trigger="click"
+                                        seleccionado = ${seleccionado}
+                                        colors="primary:#121331,secondary:#fb743e"
+                                        stroke="80"
+                                        style="width:2em;height:2em; cursor:pointer">
+                                    </lord-icon>`
+                        } else if(!cupos) filaOferta[7].innerHTML = `<span class="fw-bold ">SIN CUPO</span>`
+                        filaOferta[6].textContent = cupos //cambiar a nueva cantidad
+                    }
+                })
+            }, 'json')
+        }
+    </script> 
+{% endblock  %}

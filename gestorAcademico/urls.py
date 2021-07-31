@@ -25,11 +25,7 @@ urlpatterns = [
     path('alumnos_admin/', views.alumnos, name="alumnos"),
     path('alumnos_admin/<int:id>/editar/', views.editar_alumnos, name='editar_alumnos'),
     path('alumnos_admin/<int:id>/eliminar/', views.eliminar_alumnos, name='eliminar_alumnos'),
-<<<<<<< Updated upstream
     path('clases_matriculadas/', views.clasesMatricula, name='clasesMatricula'),
-=======
-    path('clases_matriculadas/', views.claseMatricula, name='claseMatricula'),
->>>>>>> Stashed changes
     path('clases_admin/', views.clasesAdmin, name='clasesAdmin'),
     path('clases_admin/<int:id>/eliminar/', views.eliminar_clase, name='eliminar_clase'),
     path('clases_admin/<int:id>/editar/', views.editar_clase, name='editar_clase'),
@@ -43,5 +39,9 @@ urlpatterns = [
     path('docentes_admin/', views.docente_admin, name='docenteAdmin'),
     path('docentes_admin/<int:id>/eliminar/', views.eliminar_docente, name='eliminar_docente'),
     path('docentes_admin/<int:id>/editar/', views.editar_docente, name='editar_docente'),
+    path('notas/', views.notas, name="notas"),
+    path('notas/<int:id>/editar', views.editar_nota, name="editar_nota"),
+    path('oferta/', views.ofertaAlumno, name='ofertaAlumno'),
+    path('boleta_alumno/', views.boletaAlumno, name='boletaAlumno'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 

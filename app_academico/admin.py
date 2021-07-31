@@ -2,6 +2,10 @@ from django.contrib import admin
 from .models import Clase, Asignatura, OfertaAcademica, Docente, NotasClase, Alumno
 
 # Register your models here.
+
+class AsignaturaAdmin(admin.ModelAdmin):
+    list_display = ('id','nombre')
+
 class ClaseAdmin(admin.ModelAdmin):
     list_display = ('id', 'asignatura', 'seccion', 'hora', 'dias', 'aula', 'cupos')
 
@@ -26,3 +30,4 @@ admin.site.register(OfertaAcademica, OfertaAdmin)
 admin.site.register(Docente, DocenteAdmin)
 admin.site.register(NotasClase, NotasClaseAdmin)
 admin.site.register(Alumno, AlumnoAdmin)
+

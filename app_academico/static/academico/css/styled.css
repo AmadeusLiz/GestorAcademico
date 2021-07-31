@@ -2,9 +2,19 @@
     background-color: #fd7e14;
     background: radial-gradient(circle, rgba(253,152,67,1) 0%, rgba(253,126,20,1) 100%);
 }
+
+.orangeRows {
+    background-color: #fecba1;
+}
+
 .gray {
     background-color: #495057;
 }
+
+.textGray {
+    color: #495057;
+}
+
 
 .delete {
     color: #e35d6a;
@@ -20,6 +30,14 @@
 
 .edit:hover {
     color: #fd7e14;
+}
+
+.textOrange {
+    color: #fd7e14;
+}
+
+.textOrangeDark {
+    color: #984c0c;
 }
 
 .form-check-input:checked {

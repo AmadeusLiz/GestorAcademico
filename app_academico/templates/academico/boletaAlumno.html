@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Boleta Alumno
+{% endblock %}
+
+{% block container %}
+    <div class="container">
+        {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-{% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}danger{%else%}success{% endif %} mb-3">
+                {{ message|safe }}  
+            </div>
+            {% endfor %}
+        {% endif %}
+
+        <h2 class="fw-bold mb-5">{{ request.user.alumno }}</h2>
+
+        <table class="table table-hover" id="data">
+            <thead>
+                <tr>
+                    <th class="textOrangeDark">ASIGNATURA</th>
+                    <th class="textOrangeDark">HORARIO</th>
+                    <th class="textOrangeDark">FECHAS</th>
+                    <th class="textOrangeDark">SECCION</th>
+                    <th class="textOrangeDark">DIAS</th>
+                    <th class="textOrangeDark">DOCENTE</th>
+                    <th class="textOrangeDark">AULA</th>
+                    <th class="textOrangeDark">SALA</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for a in data %}
+                    <tr><td class="pb-0 fw-bold text-white gray" colspan="8"><h5 class="card-header fw-bold text-white gray">{{a}}</h5></td></tr>
+                    <tr>
+                        <td>{{ a.asignatura.nombre }}</td>
+                        <td>{{ a.hora }} - {{ a.hora_finalizacion }}</td>
+                        <td>{{ a.fecha_inicio|date:'d/m/Y' }} - {{ a.fecha_finalizacion|date:'d/m/Y' }}</td>
+                        <td>{{ a.seccion }}</td>
+                        <td>{{ a.dias}}</td>
+                        <td>{{ a.docente | default_if_none:'-'}}</td>
+                        <td>{{ a.aula}}</td>
+                        <td>{{ a.room | default_if_none:'-'}}</td>
+
+                    </tr>    
+                {% empty %}
+                    <tr>
+                        <td colspan="7" class="text-danger text-center fw-bold">NO HAY CLASES AUN</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
+
+{% block js %}
+    <script>  
+        $(function () {
+                setTimeout(() => {
+                $('.alert').slideUp(function () { 
+                    $(this).remove();
+                });
+            }, 3000)
+        });
+        }
+    </script> 
+{% endblock  %}

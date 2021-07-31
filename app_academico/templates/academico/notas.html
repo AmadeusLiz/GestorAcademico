@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Notas
+{% endblock %}
+
+{% block container %}
+
+    <div class="row ">
+    {% if notas %}
+        <div >
+        {% if c %}
+            <h2>Estudiante {{ c.alumno }}</h2>
+            <form  action="{% url 'editar_nota' c.id %}" method="POST">
+            {% csrf_token %}
+                <div class="d-inline-block col-2">
+                    <label class="mb-3" for="parcial1">Parcial 1</label>
+                    <input type="number" value="{{ c.parcial1 }}" name="parcial1" id="parcial1" class="form-control" placeholder="70" pattern="^(?!\D)\d+" required>
+                </div>
+                <div class="d-inline-block col-2">
+                    <label class="mb-3" for="parcial2">Parcial 2</label>
+                    <input type="number" value="{{ c.parcial2 }}" name="parcial2" id="parcial2" class="form-control" placeholder="70" pattern="^(?!\D)\d+" required>
+                </div>
+                <div class="d-inline-block col-2">
+                    <label class="mb-3" for="parcial3">Parcial 3</label>
+                    <input type="number" value="{{ c.parcial3 }}" name="parcial3" id="parcial3" class="form-control" placeholder="70" pattern="^(?!\D)\d+" required>
+                </div>
+
+
+                <div class="mb-3 d-inline-block">
+
+                    <input   type ="submit" class="btn text-white orange" value="Actualizar nota">
+
+                </div>
+            </form>
+        </div>
+
+        {% endif %}
+        {% if messages %}
+    {% for message in messages %}
+        {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+        <div class="alert alert-danger fallo">
+        {{ message }}
+        </div>
+        {% elif message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+            <div class="alert alert-success fallo">
+            {{ message }}
+            </div>
+        {% endif %}
+    {% endfor %}
+{% endif %}
+
+    {% endif %}
+    <div class="row">
+    {% if otro %}
+        <div class="col-12">
+            <form action="{% url 'notas' %}" method="">
+            <div class="mb-2">
+                <label class="mb-2" for="clase">Clase</label>
+                    <select name="clase" id="clase" class="form-select form-select-sm">
+                        {% for o in otro %}<option value="{{ o.id }}">{{ o }}</option>{% endfor %}
+                    </select>
+            </div>
+            <input type ="submit" class="btn text-white orange" value="Ver clase">
+        </form>
+        </div>
+
+    {% endif %}
+    </div>
+
+        <h1>Notas de {% if otro %}{{ notas.first.clase}}
+    {% else %}{{ notas.first}}
+    {% endif %}</h1>
+        <div class="row">
+        <div class="col-12">
+        <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>{% if otro %}Alumno{% else %}Clase{% endif %}</th>
+                        <th>Parcial 1</th>
+                        <th>Parcial 2</th>
+                        <th>Parcial 3</th>
+                        {% if otro %}<th>Acciones</th>{% endif %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for c in notas %}
+                        <tr>
+                            <td>{% if otro %}{{ c.alumno}}{% else %}{{ c.clase}}{% endif %}</td>
+                            <td>{{ c.parcial1 }}</td>
+                            <td>{{ c.parcial2 }}</td>
+                            <td>{{ c.parcial3}}</td>
+                            {% if otro %}
+                            <td>
+                                <a href="{% url 'editar_nota' c.id %}" class="edit"><span class="fas fa-edit"></span></a>
+                            </td>
+                        {% endif %}
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="8" class="text-danger text-center fw-bold">NO SE ENCONTRARON RESULTADOS</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+    </div>
+    </div>
+
+{% endblock %}
+<!-- Este Html es un desastre T-T-->
