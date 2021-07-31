@@ -13,7 +13,7 @@
             </div>
             {% endfor %}
         {% endif %}
-        <form action="{% url 'editar_periodo' periodo.id %}" method="POST">
+        <form action="{% url 'academico:editar_periodo' periodo.id %}" method="POST">
             {% csrf_token %}
             <div class="row">
 

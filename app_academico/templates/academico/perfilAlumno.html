@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% load static %} 
+{% block title %}Perfil{% endblock %}
+{% block container %}
+    <main role="main">
+        <div class="container " >
+            <div class="row mt-3">
+                <!-- formulario -->
+                <div class="text-center">
+                    <div class="col-md-9 mx-auto mb-5" style="width: 200px;">
+                            <form action="{% url 'academico:editar_perfil_alumnos' %}" method="POST">
+                            {% csrf_token %}
+                            <img  width="50%" height="50%" src="{{ user.alumno.foto.url }}" required autofocus/>
+                            <h2>@{{ user.username }}</h2>
+                            
+                            <div class="mb-2">
+                                <label for="nombre">Nombre</label>
+                                <input type="text" name="nombre" id="nombre" class="form-control " disabled value="{{ request.user.alumno.nombre}}" required autofocus>
+                            </div>
+
+                            <div class="mb-2">
+                                <label for="correo">Correo</label>
+                                <input type="email" name="correo" id="correo"  class="form-control" value="{{ request.user.alumno.correo}}" required autofocus>
+                            </div>
+
+                            <div class="mb-2">
+                                <label class="mb-2" for="telefono">Teléfono</label>
+                                <input type="tel"  name="telefono" id="telefono" class="form-control" value="{{ request.user.alumno.telefono}}" required autofocus >
+                            </div>
+
+                            <div class="mb-2">
+                                <label class="mb-2" for="fecha">Fecha de nacimiento</label>
+                                <input type="text"   name="fecha" id="fecha" class="form-control" disabled value="{{ request.user.alumno.fecha_nacimiento}}" required autofocus>
+                            </div>
+
+                            <div class="mb-2">
+                                <input type="submit" class="btn btn-success" value="Actualizar Perfil">
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+
+
+        </div>
+    </main>
+
+{% endblock  %} 
+

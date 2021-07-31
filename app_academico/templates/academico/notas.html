@@ -11,7 +11,7 @@
         <div >
         {% if c %}
             <h2>Estudiante {{ c.alumno }}</h2>
-            <form  action="{% url 'editar_nota' c.id %}" method="POST">
+            <form  action="{% url 'academico:editar_nota' c.id %}" method="POST">
             {% csrf_token %}
                 <div class="d-inline-block col-2">
                     <label class="mb-3" for="parcial1">Parcial 1</label>
@@ -54,7 +54,7 @@
     <div class="row">
     {% if otro %}
         <div class="col-12">
-            <form action="{% url 'notas' %}" method="">
+            <form action="{% url 'academico:notas' %}" method="">
             <div class="mb-2">
                 <label class="mb-2" for="clase">Clase</label>
                     <select name="clase" id="clase" class="form-select form-select-sm">
@@ -92,7 +92,7 @@
                             <td>{{ c.parcial3}}</td>
                             {% if otro %}
                             <td>
-                                <a href="{% url 'editar_nota' c.id %}" class="edit"><span class="fas fa-edit"></span></a>
+                                <a href="{% url 'academico:editar_nota' c.id %}" class="edit"><span class="fas fa-edit"></span></a>
                             </td>
                         {% endif %}
                         </tr>

@@ -9,9 +9,9 @@
 
         <div class="col-3">
         {% if c %}
-            <form action="{% url 'editar_clase' c.id %}" method="POST">
+            <form action="{% url 'academico:editar_clase' c.id %}" method="POST">
         {% else %}
-            <form action="{% url 'clasesAdmin' %}" method="POST">
+            <form action="{% url 'academico:clasesAdmin' %}" method="POST">
         {% endif %}
                 {% csrf_token %}
                 <div class="mb-2">
@@ -98,8 +98,8 @@
                             <td>{{ c.aula}}</td>
                             <td>{{ c.cupos}}</td>
                             <td class="text-center">
-                                <a href="{% url 'editar_clase' c.id %}" class="edit"><span class="fas fa-edit"></span></a>&nbsp
-                                <a onclick="if (!confirm('¿Desea eliminar {{c.asignatura}} {{c.seccion}}?')) return false;" href="{% url 'eliminar_clase' c.id %}" class="delete"> <span class="fas fa-trash-alt"></span></a>
+                                <a href="{% url 'academico:editar_clase' c.id %}" class="edit"><span class="fas fa-edit"></span></a>&nbsp
+                                <a onclick="if (!confirm('¿Desea eliminar {{c.asignatura}} {{c.seccion}}?')) return false;" href="{% url 'academico:eliminar_clase' c.id %}" class="delete"> <span class="fas fa-trash-alt"></span></a>
                             </td>
                         </tr>
                     {% empty %}
