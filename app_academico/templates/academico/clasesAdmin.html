@@ -33,7 +33,7 @@
                 </div>
 
                 <div class="mb-2">
-                    <label class="mb-2" for="hora">Hora</label>
+                    <label class="mb-2" for="hora">Hora Inicio</label>
                     <input type="time" value="{{ c.hora}}" name="hora" id="hora" class="form-control" min="07:00" required>
                 </div>
 
@@ -79,13 +79,15 @@
             <table class="table table-hover">
                 <thead>
                     <tr>
-                        <th>ASIGNATURA</th>
-                        <th>SECCIÓN</th>
-                        <th>HORA</th>
-                        <th>DÍAS</th>
-                        <th>AULA</th>
-                        <th>CUPOS</th>
-                        <th>ACCIONES</th>
+                        <th class="textOrangeDark">ASIGNATURA</th>
+                        <th class="textOrangeDark">SECCIÓN</th>
+                        <th class="textOrangeDark">HORARIO</th>
+                        <th class="textOrangeDark">DÍAS</th>
+                        <th class="textOrangeDark">FECHAS</th>
+                        <th class="textOrangeDark">AULA</th>
+                        <th class="textOrangeDark">CUPOS</th>
+                        <th class="textOrangeDark">ROOM</th>
+                        <th class="textOrangeDark">ACCIONES</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -93,10 +95,12 @@
                         <tr>
                             <td>{{ c.asignatura }}</td>
                             <td>{{ c.seccion }}</td>
-                            <td>{{ c.hora }}</td>
+                            <td>{{ c.hora }} - {{ c.hora_finalizacion }}</td>
                             <td>{{ c.dias}}</td>
+                            <td>{{ c.fecha_inicio|date:'d/m/Y' }} - {{ c.fecha_finalizacion|date:'d/m/Y' }}</td>
                             <td>{{ c.aula}}</td>
                             <td>{{ c.cupos}}</td>
+                            <td>{{ c.room | default_if_none:'-'}}</td> 
                             <td class="text-center">
                                 <a href="{% url 'editar_clase' c.id %}" class="edit"><span class="fas fa-edit"></span></a>&nbsp
                                 <a onclick="if (!confirm('¿Desea eliminar {{c.asignatura}} {{c.seccion}}?')) return false;" href="{% url 'eliminar_clase' c.id %}" class="delete"> <span class="fas fa-trash-alt"></span></a>
