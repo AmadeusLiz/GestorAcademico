@@ -493,8 +493,8 @@ def editar_perfil_alumnos(request):
         #messages.add_message(request, messages.INFO, f'Tu perfil{User.alumnos.nombre} se ha actualizado éxitosamente')
 
     q = request.GET.get('q')
-
-
+    
+    # GET
     ctx = {
         'activo': 'alumnos',
         'alumnos': alumnos,
@@ -514,3 +514,35 @@ def clasesdocente(request):
     }
  
     return render(request,'academico/clasesdocente.html',ctx)
+        
+
+
+def clasesMatricula(request):
+    asignaturas = Asignatura.objects.all().order_by('nombre')
+
+    if request.method == 'POST':
+        asignatura = get_object_or_404(Asignatura, pk=request.POST.get('asignatura'))
+        seccion = request.POST.get('seccion')
+        hora = request.POST.get('hora')
+        dias = request.POST.get('dias')
+        aula = request.POST.get('aula')
+        
+
+        Clase.objects.filter(pk=id).update(asignatura=asignatura, seccion=seccion, hora=hora, dias=dias, aula=aula)
+
+
+    q = request.GET.get('q')
+
+    if q:
+        clases = Clase.objects.filter(asignatura__nombre__contains=q).order_by(
+            'asignatura')  # asignatura es unicamente un id, para acceder al nombre de la asignatura se usa doble guion bajo
+    else:
+        clases = Clase.objects.all().order_by('asignatura')
+
+    ctx = {
+        'activo': 'clases',
+        'clases': clases,
+        'asignaturas': asignaturas,
+    }
+
+    return render(request, 'academico/clasesMatriculadas.html', ctx)

@@ -30,3 +30,4 @@ admin.site.register(OfertaAcademica, OfertaAdmin)
 admin.site.register(Docente, DocenteAdmin)
 admin.site.register(NotasClase, NotasClaseAdmin)
 admin.site.register(Alumno, AlumnoAdmin)
+
