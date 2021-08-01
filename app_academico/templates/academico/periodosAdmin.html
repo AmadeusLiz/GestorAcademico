@@ -53,8 +53,8 @@
                         {% endif %}
 
                         <td class="text-center">
-                            <a href="{% url 'editar_periodo' p.id %}" class="edit"><span class="fas fa-edit"></span></a>&nbsp
-                            <a onclick="if (!confirm('¿Desea eliminar {{p.periodo}} {{p.anio}}?')) return false;" href="{% url 'eliminar_periodo' p.id %}" class="delete"> <span class="fas fa-trash-alt"></span></a>
+                            <a href="{% url 'academico:editar_periodo' p.id %}" class="edit"><span class="fas fa-edit"></span></a>&nbsp
+                            <a onclick="if (!confirm('¿Desea eliminar {{p.periodo}} {{p.anio}}?')) return false;" href="{% url 'academico:eliminar_periodo' p.id %}" class="delete"> <span class="fas fa-trash-alt"></span></a>
                         </td>
                     </tr>
                 {% empty %}
@@ -77,7 +77,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="col-12">
-                        <form action="{% url 'agregar_periodo' %}" method="POST">
+                        <form action="{% url 'academico:agregar_periodo' %}" method="POST">
                             {% csrf_token %}
                             
                             <div class="container text-center">

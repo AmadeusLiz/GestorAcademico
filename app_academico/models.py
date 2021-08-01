@@ -15,6 +15,7 @@ class Alumno(models.Model):
     )
 
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
+    foto=models.ImageField(upload_to='alumno', null=True, blank=True)
     nombre = models.CharField(max_length=25)
     apellido = models.CharField(max_length=25)
     correo = models.EmailField()

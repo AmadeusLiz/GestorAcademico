@@ -1,23 +1,58 @@
 {% extends "base.html" %}
 
 {% block title %}
-    Index
+    Menu
 {% endblock %}
 
 {% block container %}    
     
-    <h1>Home Page</h1>
+    <h1>Bienvenido {{ request.user.alumno.nombre }}</h1>
 
-    <div class="row">
-        <div class="col-6">
-            <!-- Formulario -->
-            <input id="txt-buscar" type="text" class="form-control">
-            <button id="btn-buscar" data-csrf="{{ csrf_token }}" class="btn btn-success mt-1">Enviar</button>
+ 
+        <style>
+        #c{
+                margin: 0 auto;
+                float: none;
+                margin-bottom: 10px;
+        }
+
+        a .card-link{
+        width:2000px;
+        }
+
+        h2 {
+        color: white;
+        }
+
+        .card-body {
+        background-color: orange;
+        border-radius: 10px;
+        }
+        
+        </style>
+
+        <div id="c" class="cards" >             
+            <div class="card-body" style="width: 20rem;" id="c">
+                <div class="text-center" id="c">
+                    <a href="#" class="card-link"><img src="https://login.sec.unicah.net/imgs/icono_registro.svg" width="50" height="50" color="black"/></a>
+                    <h2><td id="c">Registro</td></h2>
+                </div>
+            </div>
+            <div class="card-body" style="width: 20rem;" id="c">
+                <div class="text-center" id="c">
+                    <a href="#" class="card-link"><img src="https://login.sec.unicah.net/imgs/icono_apps_zoom.svg" width="50" height="50" color="black"/></a>
+                    <h2><td id="c">Aula Virtual</td></h2>
+                </div>
+            </div>
+
+            <div id="c" class="cards" >             
+                <div class="card-body" style="width: 20rem;" id="c">
+                    <div class="text-center" id="c">
+                        <a href="#" class="card-link"><img src="https://login.sec.unicah.net/imgs/icono_registro.svg" width="50" height="50" color="black"/></a>
+                        <h2><td id="c">Matricula</td></h2>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="col-6">
-            <!-- Resultado -->
-            <span id="resultado">Resultado</span>
-        </div>
-    </div>
 
 {% endblock %}

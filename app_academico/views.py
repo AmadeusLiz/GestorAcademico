@@ -4,8 +4,9 @@ from django.contrib import messages
 from django.http import JsonResponse
 from django.urls import reverse
 from django.core import serializers # https://docs.djangoproject.com/en/3.2/topics/serialization/
+from django.contrib.auth.decorators import login_required, user_passes_test
 
-
+@login_required()
 def index(request):
     return render(request, 'academico/index.html')
 
@@ -41,7 +42,7 @@ def alumnos(request):
 
         return render(request, 'academico/alumnos.html', ctx)
     else:
-        return redirect(reverse('index'))
+        return redirect(reverse('academico:index'))
 
 
 def eliminar_alumnos(request, id):
@@ -119,7 +120,7 @@ def clasesAdmin(request):
 
         return render(request, 'academico/clasesAdmin.html', ctx)
     else:
-        return redirect(reverse('index'))
+        return redirect(reverse('academico:index'))
 
 
 def editar_clase(request, id):
@@ -150,13 +151,13 @@ def editar_clase(request, id):
 
         return render(request, 'academico/clasesAdmin.html', ctx)
     else:
-        return redirect(reverse('index'))
+        return redirect(reverse('academico:index'))
 
 
 def eliminar_clase(request, id):
     messages.add_message(request, messages.INFO, f'La clase se ha eliminado éxitosamente')
     Clase.objects.get(pk=id).delete()
-    return redirect(reverse('clasesAdmin'))
+    return redirect(reverse('academico:clasesAdmin'))
 
 
 # ---------------------------------------------------------------OFERTA PERIODOS-------------------------------------------------------------------------
@@ -174,7 +175,7 @@ def periodos_admin(request):
 def eliminar_periodo(request, id):
     messages.add_message(request, messages.INFO, f'El periodo se ha eliminado éxitosamente')
     OfertaAcademica.objects.get(pk=id).delete()
-    return redirect(reverse('periodosAdmin'))
+    return redirect(reverse('academico:periodosAdmin'))
 
 
 def editar_periodo(request, id):
@@ -231,7 +232,7 @@ def agregar_periodo(request):
 
         messages.add_message(request, messages.INFO, f'El periodo académico ha sido añadido con éxito')
 
-    return redirect(reverse('periodosAdmin'))
+    return redirect(reverse('academico:periodosAdmin'))
 
 
 # ---------------------------------------------------------------ASIGNATURAS-------------------------------------------------------------------------
@@ -261,7 +262,7 @@ def asignaturas(request):
         }
         return render(request, 'academico/asignaturas.html', ctx)
     else:
-        return redirect(reverse('index'))
+        return redirect(reverse('academico:index'))
 
 
 def eliminar_asignatura(request, id):
@@ -319,7 +320,7 @@ def docente_admin(request):
 
         return render(request, 'academico/docenteAdmin.html', ctx)
     else:
-        return redirect(reverse('index'))
+        return redirect(reverse('academico:index'))
 
 
 
@@ -480,3 +481,36 @@ def boletaAlumno(request):
     }
     
     return render(request, 'academico/boletaAlumno.html',ctx)
+
+def editar_perfil_alumnos(request):
+    if request.method=='POST':
+        correo = request.POST.get('correo')
+        telefono = request.POST.get('telefono')
+
+
+        Alumno.objects.all().filter(user=request.user.id).update( correo=correo, telefono=telefono)
+
+        #messages.add_message(request, messages.INFO, f'Tu perfil{User.alumnos.nombre} se ha actualizado éxitosamente')
+
+    q = request.GET.get('q')
+
+
+    ctx = {
+        'activo': 'alumnos',
+        'alumnos': alumnos,
+        'alumno':get_object_or_404(Alumno,user=request.user.id )
+    }
+
+    return render(request, 'academico/perfilAlumno.html', ctx)
+
+
+def clasesdocente(request):
+    
+    clases= Clase.objects.all().filter(docente__user=request.user.id)
+
+    ctx={
+        'clases':clases
+
+    }
+ 
+    return render(request,'academico/clasesdocente.html',ctx)

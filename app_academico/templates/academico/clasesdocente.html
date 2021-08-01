@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Periodos
+{% endblock %}
+
+{% block container %}
+    <div>
+        <form action="{% url 'academico:clasesdocente' %}" method="POST">
+    </div>
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>ASIGNATURA</th>
+                <th>SECCIÓN</th>
+                <th>HORA</th>
+                <th>DÍAS</th>
+                <th>AULA</th>
+                <th>Finalizada</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            {% for c in clases %}
+                <tr>
+                    <td>{{ c.asignatura }}</td>
+                    <td>{{ c.seccion }}</td>
+                    <td>{{ c.hora }}</td>
+                    <td>{{ c.dias}}</td>
+                    <td>{{ c.aula}}</td>
+                    <td class="text-center">
+                    <div class="form-check mb-2 mt-2" style="padding-left: 5.5em;">
+                        <input class="form-check-input" type="checkbox" value="{{c.finalizada}}" name="estado" id="estado">
+                    </div>
+                        
+                    
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="7" class="text-danger text-center fw-bold">NO SE ENCONTRARON RESULTADOS</td>
+                </tr>
+            {% endfor %}
+        </tbody> 
+    </table>
+{% endblock %}
