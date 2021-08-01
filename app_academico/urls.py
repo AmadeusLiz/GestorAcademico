@@ -29,5 +29,6 @@ urlpatterns = [
     path('boleta_alumno/', views.boletaAlumno, name='boletaAlumno'),
     path('perfilAlumno/', views.editar_perfil_alumnos, name='editar_perfil_alumnos'),
     path('clasesdocente/', views.clasesdocente, name='clasesdocente'),
+    path('clases_matriculadas/', views.clasesMatricula, name='clasesMatricula'),
 
 ] 
