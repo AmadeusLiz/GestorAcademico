@@ -398,7 +398,7 @@ def notas(request):
             otro = Clase.objects.all().filter(docente__user=request.user.id)
 
     else:
-        return redirect(reverse('index'))
+        return redirect(reverse('academico:index'))
 
     ctx = {
         'activo': 'notas',
@@ -497,35 +497,43 @@ def ofertaAlumno(request):
 
 # -------------------------------------------------------------BOLETA ALUMNO-------------------------------------------
 def boletaAlumno(request):
-    data = Clase.objects.filter(alumnos=request.user.alumno.id)
+    if request.user.groups.exists():
+        if request.user.groups.all()[0].name == 'Alumno':
+            data = Clase.objects.filter(alumnos=request.user.alumno.id)
 
-    ctx = {
-        'boleta': 'boleta',
-        'data': data
-    }
+            ctx = {
+                'boleta': 'boleta',
+                'data': data
+            }
 
-    return render(request, 'academico/boletaAlumno.html', ctx)
+            return render(request, 'academico/boletaAlumno.html', ctx)
+    else:
+        return redirect(reverse('academico:index'))
 
 
 def editar_perfil_alumnos(request):
-    if request.method == 'POST':
-        correo = request.POST.get('correo')
-        telefono = request.POST.get('telefono')
+    if request.user.groups.exists():
+        if request.user.groups.all()[0].name == 'Alumno':
+            if request.method == 'POST':
+                correo = request.POST.get('correo')
+                telefono = request.POST.get('telefono')
 
-        Alumno.objects.all().filter(user=request.user.id).update(correo=correo, telefono=telefono)
+                Alumno.objects.all().filter(user=request.user.id).update(correo=correo, telefono=telefono)
 
-        # messages.add_message(request, messages.INFO, f'Tu perfil{User.alumnos.nombre} se ha actualizado éxitosamente')
+                # messages.add_message(request, messages.INFO, f'Tu perfil{User.alumnos.nombre} se ha actualizado éxitosamente')
 
-    q = request.GET.get('q')
+            q = request.GET.get('q')
 
-    # GET
-    ctx = {
-        'activo': 'alumnos',
-        'alumnos': alumnos,
-        'alumno': get_object_or_404(Alumno, user=request.user.id)
-    }
+            # GET
+            ctx = {
+                'activo': 'alumnos',
+                'alumnos': alumnos,
+                'alumno': get_object_or_404(Alumno, user=request.user.id)
+            }
 
-    return render(request, 'academico/perfilAlumno.html', ctx)
+            return render(request, 'academico/perfilAlumno.html', ctx)
+    else:
+        return redirect(reverse('academico:index'))
 
 
 def clasesdocente(request):
