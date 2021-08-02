@@ -34,6 +34,14 @@
 
     {% if user.is_superuser %}
         <div id="c" class="cards d-block" >
+        <a href="/admin/" class="card-link text-decoration-none">
+                <div class="card-body" style="width: 20rem;" id="c">
+                    <div class="text-center" id="c">
+                        <img src="https://login.sec.unicah.net/imgs/icono_registro.svg" width="50" height="50" color="black"/>
+                        <h2>Sitio de administración</h2>
+                    </div>
+                </div>
+            </a>
             <a href="{% url 'academico:alumnos' %}" class="card-link text-decoration-none">
                 <div class="card-body" style="width: 20rem;" id="c">
                     <div class="text-center" id="c">
