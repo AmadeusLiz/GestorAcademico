@@ -11,9 +11,10 @@
         {% if alumno %}
             <form action="{% url 'academico:editar_alumnos' alumno.id %}" method="POST">
         {% else %}
-            <form action="{% url 'academico:alumnos' %}" method="POST">
+            <form action="{% url 'academico:alumnos' %}" method="POST" enctype="multipart/form-data">
         {% endif %}
                 {% csrf_token %}
+                {{ form.as_p }}
                 <div class="mb-2">
                     <label class="mb-2" for="nombre">Nombre</label>
                     <input type="text" value="{{ alumno.nombre }}" name="nombre" id="nombre" class="form-control" placeholder="Jose Mario" pattern="(\b[A-Z]\w+)?(\s)?(\b[A-Z]\w+)"  required>
@@ -132,14 +133,16 @@
                 </div>
             {% endif %}
 
-            <form action="" method="GET">
-                <input name="q" value="{{ q | default_if_none:''}}" type="search" class="form-control" placeholder="Buscar Alumno">
-            </form>
+
 
             <h5 class="mt-3 mb-3 fw-bold">Alumnos {{ alumnos.count }}</h5>
+            <form action="{% url 'academico:alumnos' %}" method="GET">
+                <input name="q" value="{{ q | default_if_none:''}}" type="search" class="form-control" placeholder="Buscar Alumno">
+            </form>
             <table class="table table-hover">
                 <thead>
                     <tr>
+                        <th class="textOrangeDark">FOTO</th>
                         <th class="textOrangeDark">NOMBRE</th>
                         <th class="textOrangeDark">APELLIDO</th>
                         <th class="textOrangeDark">CORREO</th>
@@ -152,7 +155,11 @@
                 </thead>
                 <tbody>
                     {% for a in alumnos %}
-                        <tr>                        
+                        <tr>
+                            {% if a.foto %}
+                            <td><img src="{{ a.foto.url}}" alt="connect" style="max-height:1cm;max-width:1cm"></td>
+                                {% else %}<td>Sin Foto</td>
+                            {% endif %}
                             <td>{{ a.nombre }}</td>
                             <td>{{ a.apellido }}</td>
                             <td>{{ a.correo}}</td>
@@ -183,7 +190,7 @@
                         </tr>
                     {% empty %}
                         <tr>
-                            <td colspan="6" class="text-danger text-center fw-bold">NO SE ENCONTRARON RESULTADOS</td>
+                            <td colspan="9" class="text-danger text-center fw-bold">NO SE ENCONTRARON RESULTADOS</td>
                         </tr>
                     {% endfor %}
                 </tbody>

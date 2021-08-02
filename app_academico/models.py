@@ -2,6 +2,8 @@ from django.db import models
 from datetime import datetime, timedelta
 from django.contrib.auth.models import User
 from phone_field import PhoneField
+from django.core.files.base import ContentFile
+
 
 class Alumno(models.Model):
     FACULTAD = (
@@ -15,7 +17,7 @@ class Alumno(models.Model):
     )
 
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
-    foto=models.ImageField(upload_to='alumno', null=True, blank=True)
+    foto = models.ImageField(upload_to='alumno', null=True, blank=True)
     nombre = models.CharField(max_length=25)
     apellido = models.CharField(max_length=25)
     correo = models.EmailField()
@@ -24,8 +26,11 @@ class Alumno(models.Model):
     fecha_nacimiento = models.DateField()
     facultad = models.CharField(max_length=1, choices=FACULTAD, default='1')
 
+
+
     def __str__(self):
         return f'{self.nombre} {self.apellido}'
+
 
 class Asignatura(models.Model):
     nombre = models.CharField(max_length=50)
@@ -35,6 +40,7 @@ class Asignatura(models.Model):
     def __str__(self):
         return f'{self.nombre}'
 
+
 class Docente(models.Model):
     GENEROS = (
         ('1', 'Mujer'),
@@ -42,6 +48,7 @@ class Docente(models.Model):
         ('3', 'Otro')
     )
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
+    foto = models.ImageField(upload_to='docente', null=True, blank=True)
     nombre = models.CharField(max_length=25)
     apellido = models.CharField(max_length=25)
     telefono = PhoneField(blank=True, help_text='Numero de teléfono')
@@ -53,6 +60,7 @@ class Docente(models.Model):
 
     def __str__(self):
         return f'{self.nombre} {self.apellido}'
+
 
 class Clase(models.Model):
     asignatura = models.ForeignKey(Asignatura, on_delete=models.CASCADE)
@@ -76,11 +84,13 @@ class Clase(models.Model):
 
     @property
     def hora_finalizacion(self):
-        start = timedelta(hours=self.hora.hour, minutes = self.hora.minute)
-        return start + timedelta(hours=self.duracion) # https://www.lawebdelprogramador.com/foros/Python/1578062-Consulta-con-Suma-y-Resta-de-Horas.html
+        start = timedelta(hours=self.hora.hour, minutes=self.hora.minute)
+        return start + timedelta(
+            hours=self.duracion)  # https://www.lawebdelprogramador.com/foros/Python/1578062-Consulta-con-Suma-y-Resta-de-Horas.html
 
     def __str__(self):
         return f'{self.asignatura} | {self.seccion} '
+
 
 class OfertaAcademica(models.Model):
     PERIODOS = (
@@ -100,6 +110,7 @@ class OfertaAcademica(models.Model):
 
     class Meta:
         verbose_name_plural = 'Ofertas Academicas'
+
 
 class NotasClase(models.Model):
     clase = models.ForeignKey(Clase, on_delete=models.CASCADE)

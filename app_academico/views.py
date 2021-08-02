@@ -3,12 +3,15 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.http import JsonResponse
 from django.urls import reverse
-from django.core import serializers # https://docs.djangoproject.com/en/3.2/topics/serialization/
+from django.core import serializers  # https://docs.djangoproject.com/en/3.2/topics/serialization/
 from django.contrib.auth.decorators import login_required, user_passes_test
+from .forms import ImageForm, FormAlumno
+
 
 @login_required()
 def index(request):
     return render(request, 'academico/index.html')
+
 
 # ---------------------------------------------------------------ALUMNOS-------------------------------------------------------------------------
 def alumnos(request):
@@ -22,9 +25,10 @@ def alumnos(request):
             facultad = request.POST.get('facultad')
 
             Alumno.objects.create(nombre=nombre, apellido=apellido, correo=correo, telefono=telefono,
-                                  fecha_nacimiento=fecha_nacimiento,direccion=request.POST.get('dir'), facultad=facultad)
-    
-
+                                  fecha_nacimiento=fecha_nacimiento, direccion=request.POST.get('dir'),
+                                  facultad=facultad)
+            form = FormAlumno(request.POST, request.FILES, instance=Alumno.objects.all().order_by('-id').first())
+            form.save()
 
             messages.add_message(request, messages.INFO, f'El alumno {nombre} se ha agregado éxitosamente')
 
@@ -38,6 +42,7 @@ def alumnos(request):
         ctx = {
             'activo': 'alumnos',
             'alumnos': alumnos,
+            'form': FormAlumno(),
         }
 
         return render(request, 'academico/alumnos.html', ctx)
@@ -49,7 +54,7 @@ def eliminar_alumnos(request, id):
     if request.user.is_superuser:
         messages.add_message(request, messages.INFO, f'El alumno se ha eliminado éxitosamente')
         Alumno.objects.get(pk=id).delete()
-        return redirect(reverse('alumnos'))
+        return redirect(reverse('academico:alumnos'))
     else:
         return redirect(reverse('index'))
 
@@ -65,7 +70,8 @@ def editar_alumnos(request, id):
             facultad = request.POST.get('facultad')
 
             Alumno.objects.filter(pk=id).update(nombre=nombre, apellido=apellido, correo=correo, telefono=telefono,
-                                                fecha_nacimiento=fecha_nacimiento,direccion=request.POST.get('dir'), facultad=facultad)
+                                                fecha_nacimiento=fecha_nacimiento, direccion=request.POST.get('dir'),
+                                                facultad=facultad)
             messages.add_message(request, messages.INFO, f'El alumno {nombre} se ha actualizado éxitosamente')
 
         q = request.GET.get('q')
@@ -99,7 +105,8 @@ def clasesAdmin(request):
             aula = request.POST.get('aula')
             cupos = request.POST.get('cupos')
             room = request.POST.get('room')
-            Clase.objects.create(asignatura=asignatura, seccion=seccion, hora=hora, dias=dias, aula=aula, cupos=cupos, room=room)
+            Clase.objects.create(asignatura=asignatura, seccion=seccion, hora=hora, dias=dias, aula=aula, cupos=cupos,
+                                 room=room)
 
             messages.add_message(request, messages.INFO, f'La clase {asignatura.nombre} ha sido agregada con éxito')
 
@@ -107,7 +114,8 @@ def clasesAdmin(request):
 
         if q:
             clases = Clase.objects.filter(asignatura__nombre__contains=q).order_by(
-                'asignatura')  # asignatura es unicamente un id, para acceder al nombre de la asignatura se usa doble guion bajo
+                'asignatura')
+            # asignatura es unicamente un id, para acceder al nombre de la asignatura se usa doble guion bajo
         else:
             clases = Clase.objects.all().order_by('asignatura')
 
@@ -302,11 +310,18 @@ def editar_asignatura(request, id):
 
 def docente_admin(request):
     if request.user.is_superuser:
+        print(Docente.objects.all().order_by('id').first())
         if request.method == 'POST':
+
             Docente.objects.create(nombre=request.POST.get('nombre'), apellido=request.POST.get('apellido'),
                                    telefono=request.POST.get('telefono'), correo=request.POST.get('correo'),
                                    genero=request.POST.get('genero'), fecha_nacimiento=request.POST.get('datebirth'),
-                                   fecha_contratacion=request.POST.get('datecon'),direccion=request.POST.get('dir'))
+                                   fecha_contratacion=request.POST.get('datecon'), direccion=request.POST.get('dir'))
+
+            form = ImageForm(request.POST, request.FILES, instance=Docente.objects.all().order_by('-id').first())
+            if form.is_valid():
+                form.save()
+            messages.add_message(request, messages.INFO, f'El Docente {request.POST.get("nombre")} se ha agregado éxitosamente')
 
         if request.GET.get('q'):
             docentes = Docente.objects.filter(nombre__contains=request.GET.get('q')).order_by('nombre')
@@ -316,12 +331,13 @@ def docente_admin(request):
         ctx = {
             'activo': 'docentes',
             'docentes': docentes,
+            'form': ImageForm()
+
         }
 
         return render(request, 'academico/docenteAdmin.html', ctx)
     else:
         return redirect(reverse('academico:index'))
-
 
 
 def editar_docente(request, id):
@@ -334,10 +350,10 @@ def editar_docente(request, id):
             genero = request.POST.get('genero')
             fecha_nacimiento = request.POST.get('datebirth')
             fecha_contratacion = request.POST.get('datecon')
-            dir=request.POST.get('dir')
+            dir = request.POST.get('dir')
             Docente.objects.filter(pk=id).update(nombre=nombre, apellido=apellido, telefono=telefono, correo=correo,
                                                  genero=genero, fecha_nacimiento=fecha_nacimiento,
-                                                 fecha_contratacion=fecha_contratacion,direccion=dir)
+                                                 fecha_contratacion=fecha_contratacion, direccion=dir)
 
             messages.add_message(request, messages.INFO, f'El docente {nombre} se ha actualizado éxitosamente')
 
@@ -362,7 +378,7 @@ def eliminar_docente(request, id):
     if request.user.is_superuser:
         messages.add_message(request, messages.INFO, f'El docente se ha eliminado éxitosamente')
         Docente.objects.get(pk=id).delete()
-        return redirect(reverse('docenteAdmin'))
+        return redirect(reverse('academico:docenteAdmin'))
     else:
         return redirect(reverse('index'))
 
@@ -377,7 +393,8 @@ def notas(request):
         # TODO: crear vista para que el docente vea las notas y pueda editarlas
         elif request.user.groups.all()[0].name == 'Docente':
             if request.GET.get('clase'):
-                datos = NotasClase.objects.all().filter(clase=request.GET.get('clase'),clase__docente__user_id=request.user.id)
+                datos = NotasClase.objects.all().filter(clase=request.GET.get('clase'),
+                                                        clase__docente__user_id=request.user.id)
             otro = Clase.objects.all().filter(docente__user=request.user.id)
 
     else:
@@ -401,24 +418,25 @@ def editar_nota(request, id):
 
             try:
                 if request.method == 'POST':
-                    parcial1, parcial2, parcial3 = int(request.POST.get('parcial1')), int(request.POST.get('parcial2')), int(request.POST.get(
+                    parcial1, parcial2, parcial3 = int(request.POST.get('parcial1')), int(
+                        request.POST.get('parcial2')), int(request.POST.get(
                         'parcial3'))
 
-                    if parcial1 < 101 and parcial2 < 101 and  parcial3 < 101 and parcial1 > -1 and parcial2 > -1 and  parcial3 > -1:
-                        NotasClase.objects.filter(pk=id).update(parcial1=request.POST.get('parcial1'),parcial2=request.POST.get('parcial2'),parcial3=request.POST.get('parcial3'))
+                    if parcial1 < 101 and parcial2 < 101 and parcial3 < 101 and parcial1 > -1 and parcial2 > -1 and parcial3 > -1:
+                        NotasClase.objects.filter(pk=id).update(parcial1=request.POST.get('parcial1'),
+                                                                parcial2=request.POST.get('parcial2'),
+                                                                parcial3=request.POST.get('parcial3'))
                         messages.add_message(request, messages.SUCCESS, f'La nota se ha actualizado éxitosamente')
                         print('EXITO')
                     else:
-                        messages.add_message(request, messages.ERROR, f'No puede haber notas menores a 0 ni mayores a 100')
-
-
+                        messages.add_message(request, messages.ERROR,
+                                             f'No puede haber notas menores a 0 ni mayores a 100')
 
                 alumno = get_object_or_404(NotasClase, pk=id)
             except:
                 pass
 
-
-            datos = NotasClase.objects.all().filter( clase__docente__user_id=request.user.id)
+            datos = NotasClase.objects.all().filter(clase__docente__user_id=request.user.id)
 
             ctx = {
                 'activo': 'notas',
@@ -430,18 +448,20 @@ def editar_nota(request, id):
             return render(request, 'academico/notas.html', ctx)
     else:
         return redirect(reverse('index'))
-    
+
+
 # -------------------------------------------------------------OFERTA ALUMNO-------------------------------------------------------------------------
 def ofertaAlumno(request):
-    oferta = OfertaAcademica.objects.get(estado=1) # Obtener TODAS las clases ofertadas del periodo activo
-    clasesMtr = Clase.objects.filter(alumnos=request.user.alumno.id) # Clases en las que el alumno esta matriculado actualmente
-    asignaturas = [] 
+    oferta = OfertaAcademica.objects.get(estado=1)  # Obtener TODAS las clases ofertadas del periodo activo
+    clasesMtr = Clase.objects.filter(
+        alumnos=request.user.alumno.id)  # Clases en las que el alumno esta matriculado actualmente
+    asignaturas = []
 
     # Bucle que ingresa a la lista de asignaturas, unicamente los nombres de las asignaturas ofertadas
     for c in oferta.clases.all().order_by('asignatura'):
         if not c.asignatura.nombre in asignaturas:
             asignaturas.append(c.asignatura.nombre)
-    
+
     if request.method == 'POST' and request.is_ajax():
         # clases = Clase.objects.all().order_by('asignatura')
         clasesAlumno = request.POST.getlist('clases[]')
@@ -449,20 +469,24 @@ def ofertaAlumno(request):
         # Matricular el alumno en las clases con los ids ya obtenidos
         for c in oferta.clases.all():
             if f'{c.id}' in clasesAlumno:  # https://parzibyte.me/blog/2018/04/17/python-comprobar-elemento-valor-existe-lista-arreglo/
-                c.alumnos.add(request.user.alumno.id) # Si el id de la clase existe en las clases que el alumno matriculo, se añade el alumno
+                c.alumnos.add(
+                    request.user.alumno.id)  # Si el id de la clase existe en las clases que el alumno matriculo, se añade el alumno
             else:
-                c.alumnos.remove(request.user.alumno.id) # Sino se remueve, en caso de que estuviese matriculado antes y esta vez quitó la clase
-            
-            cuposClases.append(c.cupos_disponibles) # estaran en el mismo orden de las clases en oferta
+                c.alumnos.remove(
+                    request.user.alumno.id)  # Sino se remueve, en caso de que estuviese matriculado antes y esta vez quitó la clase
 
-        return JsonResponse({'clasesAlumno':serializers.serialize("json",oferta.clases.all()),'cupos': cuposClases}) # https://living-sun.com/es/python/713273-sending-json-data-from-view-in-django-python-json-django.html
-    
+            cuposClases.append(c.cupos_disponibles)  # estaran en el mismo orden de las clases en oferta
+
+        return JsonResponse({'clasesAlumno': serializers.serialize("json", oferta.clases.all()),
+                             'cupos': cuposClases})  # https://living-sun.com/es/python/713273-sending-json-data-from-view-in-django-python-json-django.html
+
     # GET
     ctx = {
         'activo': 'matricula',
         'oferta': oferta,
         'asignaturas': asignaturas,
-        'clasesOfertadas': oferta.clases.order_by('asignatura', 'seccion'), # Clases de la oferta ordenadas por asignatura y seccion
+        'clasesOfertadas': oferta.clases.order_by('asignatura', 'seccion'),
+        # Clases de la oferta ordenadas por asignatura y seccion
         'clasesAlumno': clasesMtr,
         'srcMin': 'https://cdn.lordicon.com/rivoakkk.json',
         'srcPlus': 'https://cdn.lordicon.com/mecwbjnp.json'
@@ -471,50 +495,48 @@ def ofertaAlumno(request):
     return render(request, 'academico/ofertaAlumno.html', ctx)
 
 
-# -------------------------------------------------------------BOLETA ALUMNO-------------------------------------------------------------------------
+# -------------------------------------------------------------BOLETA ALUMNO-------------------------------------------
 def boletaAlumno(request):
     data = Clase.objects.filter(alumnos=request.user.alumno.id)
-    
+
     ctx = {
         'boleta': 'boleta',
         'data': data
     }
-    
-    return render(request, 'academico/boletaAlumno.html',ctx)
+
+    return render(request, 'academico/boletaAlumno.html', ctx)
+
 
 def editar_perfil_alumnos(request):
-    if request.method=='POST':
+    if request.method == 'POST':
         correo = request.POST.get('correo')
         telefono = request.POST.get('telefono')
 
+        Alumno.objects.all().filter(user=request.user.id).update(correo=correo, telefono=telefono)
 
-        Alumno.objects.all().filter(user=request.user.id).update( correo=correo, telefono=telefono)
-
-        #messages.add_message(request, messages.INFO, f'Tu perfil{User.alumnos.nombre} se ha actualizado éxitosamente')
+        # messages.add_message(request, messages.INFO, f'Tu perfil{User.alumnos.nombre} se ha actualizado éxitosamente')
 
     q = request.GET.get('q')
-    
+
     # GET
     ctx = {
         'activo': 'alumnos',
         'alumnos': alumnos,
-        'alumno':get_object_or_404(Alumno,user=request.user.id )
+        'alumno': get_object_or_404(Alumno, user=request.user.id)
     }
 
     return render(request, 'academico/perfilAlumno.html', ctx)
 
 
 def clasesdocente(request):
-    
-    clases= Clase.objects.all().filter(docente__user=request.user.id)
+    clases = Clase.objects.all().filter(docente__user=request.user.id)
 
-    ctx={
-        'clases':clases
+    ctx = {
+        'clases': clases
 
     }
- 
-    return render(request,'academico/clasesdocente.html',ctx)
-        
+
+    return render(request, 'academico/clasesdocente.html', ctx)
 
 
 def clasesMatricula(request):
@@ -526,16 +548,15 @@ def clasesMatricula(request):
         hora = request.POST.get('hora')
         dias = request.POST.get('dias')
         aula = request.POST.get('aula')
-        
 
         Clase.objects.filter(pk=id).update(asignatura=asignatura, seccion=seccion, hora=hora, dias=dias, aula=aula)
-
 
     q = request.GET.get('q')
 
     if q:
         clases = Clase.objects.filter(asignatura__nombre__contains=q).order_by(
-            'asignatura')  # asignatura es unicamente un id, para acceder al nombre de la asignatura se usa doble guion bajo
+            'asignatura')
+        # asignatura es unicamente un id, para acceder al nombre de la asignatura se usa doble guion bajo
     else:
         clases = Clase.objects.all().order_by('asignatura')
 

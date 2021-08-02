@@ -6,16 +6,18 @@
 
 {% block container %}
     <div class="row">
+        <div class="row d-inline-flex container-fluid">
 
-        <div class="col-3">
         {% if c %}
-            <form action="{% url 'academico:editar_docente' c.id %}" method="POST">
+            <form action="{% url 'academico:editar_docente' c.id %}" method="POST" enctype="multipart/form-data">
         {% else %}
-            <form action="{% url 'academico:docenteAdmin' %}" method="POST">
+            <form action="{% url 'academico:docenteAdmin' %}" method="POST" enctype="multipart/form-data">
         {% endif %}
                 {% csrf_token %}
+        <div class="col-5 d-inline-block me-5">
+                {{ form.as_p }}
                 <div class="mb-2">
-                    <label class="mb-2" for="nombre">Nombre</label>
+                    <label class="mb-auto" for="nombre">Nombre</label>
                     <input type="text" value="{{ c.nombre }}" name="nombre" id="nombre" class="form-control" placeholder="Jose Mario" pattern="(\b[A-Z]\w+)?(\s)?(\b[A-Z]\w+)" required>
                 </div>
                 <div class="mb-2">
@@ -31,8 +33,7 @@
                     <label class="mb-2" for="correo">Correo</label>
                     <input type="email" value="{{ c.correo}}" name="correo" id="correo" class="form-control" placeholder="ejemplo@final.com" required>
                 </div>
-
-                <div class="mb-2">
+            <div class="mb-2">
                     <label class="mb-2" for="genero">Genero</label>
                     <select name="genero" id="genero" class="form-select form-select-sm" aria-selected="{{ c.genero }}">
                         {% if c.genero == '1' %}
@@ -57,6 +58,9 @@
                         {% endif %}
                     </select>
                 </div>
+        </div>
+        <div class="col-5 d-inline-block me-5">
+
                 <div class="mb-2">
                     <label for="dir">Dirección</label>
                     <textarea name="dir" id="dir" class="form-control" required rows="7" style="width:100%" required>{{ c.direccion }}</textarea>
@@ -79,10 +83,11 @@
                     <input type ="submit" class="btn text-white orange" value="Registrar Docente">
                 {% endif %}
                 </div>
-            </form>
         </div>
+            </form>
 
-        <div class="col-9">
+        </div>
+        <div class="col-12">
             {% if messages %}
                 <div class="alert alert-success mb-3">
                     {% for message in messages %}
@@ -90,15 +95,16 @@
                     {% endfor %}
                 </div>
             {% endif %}
-
-            <form action="" method="GET">
+<h5 class="mt-3 mb-3 fw-bold">Docentes {{ docentes.count }}</h5>
+            <form action="{% url 'academico:docenteAdmin' %}" method="GET">
                 <input name="q" value="{{ q | default_if_none:''}}" type="search" class="form-control" placeholder="Buscar docentes">
             </form>
 
-            <h5 class="mt-3 mb-3 fw-bold">Docentes {{ docentes.count }}</h5>
+
             <table class="table table-hover">
                 <thead>
                     <tr>
+                        <th class="textOrangeDark">FOTO</th>
                         <th class="textOrangeDark">NOMBRE</th>
                         <th class="textOrangeDark">APELLIDO</th>
                         <th class="textOrangeDark">TELEFONO</th>
@@ -113,6 +119,10 @@
                 <tbody>
                     {% for c in docentes %}
                         <tr>
+                            {% if c.foto %}
+                            <td><img src="{{ c.foto.url}}" alt="connect" style="max-height:1cm;max-width:1cm"></td>
+                                {% else %}<td>Sin Foto</td>
+                            {% endif %}
                             <td>{{ c.nombre }}</td>
                             <td>{{ c.apellido }}</td>
                             <td>{{ c.telefono }}</td>
@@ -128,7 +138,7 @@
                         </tr>
                     {% empty %}
                         <tr>
-                            <td colspan="8" class="text-danger text-center fw-bold">NO SE ENCONTRARON RESULTADOS</td>
+                            <td colspan="9" class="text-danger text-center fw-bold">NO SE ENCONTRARON RESULTADOS</td>
                         </tr>
                     {% endfor %}
                 </tbody>

@@ -6,7 +6,7 @@
 
 {% block container %}    
     
-    <h1>Bienvenido {{ request.user.alumno.nombre }}</h1>
+    <h1>Bienvenido {{ user }}</h1>
 
  
         <style>
@@ -31,28 +31,93 @@
         
         </style>
 
-        <div id="c" class="cards" >             
-            <div class="card-body" style="width: 20rem;" id="c">
-                <div class="text-center" id="c">
-                    <a href="#" class="card-link"><img src="https://login.sec.unicah.net/imgs/icono_registro.svg" width="50" height="50" color="black"/></a>
-                    <h2><td id="c">Registro</td></h2>
-                </div>
-            </div>
-            <div class="card-body" style="width: 20rem;" id="c">
-                <div class="text-center" id="c">
-                    <a href="#" class="card-link"><img src="https://login.sec.unicah.net/imgs/icono_apps_zoom.svg" width="50" height="50" color="black"/></a>
-                    <h2><td id="c">Aula Virtual</td></h2>
-                </div>
-            </div>
 
-            <div id="c" class="cards" >             
+    {% if user.is_superuser %}
+        <div id="c" class="cards" >
+            <a href="{% url 'academico:alumnos' %}" class="card-link text-decoration-none">
                 <div class="card-body" style="width: 20rem;" id="c">
                     <div class="text-center" id="c">
-                        <a href="#" class="card-link"><img src="https://login.sec.unicah.net/imgs/icono_registro.svg" width="50" height="50" color="black"/></a>
-                        <h2><td id="c">Matricula</td></h2>
+                        <img src="https://login.sec.unicah.net/imgs/icono_registro.svg" width="50" height="50" color="black"/>
+                        <h2>Registrar Alumno</h2>
                     </div>
                 </div>
+            </a>
+            <a href="{% url 'academico:docenteAdmin' %}" class="card-link text-decoration-none">
+            <div class="card-body" style="width: 20rem;" id="c">
+                <div class="text-center" id="c">
+                    <img src="https://login.sec.unicah.net/imgs/icono_apps_zoom.svg" width="50" height="50" color="black"/>
+                    <h2>Registrar Docente</h2>
+                </div>
             </div>
+            </a>
+            <a href="{% url 'academico:alumnos' %}" class="card-link text-decoration-none">
+                <div class="card-body" style="width: 20rem;" id="c">
+                    <div class="text-center" id="c">
+                        <img src="https://login.sec.unicah.net/imgs/icono_registro.svg" width="50" height="50" color="black"/>
+                        <h2>Registrar Asignatura</h2>
+                    </div>
+                </div>
+            </a>
+            <a href="{% url 'academico:clasesAdmin' %}" class="card-link text-decoration-none">
+                <div class="card-body" style="width: 20rem;" id="c">
+                    <div class="text-center" id="c">
+                        <img src="https://login.sec.unicah.net/imgs/icono_registro.svg" width="50" height="50" color="black"/>
+                        <h2>Crear Clase</h2>
+                    </div>
+                </div>
+            </a>
+            <a href="{% url 'academico:ofertaAlumno' %}" class="card-link text-decoration-none">
+                <div class="card-body" style="width: 20rem;" id="c">
+                    <div class="text-center" id="c">
+                        <img src="https://login.sec.unicah.net/imgs/icono_registro.svg" width="50" height="50" color="black"/>
+                        <h2>Oferta academica</h2>
+                    </div>
+                </div>
+            </a>
+        </div>
+    {% else %}
+    <div id="c" class="cards" >
+            <a href="{% url 'academico:alumnos' %}" class="card-link text-decoration-none">
+                <div class="card-body" style="width: 20rem;" id="c">
+                    <div class="text-center" id="c">
+                        <a href="{% url 'academico:alumnos' %}" class="card-link"><img src="https://login.sec.unicah.net/imgs/icono_registro.svg" width="50" height="50" color="black"/></a>
+                        <h2><td id="c">Registrar Alumno</td></h2>
+                    </div>
+                </div>
+            </a>
+            <a href="{% url 'academico:alumnos' %}" class="card-link text-decoration-none">
+            <div class="card-body" style="width: 20rem;" id="c">
+                <div class="text-center" id="c">
+                    <a href="{% url 'academico:alumnos' %}" class="card-link"><img src="https://login.sec.unicah.net/imgs/icono_apps_zoom.svg" width="50" height="50" color="black"/></a>
+                    <h2><td id="c">Registrar Docente</td></h2>
+                </div>
+            </div>
+            </a>
+            <a href="{% url 'academico:alumnos' %}" class="card-link text-decoration-none">
+                <div class="card-body" style="width: 20rem;" id="c">
+                    <div class="text-center" id="c">
+                        <a href="{% url 'academico:alumnos' %}" class="card-link"><img src="https://login.sec.unicah.net/imgs/icono_registro.svg" width="50" height="50" color="black"/></a>
+                        <h2><td id="c">Registrar Asignatura</td></h2>
+                    </div>
+                </div>
+            </a>
+            <a href="{% url 'academico:alumnos' %}" class="card-link text-decoration-none">
+                <div class="card-body" style="width: 20rem;" id="c">
+                    <div class="text-center" id="c">
+                        <img src="https://login.sec.unicah.net/imgs/icono_registro.svg" width="50" height="50" color="black"/>
+                        <h2><td id="c">Crear Clase</td></h2>
+                    </div>
+                </div>
+            </a>
+            <a href="{% url 'academico:alumnos' %}" class="card-link text-decoration-none">
+                <div class="card-body" style="width: 20rem;" id="c">
+                    <div class="text-center" id="c">
+                        <a href="{% url 'academico:alumnos' %}" class="card-link"><img src="https://login.sec.unicah.net/imgs/icono_registro.svg" width="50" height="50" color="black"/></a>
+                        <h2><td id="c">Oferta academica</td></h2>
+                    </div>
+                </div>
+            </a>
         </div>
 
+    {% endif %}
 {% endblock %}
