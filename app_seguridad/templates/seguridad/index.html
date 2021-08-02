@@ -56,7 +56,7 @@
         <main class="form-signin">
             <form action="{% url 'login_view' %}" method="post">
                 {% csrf_token %}
-                <img class="mb-4" src="/docs/5.0/assets/brand/bootstrap-logo.svg" alt="" width="72" height="57">
+                <img class="mb-4" src="{% static 'seguridad/img/login.svg' %}"  alt="Icon made by Pixel perfect from www.flaticon.com" width="100" height="100">
                 <h1 class="h3 mb-3 fw-normal">Inicia sesión aquí</h1>
 
                 <div class="form-floating">

@@ -5,13 +5,8 @@
 {% endblock %}
 
 {% block container %}
-{% if c %}
-            <form action="{% url 'editar_clase' c.id %}" method="POST">
-        {% else %}
-            <form action="{% url 'clasesAdmin' %}" method="POST">
-        {% endif %}
-                {% csrf_token %}
-{% for c in clases %} 
+
+
 <style>
 
 .cards{
@@ -166,7 +161,8 @@
 }
 </style>
 
-<div class="cards" id="c">
+<br class="cards container-fluid" id="c">
+    {% for c in m %}
                 <div class="card" id="c">
                     <div class="card-titulo" id="c">{{ c.asignatura }}</div>
                    <hr>
@@ -193,6 +189,7 @@
                         </div>
                         <div class="card-box-icono"></div>
                     </div>
+
                   <!--  <div class="card-dias">
                         
                            <div class="card-dias-dia activo">L</div>
@@ -204,10 +201,11 @@
                            <div class="card-dias-dia">D</div>
                         
                     </div>-->
-                </div>
+                </div></br>
+{% endfor %}
             </div>
-                           
-    {% endfor %}           
+
+
      
 {% endblock %}
 

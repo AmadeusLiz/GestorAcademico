@@ -14,6 +14,7 @@ def index(request):
 
 
 # ---------------------------------------------------------------ALUMNOS-------------------------------------------------------------------------
+@login_required()
 def alumnos(request):
     if request.user.is_superuser:
         if request.method == 'POST':
@@ -49,7 +50,7 @@ def alumnos(request):
     else:
         return redirect(reverse('academico:index'))
 
-
+@login_required()
 def eliminar_alumnos(request, id):
     if request.user.is_superuser:
         messages.add_message(request, messages.INFO, f'El alumno se ha eliminado éxitosamente')
@@ -58,7 +59,7 @@ def eliminar_alumnos(request, id):
     else:
         return redirect(reverse('index'))
 
-
+@login_required()
 def editar_alumnos(request, id):
     if request.user.is_superuser:
         if request.method == 'POST':
@@ -93,6 +94,7 @@ def editar_alumnos(request, id):
 
 
 # ---------------------------------------------------------------CLASES-------------------------------------------------------------------------
+@login_required()
 def clasesAdmin(request):
     if request.user.is_superuser:
         asignaturas = Asignatura.objects.all().order_by('nombre')
@@ -130,7 +132,7 @@ def clasesAdmin(request):
     else:
         return redirect(reverse('academico:index'))
 
-
+@login_required()
 def editar_clase(request, id):
     if request.user.is_superuser:
         if request.method == 'POST':
@@ -161,7 +163,7 @@ def editar_clase(request, id):
     else:
         return redirect(reverse('academico:index'))
 
-
+@login_required()
 def eliminar_clase(request, id):
     messages.add_message(request, messages.INFO, f'La clase se ha eliminado éxitosamente')
     Clase.objects.get(pk=id).delete()
@@ -169,6 +171,7 @@ def eliminar_clase(request, id):
 
 
 # ---------------------------------------------------------------OFERTA PERIODOS-------------------------------------------------------------------------
+@login_required()
 def periodos_admin(request):
     periodos = OfertaAcademica.objects.all().order_by('-anio', '-periodo')
 
@@ -179,13 +182,13 @@ def periodos_admin(request):
 
     return render(request, 'academico/periodosAdmin.html', ctx)
 
-
+@login_required()
 def eliminar_periodo(request, id):
     messages.add_message(request, messages.INFO, f'El periodo se ha eliminado éxitosamente')
     OfertaAcademica.objects.get(pk=id).delete()
     return redirect(reverse('academico:periodosAdmin'))
 
-
+@login_required()
 def editar_periodo(request, id):
     periodo = get_object_or_404(OfertaAcademica, pk=id)
     clases = Clase.objects.all().order_by('asignatura')
@@ -224,7 +227,7 @@ def editar_periodo(request, id):
 
     return render(request, 'academico/ofertaAdmin.html', ctx)
 
-
+@login_required()
 def agregar_periodo(request):
     if request.method == 'POST':
         anio = request.POST.get('anio')
@@ -548,30 +551,16 @@ def clasesdocente(request):
 
 
 def clasesMatricula(request):
-    asignaturas = Asignatura.objects.all().order_by('nombre')
+    if request.user.groups.exists():
+        if request.user.groups.all()[0].name == 'Alumno':
+            datos = Clase.objects.all().filter(alumnos__user_id=request.user.id)
+        else:
+            datos = Clase.objects.all().filter(docente__user_id=request.user.id)
 
-    if request.method == 'POST':
-        asignatura = get_object_or_404(Asignatura, pk=request.POST.get('asignatura'))
-        seccion = request.POST.get('seccion')
-        hora = request.POST.get('hora')
-        dias = request.POST.get('dias')
-        aula = request.POST.get('aula')
-
-        Clase.objects.filter(pk=id).update(asignatura=asignatura, seccion=seccion, hora=hora, dias=dias, aula=aula)
-
-    q = request.GET.get('q')
-
-    if q:
-        clases = Clase.objects.filter(asignatura__nombre__contains=q).order_by(
-            'asignatura')
-        # asignatura es unicamente un id, para acceder al nombre de la asignatura se usa doble guion bajo
-    else:
-        clases = Clase.objects.all().order_by('asignatura')
-
+    print(datos)
     ctx = {
-        'activo': 'clases',
-        'clases': clases,
-        'asignaturas': asignaturas,
+        'activo': 'notas',
+        'm': datos,
     }
 
     return render(request, 'academico/clasesMatriculadas.html', ctx)
