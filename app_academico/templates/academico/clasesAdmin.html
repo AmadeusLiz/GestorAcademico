@@ -40,6 +40,35 @@
                 <div class="mb-2">
                     <label class="mb-2" for="dias">Dias</label>
                     <input type="text"  value="{{ c.dias }}" name="dias" id="dias" class="form-control" placeholder="L, M, X, J, V" pattern="^(?!\D)\d+" required>
+                     <div class="row">
+        <div id="content" class="col-lg-12">
+            <form action="index.php" method="post">
+                <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                    <label class="btn btn-primary">
+                        <input type="checkbox" name="countries[]" value="L" autocomplete="off">L
+                    </label>
+                    <label class="btn btn-primary">
+                        <input type="checkbox" name="countries[]" value="M" autocomplete="off">M
+                    </label>
+                    <label class="btn btn-primary">
+                        <input type="checkbox" name="countries[]" value="Portugal" autocomplete="off">M
+                    </label>
+                    <label class="btn btn-primary">
+                        <input type="checkbox" name="countries[]" value="Italia" autocomplete="off">J
+                    </label>
+                    <label class="btn btn-primary">
+                        <input type="checkbox" name="countries[]" value="Alemania" autocomplete="off">V
+                    </label>
+                    <label class="btn btn-primary">
+                        <input type="checkbox" name="countries[]" value="Alemania" autocomplete="off">S
+                    </label>
+                    <label class="btn btn-primary">
+                        <input type="checkbox" name="countries[]" value="Alemania" autocomplete="off">D
+                    </label>
+                </div>
+           </form>
+        </div>
+
                 </div>
 
                 <div class="mb-2">
