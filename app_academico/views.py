@@ -525,8 +525,6 @@ def editar_perfil_alumnos(request):
 
                 # messages.add_message(request, messages.INFO, f'Tu perfil{User.alumnos.nombre} se ha actualizado éxitosamente')
 
-            q = request.GET.get('q')
-
             # GET
             ctx = {
                 'activo': 'alumnos',
