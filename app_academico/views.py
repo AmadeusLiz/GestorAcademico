@@ -313,7 +313,6 @@ def editar_asignatura(request, id):
 
 def docente_admin(request):
     if request.user.is_superuser:
-        print(Docente.objects.all().order_by('id').first())
         if request.method == 'POST':
 
             Docente.objects.create(nombre=request.POST.get('nombre'), apellido=request.POST.get('apellido'),
@@ -430,7 +429,6 @@ def editar_nota(request, id):
                                                                 parcial2=request.POST.get('parcial2'),
                                                                 parcial3=request.POST.get('parcial3'))
                         messages.add_message(request, messages.SUCCESS, f'La nota se ha actualizado éxitosamente')
-                        print('EXITO')
                     else:
                         messages.add_message(request, messages.ERROR,
                                              f'No puede haber notas menores a 0 ni mayores a 100')
@@ -522,12 +520,20 @@ def editar_perfil_alumnos(request):
             if request.method == 'POST':
                 correo = request.POST.get('correo')
                 telefono = request.POST.get('telefono')
+                direccion= request.POST.get('direccion')
 
-                Alumno.objects.all().filter(user=request.user.id).update(correo=correo, telefono=telefono)
-                
-                form = FormAlumno(request.POST,request.FILES,instance=Alumno.objects.all().filter(pk=request.user.alumno.id).first())
-                form.save()
-                # messages.add_message(request, messages.INFO, f'Tu perfil{User.alumnos.nombre} se ha actualizado éxitosamente')
+                if len(telefono) >= 8:
+                    Alumno.objects.all().filter(user=request.user.id).update(correo=correo, telefono=telefono, direccion=direccion)
+            
+                    form = FormAlumno(request.POST,request.FILES,instance=Alumno.objects.all().filter(pk=request.user.alumno.id).first())
+                    form.save()
+                    messages.add_message(request, messages.INFO, f'Datos actualizados corectamente')
+                    
+                else:
+                    pass
+                    messages.add_message(request, messages.INFO, f'Ingrese corectamente su telefono')
+                    # debe ser mayor a 8
+                    # messages.add_message(request, messages.INFO, f'Tu perfil{User.alumnos.nombre} se ha actualizado éxitosamente')
                
             # GET
             ctx = {
@@ -544,11 +550,19 @@ def editar_perfil_alumnos(request):
             if request.method == 'POST':
                 correo = request.POST.get('correo')
                 telefono = request.POST.get('telefono')
-
-                Docente.objects.all().filter(user=request.user.id).update(correo=correo, telefono=telefono)
+                direccion= request.POST.get('direccion')
                 
-                form = ImageForm(request.POST,request.FILES,instance=Docente.objects.all().filter(pk=request.user.docente.id).first())
-                form.save()
+                if len(telefono) >= 8:
+                    Docente.objects.all().filter(user=request.user.id).update(correo=correo, telefono=telefono, direccion=direccion)
+                    form = ImageForm(request.POST,request.FILES,instance=Docente.objects.all().filter(pk=request.user.docente.id).first())
+                    form.save()
+                    messages.add_message(request, messages.INFO, f'Datos actualizados corectamente')
+                
+                else:
+                    messages.add_message(request, messages.INFO, f'Ingrese corectamente su telefono')
+                    pass
+                    
+
                 # messages.add_message(request, messages.INFO, f'Tu perfil{User.alumnos.nombre} se ha actualizado éxitosamente')
           
             # GET
@@ -568,22 +582,22 @@ def clasesdocente(request):
     clases = Clase.objects.all().filter(docente__user=request.user.id)
 
     if request.method == 'POST':
-        finalizada = request.POST.get('finalizada')
+        for c in clases:
+            chk = request.POST.get(f'chk-{c.id}')   
+            if chk:
+                Clase.objects.filter(pk=c.id).update(finalizada=True)
+            else:
+                Clase.objects.filter(pk=c.id).update(finalizada=False)
 
-        if finalizada:
-            final= True
-        else:
-            final = False
-        
-        Clase.objects.all().filter(pk=finalizada).update(finalizada=final)
+            
 
-        #Clase.objects.create( finalizada=finalizada)   
+    clases = Clase.objects.all().filter(docente__user=request.user.id)
+    messages.add_message(request, messages.INFO, f'Datos actualizados corectamente')
 
     ctx = {
         'clases': clases
-        
-
     }
+
 
     return render(request, 'academico/clasesdocente.html', ctx)
 
@@ -595,7 +609,6 @@ def clasesMatricula(request):
         else:
             datos = Clase.objects.all().filter(docente__user_id=request.user.id)
 
-    print(datos)
     ctx = {
         'activo': 'notas',
         'm': datos,

@@ -6,8 +6,15 @@
 
 {% block container %}
     <div class="col-12">
-
+        {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-{% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}danger{%else%}success{% endif %} mb-3">
+                {{ message|safe }}  
+            </div>
+            {% endfor %}
+        {% endif %}
         <form action="{% url 'academico:clasesdocente' %}" method="POST">
+            {% csrf_token %}
             <table class="table table-hover">
                 <thead>
                     <tr>
@@ -16,7 +23,7 @@
                         <th>HORA</th>
                         <th>DÍAS</th>
                         <th>AULA</th>
-                        <th>Finalizada</th>
+                        <th class="text-center">FINALIZADA</th>
 
                     </tr>
                 </thead>
@@ -29,39 +36,39 @@
                             <td>{{ c.dias}}</td>
                             <td>{{ c.aula}}</td>
                             <td class="text-center">
-                            {% comment %} <div class="form-check mb-2 mt-2" style="padding-left: 5.5em;">
-                                <input class="form-check-input" type="checkbox" value="{{c.finalizada}}" name="estado" id="estado">
-                            </div> {% endcomment %}
-
-                            <div class="form-check mb-2 mt-2" style="padding-left: 5.5em;">
-                                <input class="form-check-input" type="checkbox" name="finalizada" value="{{c.id}}" id="finalizada">
-                                <label class="form-check-label fw-bold" for="finalizada">
-                                    Estado
-                                </label>
-                            </div>    
-                            
+                                <input class="form-check-input" type="checkbox" name="chk-{{c.id}}" value="{{c.id}}" {% if c.finalizada %}checked{% endif %}>
+                            </td>    
+                        </tr>
+                        
+                        <!-- AGREGAR EMPTY-->
+                        {% empty %}
+                        <tr>
+                            <td colspan="8" class="text-danger text-center fw-bold">NO HAY CLASES DISPONIBLES</td>
                         </tr>
                     
                     {% endfor %}
                 </tbody> 
             </table>
-            {% csrf_token %}
             <div class="container text-center">
-                
                 <div class="row-align">
-                    <button type="submit" class="btn btn-block text-white me-3 orange" style="background-color: #ff8a50" value="Guardar">AÑADIR</button>
-                                        
+                    <button type="submit" class="btn btn-block text-white me-3 orange" style="background-color: #ff8a50" value="Guardar">ACTUALIZAR</button>
                 </div>
             </div>
+
         </form>
-
-
-
-
-
-
     </div>
-
-
-   
 {% endblock %}
+
+{% block js %}
+    <script>   
+        $(function () {
+                setTimeout(() => {
+                $('.alert').slideUp(function () { 
+                    $(this).remove();
+                });
+            }, 3000)
+        });
+
+      
+    </script> 
+{% endblock  %}

@@ -9,7 +9,14 @@
                 <!-- formulario -->
                 <div class="text-center">
                     <div class="col-md-9 mx-auto mb-5" style="width: 200px;">
-                            <form action="{% url 'academico:editar_perfil_alumnos' %}" method="POST" enctype="multipart/form-data">
+                        {% if messages %}
+                        <div class="alert alert-success mb-2">
+                        {% for message in messages %}
+                            {{ message }}
+                        {% endfor %}
+                        </div>
+                        {% endif %}
+                        <form action="{% url 'academico:editar_perfil_alumnos' %}" method="POST" enctype="multipart/form-data">
                             {% if user.alumno.foto  %}
                             <img  width="50%" height="50%" src="{{ user.alumno.foto.url }}" required autofocus/>
                             {% else %}
@@ -51,7 +58,7 @@
                             </div>
 
                             <div class="mb-2">
-                                <input type="submit" class="btn btn-success" value="Actualizar Perfil">
+                                <input type="submit" class="btn text-white orange" value="Actualizar Perfil">
                             </div>
 
                         </form>
@@ -62,6 +69,13 @@
                 <!-- formulario -->
                 <div class="text-center">
                     <div class="col-md-9 mx-auto mb-5" style="width: 200px;">
+                            {% if messages %}
+                            <div class="alert alert-success mb-2">
+                            {% for message in messages %}
+                                {{ message }}
+                            {% endfor %}
+                            </div>
+                            {% endif %}
                             <form action="{% url 'academico:editar_perfil_alumnos' %}" method="POST" enctype="multipart/form-data">
                             {% csrf_token %}
                             {% if user.docente.foto  %}
@@ -104,7 +118,7 @@
                             </div>
 
                             <div class="mb-2">
-                                <input type="submit" class="btn btn-success" value="Actualizar Perfil">
+                                <input type="submit" class="btn text-white orange" value="Actualizar Perfil">
                             </div>
 
                         </form>
@@ -121,6 +135,18 @@
 {% endblock  %} 
 
 {% block js %}
+
+<script>
+    $(function () {
+        
+        setTimeout(() => {
+            $('.alert').slideUp(function () {
+                $(this).remove();
+            });
+        }, 3000)
+
+    });
+</script>
     
 {% endblock  %}
 
