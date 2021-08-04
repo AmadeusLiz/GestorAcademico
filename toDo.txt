@@ -1,32 +1,32 @@
 NO SUBIR LOS ARCHIVOS .PYC NI LA DBSQLITE
 LINKS PARA DOCENTES
 Crear clase y oferta, no van
-Gestionar clase -> Clases docente http://127.0.0.1:8000/academico/clasesdocente/
+Gestionar clase -> Clases docente http://127.0.0.1:8000/academico/clasesdocente/✅
 
 NO SUBIR LOS ARCHIVOS .PYC NI LA DBSQLITE
 LINKS PARA ALUMNOS
-BOLETA DE CLASES -> http://127.0.0.1:8000/academico/boleta_alumno/
+BOLETA DE CLASES -> http://127.0.0.1:8000/academico/boleta_alumno/✅
 Crear clase no va
-Texto oferta academica cambiar a "Matricula"
+Texto oferta academica cambiar a "Matricula"✅
 
 NO SUBIR LOS ARCHIVOS .PYC NI LA DBSQLITE
 LINKS PARA ADMIN
-OFERTA ACADEMICA -> http://127.0.0.1:8000/academico/periodos_admin/
+OFERTA ACADEMICA -> http://127.0.0.1:8000/academico/periodos_admin/✅
 
 NO SUBIR LOS ARCHIVOS .PYC NI LA DBSQLITE
 ***CAMBIOS**
-Diseños de inicio que no salgan hacia abajo sino 3 cards en cada linea (Esther)
-Modulo de clases matriculadas, que cards salgan 3 cards en cada linea (Josue)
+Diseños de inicio que no salgan hacia abajo sino 3 cards en cada linea (Esther)✅
+Modulo de clases matriculadas, que cards salgan 3 cards en cada linea (Josue)✅
 Cuando no hay clases matriculadas que me muestre un msj diciendo que no hay ninguna (Josue)
-Que las eccion de clases matriculadas se meustre en una sola linea (Josue)
-Pantalla para editar los datos del alumno que se vea igual a la de editar de los docentes (Josue)
-Al editar las notas del alumno que solo me salgan abajo los alumnos de esa clase no todos (Eduardo)
-En clases, añadir el campo Room (dato no obligatorio) (Kenia)
+Que las eccion de clases matriculadas se meustre en una sola linea (Josue)✅
+Pantalla para editar los datos del alumno que se vea igual a la de editar de los docentes (Josue)✅
+Al editar las notas del alumno que solo me salgan abajo los alumnos de esa clase no todos (Eduardo)✅
+En clases, añadir el campo Room (dato no obligatorio) (Kenia)✅
 Segun porcentaje permitir agregar docente (Lizzie)
 Verificar mostrar mensaje cuando no hay oferta academica actualmente (Lizzie)
-Cambiar dias de clase a checkboxs (Lizzie)
-Modificar que me permita quitar todas mis clases matriculadas (Lizzie)
-Arreglar entrada a clases_docente, casilla de finalizar clase(Cristian)
+Cambiar dias de clase a checkboxs (Lizzie)✅
+Modificar que me permita quitar todas mis clases matriculadas (Lizzie)✅
+Arreglar entrada a clases_docente, casilla de finalizar clase(Cristian)✅
 Verificar que si el alumno no tiene clases matriculadas actualmente, muestre un mensaje (Kenia) (Boleta Alumno)
 
 NO SUBIR LOS ARCHIVOS .PYC NI LA DBSQLITE

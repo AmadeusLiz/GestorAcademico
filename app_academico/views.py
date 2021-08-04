@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.http import JsonResponse
 from django.urls import reverse
 from django.core import serializers  # https://docs.djangoproject.com/en/3.2/topics/serialization/
-from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib.auth.decorators import login_required
 from .forms import ImageForm, FormAlumno
 
 
@@ -73,6 +73,8 @@ def editar_alumnos(request, id):
             Alumno.objects.filter(pk=id).update(nombre=nombre, apellido=apellido, correo=correo, telefono=telefono,
                                                 fecha_nacimiento=fecha_nacimiento, direccion=request.POST.get('dir'),
                                                 facultad=facultad)
+            form = FormAlumno(request.POST, request.FILES, instance=Alumno.objects.all().filter(pk=id).first())
+            form.save()
             messages.add_message(request, messages.INFO, f'El alumno {nombre} se ha actualizado éxitosamente')
 
         q = request.GET.get('q')
@@ -85,7 +87,8 @@ def editar_alumnos(request, id):
         ctx = {
             'activo': 'alumnos',
             'alumnos': alumnos,
-            'alumno': get_object_or_404(Alumno, pk=id)
+            'alumno': get_object_or_404(Alumno, pk=id),
+            'form': FormAlumno(),
         }
 
         return render(request, 'academico/alumnos.html', ctx)
@@ -389,7 +392,9 @@ def editar_docente(request, id):
             Docente.objects.filter(pk=id).update(nombre=nombre, apellido=apellido, telefono=telefono, correo=correo,
                                                  genero=genero, fecha_nacimiento=fecha_nacimiento,
                                                  fecha_contratacion=fecha_contratacion, direccion=dir)
-
+            form = ImageForm(request.POST, request.FILES,
+                             instance=Docente.objects.all().filter(pk=id).first())
+            form.save()
             messages.add_message(request, messages.INFO, f'El docente {nombre} se ha actualizado éxitosamente')
 
         if request.GET.get('q'):
@@ -402,6 +407,7 @@ def editar_docente(request, id):
             'activo': 'docentes',
             'docentes': docentes,
             'c': docente,
+            'form': ImageForm()
         }
 
         return render(request, 'academico/docenteAdmin.html', ctx)
@@ -645,6 +651,7 @@ def clasesMatricula(request):
     ctx = {
         'activo': 'notas',
         'm': datos,
+
     }
 
     return render(request, 'academico/clasesMatriculadas.html', ctx)
