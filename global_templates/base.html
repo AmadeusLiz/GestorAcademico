@@ -1,6 +1,6 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,22 +13,12 @@
 <body>
     <nav class="orange navbar navbar-expand-lg navbar-light ">
         <div class="container">
-          <a class="navbar-brand" href="/">Navbar</a>
+          <a class="navbar-brand" href="/"><img src="{% static 'seguridad/img/mainWhite.png' %}" alt="TEACH.IT LOGO" width="120" height="40"></a>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
           <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
             <div class="navbar-nav">
-              <a class="nav-link {% if activo == 'alumnos' %}active{% endif %}" href="{% url 'academico:alumnos' %}">Alumnos</a>
-              <a class="nav-link {% if activo == 'clases' %} active {% endif %}" href="{% url 'academico:clasesAdmin' %}">Clases</a>
-              <a class="nav-link" href="{% url 'academico:asignaturas' %}">Asignaturas</a>
-                <a class="nav-link {% if activo == 'docentes' %} active {% endif %}" href="{% url 'academico:docenteAdmin' %}">Docentes</a>
-              <a class="nav-link {% if activo == 'periodos' %} active {% endif %}" href="{% url 'academico:periodosAdmin' %}">Periodos</a>
-              <a class="nav-link {% if activo == 'oferta' %} active {% endif %}">Oferta Academica</a>
-              <a class="nav-link {% if activo == 'matricula' %} active {% endif %}" href="{% url 'academico:ofertaAlumno' %}">Matricula</a>
-              <a class="nav-link {% if activo == 'boleta' %} active {% endif %}" href="{% url 'academico:boletaAlumno' %}">Boleta Alumno</a>
-              <a class="nav-link" href="{% url 'academico:editar_perfil_alumnos' %}">Perfil</a>
-              <a class="nav-link {% if activo == 'claseses' %} active {% endif %}" href="{% url 'academico:clasesdocente' %}">Clases Docente</a>
               <a class="nav-link"href="{% url 'logout_view' %}" >Cerrar Sesión</a>
             </div>
           </div>
