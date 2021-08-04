@@ -100,7 +100,7 @@
                         </div>
                     </div>
                 </a>
-                <a href="{% url 'academico:ofertaAlumno' %}" class="card-link text-decoration-none">
+                <a href="{% url 'academico:periodosAdmin' %}" class="card-link text-decoration-none">
                     <div class="card" style="width: 20rem;" id="c">
                         <div class="text-center" id="c">
                             <img src="https://login.sec.unicah.net/imgs/icono_registro.svg" width="50" height="50" color="black"/>
@@ -112,7 +112,7 @@
             
         </div>
         
-    {% else %}
+    {% elif "Docente" in user.groups.all.first.name %}
     <div class="row">
         <h1>Bienvenido {{ user }}</h1>
         <div class="container">
@@ -144,11 +144,59 @@
         </div>
 
         <div class="container">
-            <a href="{% url 'academico:clasesAdmin' %}" class="card-link text-decoration-none">
+            <a href="{% url 'academico:clasesdocente' %}" class="card-link text-decoration-none">
                 <div class="card" style="width: 20rem;" id="c">
                     <div class="text-center" id="c">
                         <img src="https://login.sec.unicah.net/imgs/icono_registro.svg" width="50" height="50" color="black"/>
-                        <h2>Crear Clase</h2>
+                        <h2>Gestionar Clase</h2>
+                    </div>
+                </div>
+            </a>
+
+
+        </div>
+            
+            
+
+
+    </div>
+        {% elif "Alumno" in user.groups.all.first.name %}
+    <div class="row">
+        <h1>Bienvenido {{ user }}</h1>
+        <div class="container">
+            <a href="{% url 'academico:notas' %}" class="card-link text-decoration-none">
+                <div class="card" style="width: 20rem;" id="c">
+                    <div class="text-center" id="c">
+                        <img src="https://login.sec.unicah.net/imgs/icono_registro.svg" width="50" height="50" color="black"/>
+                        <h2>Notas</h2>
+                    </div>
+                </div>
+            </a>
+            <a href="{% url 'academico:editar_perfil_alumnos' %}" class="card-link text-decoration-none">
+            <div class="card" style="width: 20rem;" id="c">
+                <div class="text-center" id="c">
+                    <img src="https://login.sec.unicah.net/imgs/icono_apps_zoom.svg" width="50" height="50" color="black"/>
+                    <h2>Perfil</h2>
+                </div>
+            </div>
+            </a>
+            <a href="{% url 'academico:clasesMatricula' %}" class="card-link text-decoration-none">
+                <div class="card" style="width: 20rem;" id="c">
+                    <div class="text-center" id="c">
+                        <img src="https://login.sec.unicah.net/imgs/icono_registro.svg" width="50" height="50" color="black"/>
+                        <h2>Clases</h2>
+                    </div>
+                </div>
+            </a>
+
+        </div>
+
+        <div class="container">
+            <a href="{% url 'academico:boletaAlumno' %}" class="card-link text-decoration-none">
+                <div class="card" style="width: 20rem;" id="c">
+                    <div class="text-center" id="c">
+                        <img src="https://login.sec.unicah.net/imgs/icono_registro.svg" width="50" height="50" color="black"/>
+                        <h2>Boleta</h2>
                     </div>
                 </div>
             </a>
@@ -156,14 +204,14 @@
                 <div class="card" style="width: 20rem;" id="c">
                     <div class="text-center" id="c">
                         <img src="https://login.sec.unicah.net/imgs/icono_registro.svg" width="50" height="50" color="black"/>
-                        <h2>Oferta Academica</h2>
+                        <h2>Matricula</h2>
                     </div>
                 </div>
             </a>
 
         </div>
-            
-            
+
+
 
 
     </div>
