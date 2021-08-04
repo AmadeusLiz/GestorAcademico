@@ -436,10 +436,12 @@ def editar_nota(request, id):
                                              f'No puede haber notas menores a 0 ni mayores a 100')
 
                 alumno = get_object_or_404(NotasClase, pk=id)
+                datos = NotasClase.objects.all().filter(clase=alumno.clase,
+                                                        clase__docente__user_id=request.user.id)
             except:
                 pass
 
-            datos = NotasClase.objects.all().filter(clase__docente__user_id=request.user.id)
+
 
             ctx = {
                 'activo': 'notas',
