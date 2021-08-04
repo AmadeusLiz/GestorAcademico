@@ -4,89 +4,120 @@
     Menu
 {% endblock %}
 
-{% block container %}    
-    
-    <h1>Bienvenido {{ user }}</h1>
-
- 
-        <style>
-        #c{
-                margin: 0 auto;
-                float: none;
-                margin-bottom: 10px;
+{% block container %} 
+    <style>
+        
+        .container{
+            width: 100%;
+            display: flex;
+            max-width: 1100px;
         }
 
-        a .card-link{
-        width:2000px;
+        .card{
+            width: 100%;
+            margin: 10px;
+            border-radius: 10px;
+            overflow: hidden;
+            background: orange;
+            box-shadow: 0px 1px 10px rgba(0,0,0, 0.2);
+            cursor: default;
+            height: 170px;
+        }
+
+        .card:hover{
+            box-shadow: 5px 5px 20px rgba(0,0,0, 0.4);
+            transform: translateY(-3%);
         }
 
         h2 {
         color: white;
+        margin-top: 10px;
         }
 
-        .card-body {
-        background-color: orange;
-        border-radius: 10px;
+        img{
+            margin-top: 20px;
+        }
+
+        .h1{
+            width: 100%;
+            margin: 5px;
+            float: left;
+        }
+
+        .card .contenido{
+            padding: 15px;
+            text-align: center;
         }
         
-        </style>
+    </style>
 
 
     {% if user.is_superuser %}
-        <div id="c" class="cards d-block" >
-        <a href="/admin/" class="card-link text-decoration-none">
-                <div class="card-body" style="width: 20rem;" id="c">
-                    <div class="text-center" id="c">
-                        <img src="https://login.sec.unicah.net/imgs/icono_registro.svg" width="50" height="50" color="black"/>
-                        <h2>Sitio de administración</h2>
+        <div class="row">
+            <h1>Bienvenido {{ user }}</h1>
+            <div class="container">
+                <a href="/admin/" class="card-link text-decoration-none">
+                    <div class="card" style="width: 20rem;" id="c">
+                        <div class="text-center" id="c">
+                            <img src="https://login.sec.unicah.net/imgs/icono_registro.svg" width="50" height="50" color="black"/>
+                            <h2>Sitio de Administración</h2>
+                        </div>
                     </div>
-                </div>
-            </a>
-            <a href="{% url 'academico:alumnos' %}" class="card-link text-decoration-none">
-                <div class="card-body" style="width: 20rem;" id="c">
-                    <div class="text-center" id="c">
-                        <img src="https://login.sec.unicah.net/imgs/icono_registro.svg" width="50" height="50" color="black"/>
-                        <h2>Registrar Alumno</h2>
+                </a>
+                    <a href="{% url 'academico:alumnos' %}" class="card-link text-decoration-none">
+                        <div class="card" style="width: 20rem;" id="c">
+                            <div class="text-center" id="c">
+                                <img src="https://login.sec.unicah.net/imgs/icono_registro.svg" width="50" height="50" color="black"/>
+                                <h2>Registrar Alumno</h2>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="{% url 'academico:docenteAdmin' %}" class="card-link text-decoration-none">
+                    <div class="card" style="width: 20rem;" id="c">
+                        <div class="text-center" id="c">
+                            <img src="https://login.sec.unicah.net/imgs/icono_apps_zoom.svg" width="50" height="50" color="black"/>
+                            <h2>Registrar Docente</h2>
+                        </div>
                     </div>
-                </div>
-            </a>
-            <a href="{% url 'academico:docenteAdmin' %}" class="card-link text-decoration-none">
-            <div class="card-body" style="width: 20rem;" id="c">
-                <div class="text-center" id="c">
-                    <img src="https://login.sec.unicah.net/imgs/icono_apps_zoom.svg" width="50" height="50" color="black"/>
-                    <h2>Registrar Docente</h2>
-                </div>
+                </a>
+
             </div>
-            </a>
-            <a href="{% url 'academico:asignaturas' %}" class="card-link text-decoration-none">
-                <div class="card-body" style="width: 20rem;" id="c">
-                    <div class="text-center" id="c">
-                        <img src="https://login.sec.unicah.net/imgs/icono_registro.svg" width="50" height="50" color="black"/>
-                        <h2>Registrar Asignatura</h2>
+
+            <div class="container">
+                <a href="{% url 'academico:asignaturas' %}" class="card-link text-decoration-none">
+                    <div class="card" style="width: 20rem;" id="c">
+                        <div class="text-center" id="c">
+                            <img src="https://login.sec.unicah.net/imgs/icono_registro.svg" width="50" height="50" color="black"/>
+                            <h2>Registrar Asignatura</h2>
+                        </div>
                     </div>
-                </div>
-            </a>
-            <a href="{% url 'academico:clasesAdmin' %}" class="card-link text-decoration-none">
-                <div class="card-body" style="width: 20rem;" id="c">
-                    <div class="text-center" id="c">
-                        <img src="https://login.sec.unicah.net/imgs/icono_registro.svg" width="50" height="50" color="black"/>
-                        <h2>Crear Clase</h2>
+                </a>
+                <a href="{% url 'academico:clasesAdmin' %}" class="card-link text-decoration-none">
+                    <div class="card" style="width: 20rem;" id="c">
+                        <div class="text-center" id="c">
+                            <img src="https://login.sec.unicah.net/imgs/icono_registro.svg" width="50" height="50" color="black"/>
+                            <h2>Crear Clase</h2>
+                        </div>
                     </div>
-                </div>
-            </a>
-            <a href="{% url 'academico:ofertaAlumno' %}" class="card-link text-decoration-none">
-                <div class="card-body" style="width: 20rem;" id="c">
-                    <div class="text-center" id="c">
-                        <img src="https://login.sec.unicah.net/imgs/icono_registro.svg" width="50" height="50" color="black"/>
-                        <h2>Oferta academica</h2>
+                </a>
+                <a href="{% url 'academico:ofertaAlumno' %}" class="card-link text-decoration-none">
+                    <div class="card" style="width: 20rem;" id="c">
+                        <div class="text-center" id="c">
+                            <img src="https://login.sec.unicah.net/imgs/icono_registro.svg" width="50" height="50" color="black"/>
+                            <h2>Oferta Academica</h2>
+                        </div>
                     </div>
-                </div>
-            </a>
+                </a>
+            </div>
+            
         </div>
+        
     {% else %}
-    <div id="c" class="cards d-inline-block container-fluid" >
+    <div class="row">
+        <h1>Bienvenido {{ user }}</h1>
+        <div class="container">
             <a href="{% url 'academico:notas' %}" class="card-link text-decoration-none">
-                <div class="card-body" style="width: 20rem;" id="c">
+                <div class="card" style="width: 20rem;" id="c">
                     <div class="text-center" id="c">
                         <img src="https://login.sec.unicah.net/imgs/icono_registro.svg" width="50" height="50" color="black"/>
                         <h2>Notas</h2>
@@ -94,7 +125,7 @@
                 </div>
             </a>
             <a href="{% url 'academico:editar_perfil_alumnos' %}" class="card-link text-decoration-none">
-            <div class="card-body" style="width: 20rem;" id="c">
+            <div class="card" style="width: 20rem;" id="c">
                 <div class="text-center" id="c">
                     <img src="https://login.sec.unicah.net/imgs/icono_apps_zoom.svg" width="50" height="50" color="black"/>
                     <h2>Perfil</h2>
@@ -102,15 +133,19 @@
             </div>
             </a>
             <a href="{% url 'academico:clasesMatricula' %}" class="card-link text-decoration-none">
-                <div class="card-body" style="width: 20rem;" id="c">
+                <div class="card" style="width: 20rem;" id="c">
                     <div class="text-center" id="c">
                         <img src="https://login.sec.unicah.net/imgs/icono_registro.svg" width="50" height="50" color="black"/>
                         <h2>Clases</h2>
                     </div>
                 </div>
             </a>
+
+        </div>
+
+        <div class="container">
             <a href="{% url 'academico:clasesAdmin' %}" class="card-link text-decoration-none">
-                <div class="card-body" style="width: 20rem;" id="c">
+                <div class="card" style="width: 20rem;" id="c">
                     <div class="text-center" id="c">
                         <img src="https://login.sec.unicah.net/imgs/icono_registro.svg" width="50" height="50" color="black"/>
                         <h2>Crear Clase</h2>
@@ -118,14 +153,21 @@
                 </div>
             </a>
             <a href="{% url 'academico:ofertaAlumno' %}" class="card-link text-decoration-none">
-                <div class="card-body" style="width: 20rem;" id="c">
+                <div class="card" style="width: 20rem;" id="c">
                     <div class="text-center" id="c">
                         <img src="https://login.sec.unicah.net/imgs/icono_registro.svg" width="50" height="50" color="black"/>
-                        <h2>Oferta academica</h2>
+                        <h2>Oferta Academica</h2>
                     </div>
                 </div>
             </a>
+
         </div>
+            
+            
+
+
+    </div>
+    
 
     {% endif %}
 {% endblock %}
