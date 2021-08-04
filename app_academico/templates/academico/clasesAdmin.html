@@ -5,6 +5,7 @@
 {% endblock %}
 
 {% block container %}
+    <h3 class="mb-3 text-end fw-bold textOrangeDark">REGISTRO DE CLASES</h3>
     <div class="row">
 
         <div class="col-3">
@@ -15,7 +16,7 @@
         {% endif %}
                 {% csrf_token %}
                 <div class="mb-2">
-                    <label class="mb-2" for="asignatura">Asignatura</label>
+                    <label class="mb-2 fw-bold" for="asignatura">Asignatura</label>
                     <select name="asignatura" id="asignatura" class="form-select">
                         {% for a in  asignaturas %}
                             {% if c and c.asignatura.id == a.id %}
@@ -27,17 +28,17 @@
                 </div>
 
                 <div class="mb-2">
-                    <label class="mb-2" for="seccion">Seccion</label>
+                    <label class="mb-2 fw-bold" for="seccion">Sección</label>
                     <input type="text" value="{{ c.seccion }}" name="seccion" id="seccion" class="form-control" placeholder="1201" pattern="^(?!\D)\d+" required>
                 </div>
 
                 <div class="mb-2">
-                    <label class="mb-2" for="hora">Hora Inicio</label>
+                    <label class="mb-2 fw-bold" for="hora">Hora Inicio</label>
                     <input type="time" value="{{ c.hora}}" name="hora" id="hora" class="form-control" min="07:00" required>
                 </div>
 
                 <div class="mb-2">
-                    <label class="mb-2" for="dias">Días</label>
+                    <label class="mb-2 fw-bold" for="dias">Días</label>
                         <div class="btn-group btn-group-toggle" data-toggle="buttons">
                             {% for d in "LMXJVSD" %} <!--https://stackoverflow.com/questions/5242866/how-to-loop-7-times-in-the-django-templates-->
                                  <label class="btn" {% if d == 'L' %}style="padding-left: 0px;"{% endif %}>
@@ -48,25 +49,25 @@
                 </div>
 
                 <div class="mb-2">
-                    <label class="mb-2" for="aula">Aula</label>
-                    <input type="text"  value="{{ c.aula }}" name="aula" id="aula" class="form-control" placeholder="C303" required>
+                    <label class="mb-2 fw-bold" for="aula">Aula</label>
+                    <input type="text" value="{{ c.aula }}" name="aula" id="aula" class="form-control" placeholder="C303" required>
                 </div>
 
                 <div class="mb-2">
-                    <label for="cupos">Cupos</label>
+                    <label class="fw-bold" for="cupos">Cupos</label>
                     <input type="number"  value="{{ c.cupos }}" name="cupos" id="cupos" class="form-control" min="10"  placeholder="10" required>
                 </div>
 
                 <div class="mb-2">
-                    <label class="mb-2" for="aula">Room</label>
+                    <label class="mb-2 fw-bold" for="aula">Room</label>
                     <input type="text"  value="{{ c.room }}" name="room" id="room" class="form-control" placeholder="www.unicah.edu">
                 </div>
 
                 <div class="mb-2">
                 {% if c %}
-                    <input onclick="if (!confirm('¿Desea actualizar {{c.asignatura}} {{c.seccion}}?')) return false;"  type ="submit" class="btn text-white orange" value="Actualizar Asignatura">
+                    <input onclick="if (!confirm('¿Desea actualizar {{c.asignatura}} {{c.seccion}}?')) return false;"  type ="submit" class="btn text-white orange" value="Actualizar Clase">
                 {% else %}
-                    <input type ="submit" class="btn text-white orange" value="Registrar Asignatura">
+                    <input type ="submit" class="btn text-white orange" value="Registrar Clase">
                 {% endif %}
                 </div>
             </form>
@@ -109,7 +110,7 @@
                             <td>{{ c.dias}}</td>
                             <td>{{ c.fecha_inicio|date:'d/m/Y' }} - {{ c.fecha_finalizacion|date:'d/m/Y' }}</td>
                             <td>{{ c.aula}}</td>
-                            <td>{{ c.cupos}}</td>
+                            <td class="text-center">{{ c.cupos}}</td>
                             <td>{{ c.room | default_if_none:'-'}}</td> 
                             <td class="text-center">
                                 <a href="{% url 'academico:editar_clase' c.id %}" class="edit"><span class="fas fa-edit"></span></a>&nbsp

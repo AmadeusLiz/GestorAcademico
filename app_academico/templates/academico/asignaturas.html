@@ -1,10 +1,12 @@
 {% extends "base.html" %}
 
 {% block title %}
-    Asignaturas
+    ASIGNATURAS
 {% endblock %}
 
 {% block container %}
+    <h3 class="mb-3 fw-bold text-end textOrangeDark">REGISTRO DE ASIGNATURAS</h3>
+
     <div class="row">
         <div class="col-3">
         {% if c %}
@@ -15,17 +17,17 @@
             
                 {% csrf_token %}
                 <div class="mb-3">
-                    <label for="nombre">Nombre</label>
+                    <label class="fw-bold  mb-2" for="nombre">Nombre</label>
                     <input type="text" value="{{ c.nombre }}" name="nombre" id="nombre" class="form-control" placeholder="Programación Web" required autofocus>
                 </div>
 
                 <div class="mb-3">
-                    <label for="descripcion">Descripcion</label>
+                    <label class="fw-bold mb-2" for="descripcion">Descripción</label>
                     <textarea name="descripcion" id="descripcion" class="form-control"  required rows="7" style="width:100%"  required>{{ c.descripcion }} </textarea>
                 </div>
 
                 <div class="mb-3">
-                    <label for="creditos">Creditos</label>
+                    <label class="fw-bold mb-2" for="creditos">Créditos</label>
                     <input type="number" value="{{ c.creditos }}" name="creditos" id="creditos" class="form-control" placeholder="5" min="1" required>
                 </div>
                 
@@ -52,14 +54,15 @@
                 <input type="search" name="q" value="{{ q|default_if_none:'' }}" class="form-control" placeholder="Buscar asignatura">
             </form>
 
-            <h2 class="mt-4">Lista de Asignaturas: {{ asignaturas.count }}</h2>
+            <h5 class="mt-3 mb-3 fw-bold">Asignaturas {{ asignaturas.count }}</h5>
+
             <table class="table table-hover">
                 <thead>
                     <tr>
                         <th class="textOrangeDark">NOMBRE</th>
-                        <th class="textOrangeDark">DESCRIPCION</th>
-                        <th class="textOrangeDark">CREDITOS</th>
-                        <th class="textOrangeDark">ACCIONES</th>
+                        <th class="textOrangeDark">DESCRIPCIÓN</th>
+                        <th class="text-center textOrangeDark">CRÉDITOS</th>
+                        <th class="text-center textOrangeDark">ACCIONES</th>
                     </tr>
                 </thead>
                 <tbody>

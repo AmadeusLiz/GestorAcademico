@@ -5,8 +5,9 @@
 {% endblock %}
 
 {% block container %}
-    <div class="row">
+    <h3 class="mb-3 text-end fw-bold textOrangeDark">REGISTRO DE ALUMNOS</h3>
 
+    <div class="row">
         <div class="col-3">
         {% if alumno %}
             <form action="{% url 'academico:editar_alumnos' alumno.id %}" method="POST">
