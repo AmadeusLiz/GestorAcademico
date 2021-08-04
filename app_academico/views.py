@@ -105,19 +105,24 @@ def clasesAdmin(request):
             seccion = request.POST.get('seccion')
             hora = request.POST.get('hora')
             aula = request.POST.get('aula')
-            cupos = request.POST.get('cupos')
+            cupos = int(request.POST.get('cupos'))
             room = request.POST.get('room')
             seleccionados = []
-                                 
-            for dia in dias:
-                chk = request.POST.get(f'chk-{dia}')  # almacenar id de clase
-                if dia == chk:
-                    seleccionados.append(dia)
-            
-            resultado = ', '.join(seleccionados) # Para convertir en string al guardar
 
-            Clase.objects.create(asignatura=asignatura, seccion=seccion, hora=hora, dias=resultado, aula=aula, cupos=cupos, room=room)
-            messages.add_message(request, messages.INFO, f'La clase {asignatura.nombre} ha sido agregada con éxito')
+            print(type(len(seccion)))
+            if len(seccion) == 4 and (cupos > 10 and cupos < 61):
+                for dia in dias:
+                    chk = request.POST.get(f'chk-{dia}')  # almacenar id de clase
+                    if dia == chk:
+                        seleccionados.append(dia)
+            
+                resultado = ', '.join(seleccionados) # Para convertir en string al guardar
+
+                Clase.objects.create(asignatura=asignatura, seccion=seccion, hora=hora, dias=resultado, aula=aula, cupos=cupos, room=room)
+                messages.add_message(request, messages.INFO, f'La clase {asignatura.nombre} ha sido agregada con éxito')
+            else:
+                messages.add_message(request, messages.ERROR, f'Seccion debe contener 4 digitos, cupos mayor a 10')
+
 
         q = request.GET.get('q')
 
@@ -263,15 +268,22 @@ def agregar_periodo(request):
 # ---------------------------------------------------------------ASIGNATURAS-------------------------------------------------------------------------
 def asignaturas(request):
     if request.user.is_superuser:
-        if request.method == 'POST':
-            nombre = request.POST.get('nombre')
-            descripcion = request.POST.get('descripcion')
-            creditos = request.POST.get('creditos')
+        try:
+            if request.method == 'POST':
+                nombre = request.POST.get('nombre')
+                descripcion = request.POST.get('descripcion')
+                creditos = int(request.POST.get('creditos'))
+                
+                if creditos > 0 and creditos < 10:
+                    c = Asignatura(nombre=nombre, descripcion=descripcion, creditos=creditos)
+                    c.save()
 
-            c = Asignatura(nombre=nombre, descripcion=descripcion, creditos=creditos)
-            c.save()
-
-            messages.add_message(request, messages.INFO, f'La asignatura {nombre}  ha sido registrado con éxito')
+                    messages.add_message(request, messages.INFO, f'La asignatura {nombre}  ha sido registrado con éxito')
+                else:
+                    messages.add_message(request, messages.ERROR,
+                                             f'No puede ingresar numeros negativos ni, creditos mayores a 10')
+        except:
+            pass
 
         q = request.GET.get('q')
 
@@ -302,15 +314,22 @@ def eliminar_asignatura(request, id):
 def editar_asignatura(request, id):
     if request.user.is_superuser:
         asig = get_object_or_404(Asignatura, pk=id)
+        try:
+            if request.method == 'POST':
+                nombre = request.POST.get('nombre')
+                descripcion = request.POST.get('descripcion')
+                creditos = int(request.POST.get('creditos'))
 
-        if request.method == 'POST':
-            nombre = request.POST.get('nombre')
-            descripcion = request.POST.get('descripcion')
-            creditos = request.POST.get('creditos')
+                if creditos > 0 and creditos < 10:
+                    Asignatura.objects.filter(pk=id).update(nombre=nombre, descripcion=descripcion, creditos=creditos)
 
-            Asignatura.objects.filter(pk=id).update(nombre=nombre, descripcion=descripcion, creditos=creditos)
+                    messages.add_message(request, messages.INFO, f'La clase {nombre} se ha actualizado éxitosamente')
+                else:
+                     messages.add_message(request, messages.ERROR,
+                                             f'No puede ingresar numeros negativos, ni creditos mayores a 10')
 
-            messages.add_message(request, messages.INFO, f'La clase {nombre} se ha actualizado éxitosamente')
+        except:
+            pass
 
         data = Asignatura.objects.all().order_by('nombre')
 

@@ -54,7 +54,12 @@
 
                 <div class="mb-2">
                     <label for="cupos">Cupos</label>
-                    <input type="number"  value="{{ c.cupos }}" name="cupos" id="cupos" class="form-control" min="10" max="400" placeholder="10" required>
+                    <input type="number"  value="{{ c.cupos }}" name="cupos" id="cupos" class="form-control" min="10"  placeholder="10" required>
+                </div>
+
+                <div class="mb-2">
+                    <label class="mb-2" for="aula">Room</label>
+                    <input type="text"  value="{{ c.room }}" name="room" id="room" class="form-control" placeholder="www.unicah.edu">
                 </div>
 
                 <div class="mb-2">
@@ -69,11 +74,11 @@
 
         <div class="col-9">
             {% if messages %}
-                <div class="alert alert-success mb-3">
-                    {% for message in messages %}
-                        {{ message | safe }}
-                    {% endfor %}
+                {% for message in messages %}
+                <div class="alert alert-{% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}danger{%else%}success{% endif %} mb-3">
+                    {{ message|safe }}  
                 </div>
+                {% endfor %}
             {% endif %}
 
             <form action="" method="GET">
@@ -113,7 +118,7 @@
                         </tr>
                     {% empty %}
                         <tr>
-                            <td colspan="7" class="text-danger text-center fw-bold">NO SE ENCONTRARON RESULTADOS</td>
+                            <td colspan="9" class="text textOrangeDark text-center fw-bold">NO SE ENCONTRARON RESULTADOS</td>
                         </tr>
                     {% endfor %}
                 </tbody>
