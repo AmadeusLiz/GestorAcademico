@@ -16,7 +16,6 @@
                 {% csrf_token %}
                 <div class="mb-2">
                     <label class="mb-2" for="asignatura">Asignatura</label>
-                    {% comment %} <input type="text" value="{{ c.asignatura }}" name="asignatura" id="asignatura" class="form-control"> {% endcomment %}
                     <select name="asignatura" id="asignatura" class="form-select">
                         {% for a in  asignaturas %}
                             {% if c and c.asignatura.id == a.id %}
@@ -38,37 +37,14 @@
                 </div>
 
                 <div class="mb-2">
-                    <label class="mb-2" for="dias">Dias</label>
-                    <input type="text"  value="{{ c.dias }}" name="dias" id="dias" class="form-control" placeholder="L, M, X, J, V" pattern="^(?!\D)\d+" required>
-                     <div class="row">
-        <div id="content" class="col-lg-12">
-            <form action="index.php" method="post">
-                <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                    <label class="btn btn-primary">
-                        <input type="checkbox" name="countries[]" value="L" autocomplete="off">L
-                    </label>
-                    <label class="btn btn-primary">
-                        <input type="checkbox" name="countries[]" value="M" autocomplete="off">M
-                    </label>
-                    <label class="btn btn-primary">
-                        <input type="checkbox" name="countries[]" value="Portugal" autocomplete="off">M
-                    </label>
-                    <label class="btn btn-primary">
-                        <input type="checkbox" name="countries[]" value="Italia" autocomplete="off">J
-                    </label>
-                    <label class="btn btn-primary">
-                        <input type="checkbox" name="countries[]" value="Alemania" autocomplete="off">V
-                    </label>
-                    <label class="btn btn-primary">
-                        <input type="checkbox" name="countries[]" value="Alemania" autocomplete="off">S
-                    </label>
-                    <label class="btn btn-primary">
-                        <input type="checkbox" name="countries[]" value="Alemania" autocomplete="off">D
-                    </label>
-                </div>
-           </form>
-        </div>
-
+                    <label class="mb-2" for="dias">Días</label>
+                        <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                            {% for d in "LMXJVSD" %} <!--https://stackoverflow.com/questions/5242866/how-to-loop-7-times-in-the-django-templates-->
+                                 <label class="btn" {% if d == 'L' %}style="padding-left: 0px;"{% endif %}>
+                                    <input type="checkbox" class="form-check-input" name="chk-{{d}}" value={{d}} {% for dC in diasClase %}{% if dC == d %}checked{% endif %}{% endfor %}  >{{d}}
+                                </label>
+                            {% endfor %}
+                        </div>
                 </div>
 
                 <div class="mb-2">
@@ -78,7 +54,12 @@
 
                 <div class="mb-2">
                     <label for="cupos">Cupos</label>
-                    <input type="number"  value="{{ c.cupos }}" name="cupos" id="cupos" class="form-control" min="10" max="400" placeholder="10" required>
+                    <input type="number"  value="{{ c.cupos }}" name="cupos" id="cupos" class="form-control" min="10"  placeholder="10" required>
+                </div>
+
+                <div class="mb-2">
+                    <label class="mb-2" for="aula">Room</label>
+                    <input type="text"  value="{{ c.room }}" name="room" id="room" class="form-control" placeholder="www.unicah.edu">
                 </div>
 
                 <div class="mb-2">
@@ -93,11 +74,11 @@
 
         <div class="col-9">
             {% if messages %}
-                <div class="alert alert-success mb-3">
-                    {% for message in messages %}
-                        {{ message | safe }}
-                    {% endfor %}
+                {% for message in messages %}
+                <div class="alert alert-{% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}danger{%else%}success{% endif %} mb-3">
+                    {{ message|safe }}  
                 </div>
+                {% endfor %}
             {% endif %}
 
             <form action="" method="GET">
@@ -137,7 +118,7 @@
                         </tr>
                     {% empty %}
                         <tr>
-                            <td colspan="7" class="text-danger text-center fw-bold">NO SE ENCONTRARON RESULTADOS</td>
+                            <td colspan="9" class="text textOrangeDark text-center fw-bold">NO SE ENCONTRARON RESULTADOS</td>
                         </tr>
                     {% endfor %}
                 </tbody>

@@ -126,11 +126,11 @@
 
         <div class="col-9">
             {% if messages %}
-                <div class="alert alert-success mb-3">
-                    {% for message in messages %}
-                        {{ message | safe }}
-                    {% endfor %}
+                {% for message in messages %}
+                <div class="alert alert-{% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}danger{%else%}success{% endif %} mb-3">
+                    {{ message|safe }}  
                 </div>
+                {% endfor %}
             {% endif %}
 
 
@@ -190,7 +190,7 @@
                         </tr>
                     {% empty %}
                         <tr>
-                            <td colspan="9" class="text-danger text-center fw-bold">NO SE ENCONTRARON RESULTADOS</td>
+                            <td colspan="9" class="text textOrangeDark text-center fw-bold">NO SE ENCONTRARON RESULTADOS</td>
                         </tr>
                     {% endfor %}
                 </tbody>

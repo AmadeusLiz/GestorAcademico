@@ -89,11 +89,11 @@
         </div>
         <div class="col-12">
             {% if messages %}
-                <div class="alert alert-success mb-3">
-                    {% for message in messages %}
-                        {{ message | safe }}
-                    {% endfor %}
+                {% for message in messages %}
+                <div class="alert alert-{% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}danger{%else%}success{% endif %} mb-3">
+                    {{ message|safe }}  
                 </div>
+                {% endfor %}
             {% endif %}
 <h5 class="mt-3 mb-3 fw-bold">Docentes {{ docentes.count }}</h5>
             <form action="{% url 'academico:docenteAdmin' %}" method="GET">
@@ -138,7 +138,7 @@
                         </tr>
                     {% empty %}
                         <tr>
-                            <td colspan="9" class="text-danger text-center fw-bold">NO SE ENCONTRARON RESULTADOS</td>
+                            <td colspan="10" class="text textOrangeDark text-center fw-bold">NO SE ENCONTRARON RESULTADOS</td>
                         </tr>
                     {% endfor %}
                 </tbody>

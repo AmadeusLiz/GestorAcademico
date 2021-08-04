@@ -35,7 +35,7 @@
         </table> 
         <div class="text-end">
             <!-- al presionar boton debo verificar que clases se seleccionaron -->
-            <button id="btnMtr" data-csrf="{{ csrf_token }}" class="btn btn-sm orange text-white" onclick="if (!confirm('¿Deseas matricular las clases seleccionadas?')) return false; else matricular()" hidden>Matricular</button>
+            <button id="btnMtr" data-csrf="{{ csrf_token }}" class="btn btn-sm orange text-white" onclick="if (!confirm('¿Deseas matricular las clases seleccionadas?')) return false; else matricular()">Matricular</button>
         </div>
 
         <h4 class="fw-bold mt-3">Oferta académica del periodo</h3>
@@ -53,47 +53,51 @@
                 </tr>
             </thead>
             <tbody>
-            {% for a in asignaturas %}
-                <tr><td class="pb-0 fw-bold text-white gray" colspan="8"><h5 class="card-header fw-bold text-white gray">{{a}}</h5></td></tr>
-                    {% for c in clasesOfertadas %}
-                        {% if a == c.asignatura.nombre %}
-                        <tr id="tr-{{c.id}}">
-                            <td class="text-center">{{ c.seccion }}</td>
-                            <td>{{ c.asignatura.nombre }}</td>
-                            <td>{{ c.fecha_inicio|date:'d/m/Y' }} - {{ c.fecha_finalizacion|date:'d/m/Y' }}</td>
-                            <td>{{ c.hora }} - {{ c.hora_finalizacion }}</td>
-                            <td>{{ c.dias}}</td>
-                            <td>{{ c.aula}}</td>
-                            <td class="text-center">{{ c.cupos_disponibles}}</td>
+            {% if oferta %}
+                {% for a in asignaturas %}
+                    <tr><td class="pb-0 fw-bold text-white gray" colspan="8"><h5 class="card-header fw-bold text-white gray">{{a}}</h5></td></tr>
+                        {% for c in clasesOfertadas %}
+                            {% if a == c.asignatura.nombre %}
+                            <tr id="tr-{{c.id}}">
+                                <td class="text-center">{{ c.seccion }}</td>
+                                <td>{{ c.asignatura.nombre }}</td>
+                                <td>{{ c.fecha_inicio|date:'d/m/Y' }} - {{ c.fecha_finalizacion|date:'d/m/Y' }}</td>
+                                <td>{{ c.hora }} - {{ c.hora_finalizacion }}</td>
+                                <td>{{ c.dias}}</td>
+                                <td>{{ c.aula}}</td>
+                                <td class="text-center">{{ c.cupos_disponibles}}</td>
 
-                            <!--El nombre del icono src depende si esta seleccionada o no-->
-                            <td onclick="agregarQuitar({{c.id}}, {{c.asignatura.id}})" class="text-center">
-                            {% if c.cupos_disponibles > 0 %}  <!--Mostrar opcion de agregar solo si hay cupos-->
-                                <lord-icon
-                                    id="lordicon{{c.id}}"
-                                    class="icon {{c.asignatura.id}}"
-                                    src=''
-                                    trigger="click"
-                                    seleccionado = "False"
-                                    colors="primary:#121331,secondary:#fb743e"
-                                    stroke="80"
-                                    style="width:2em;height:2em; cursor:pointer">
-                                </lord-icon>
-                            {% else %}
-                                <span class="fw-bold ">SIN CUPO</span>
+                                <!--El nombre del icono src depende si esta seleccionada o no-->
+                                <td onclick="agregarQuitar({{c.id}}, {{c.asignatura.id}})" class="text-center">
+                                {% if c.cupos_disponibles > 0 %}  <!--Mostrar opcion de agregar solo si hay cupos-->
+                                    <lord-icon
+                                        id="lordicon{{c.id}}"
+                                        class="icon {{c.asignatura.id}}"
+                                        src=''
+                                        trigger="click"
+                                        seleccionado = "False"
+                                        colors="primary:#121331,secondary:#fb743e"
+                                        stroke="80"
+                                        style="width:2em;height:2em; cursor:pointer">
+                                    </lord-icon>
+                                {% else %}
+                                    <span class="fw-bold ">SIN CUPO</span>
+                                {% endif %}
+                                </tr>
                             {% endif %}
+                        {% empty %}
+                            <tr>
+                                <td colspan="8" class="text-danger text-center fw-bold">NO HAY CLASES OFERTADAS</td>
                             </tr>
-                        {% endif %}
+                        {% endfor %}
                     {% empty %}
-                        <tr>
-                            <td colspan="8" class="text-danger text-center fw-bold">NO HAY CLASES OFERTADAS</td>
-                        </tr>
-                    {% endfor %}
-                {% empty %}
-                <tr>
-                    <td colspan="8" class="text-danger text-center fw-bold">NO HAY ASIGNATURAS AUN</td>
-                </tr>
-            {% endfor %}
+                    <tr>
+                        <td colspan="8" class="text-danger text-center fw-bold">NO HAY ASIGNATURAS AUN</td>
+                    </tr>
+                {% endfor %}
+            {% else %}
+            <h1>NO HAY OFERTA</h1>
+            {% endif %}
             </tbody>
         </table>
         
@@ -112,7 +116,6 @@
             $(".icon").attr("src",`{{srcPlus}}`) //colocar por defecto el +, para ello se les aplico la clase icon
 
             // Llenar y modificar las tablas segun los datos que vienen de la bd
-            btnMtr = $("#btnMtr")
             clasesMtr = $("#clasesMtr tbody")
             filas = parseInt($("#clasesMtr").attr("filas")) 
 
@@ -141,7 +144,6 @@
                 $("#clasesMtr").attr("filas", filas)     
             {% endfor %}
 
-            filas > 0 ? $(btnMtr).removeAttr("hidden") : $(btnMtr).attr("hidden","hidden")
         });
 
         async function agregarQuitar(idClase, idAsignatura){
@@ -150,7 +152,6 @@
             asignatura = $(`.icon.${idAsignatura}`)
             fila = $(`#tr-${idClase}`)
             clasesMtr = $("#clasesMtr tbody")
-            btnMtr = $("#btnMtr")
 
             //no funciona determinar directamente contar las filas, por temas del fadeout no se actualiza rapido la cantidad, se asigna un attr que contenga la cantidad de filas
             filas = parseInt($("#clasesMtr").attr("filas")) 
@@ -181,7 +182,6 @@
                 $("#clasesMtr").attr("filas", filas) 
             }
             
-            (filas > 0) ? $(btnMtr).removeAttr("hidden") : $(btnMtr).attr("hidden","hidden")//tiene filas la tabla? se muestra el boton de matricular
         }
 
         function matricular(){
