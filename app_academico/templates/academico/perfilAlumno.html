@@ -5,17 +5,24 @@
     <main role="main">
         <div class="container " >
             <div class="row mt-3">
+            {% if o  %}
                 <!-- formulario -->
                 <div class="text-center">
                     <div class="col-md-9 mx-auto mb-5" style="width: 200px;">
-                            <form action="{% url 'academico:editar_perfil_alumnos' %}" method="POST">
-                            {% csrf_token %}
+                            <form action="{% url 'academico:editar_perfil_alumnos' %}" method="POST" enctype="multipart/form-data">
+                            {% if user.alumno.foto  %}
                             <img  width="50%" height="50%" src="{{ user.alumno.foto.url }}" required autofocus/>
+                            {% else %}
+                            <div>Sin foto</div>
+                            {% endif %}
+                            
+                            {% csrf_token %}
+                            {{form.as_p}}
                             <h2>@{{ user.username }}</h2>
                             
                             <div class="mb-2">
                                 <label for="nombre">Nombre</label>
-                                <input type="text" name="nombre" id="nombre" class="form-control " disabled value="{{ request.user.alumno.nombre}}" required autofocus>
+                                <input type="text" name="nombre" id="nombre" class="form-control " disabled value="{{ request.user.alumno.nombre}} {{ request.user.alumno.apellido}}" required autofocus>
                             </div>
 
                             <div class="mb-2">
@@ -25,7 +32,17 @@
 
                             <div class="mb-2">
                                 <label class="mb-2" for="telefono">Teléfono</label>
-                                <input type="tel"  name="telefono" id="telefono" class="form-control" value="{{ request.user.alumno.telefono}}" required autofocus >
+                                <input type="tel"  name="telefono" id="telefono" minlength="8" class="form-control" value="{{ request.user.alumno.telefono}}" required autofocus >
+                            </div>
+
+                            <div class="mb-2">
+                                <label class="mb-2" for="direccion">Direccion</label>
+                                <input type="tel"  name="direccion" id="direccion" class="form-control" value="{{ request.user.alumno.direccion}}" required autofocus >
+                            </div>
+
+                            <div class="mb-2">
+                                <label class="mb-2" for="facultad">Facultad</label>
+                                <input type="text"  name="facultad" id="facultad" class="form-control" disabled value="{{ request.user.alumno.facultad}}" required autofocus >
                             </div>
 
                             <div class="mb-2">
@@ -40,6 +57,60 @@
                         </form>
                     </div>
                 </div>
+                {% else %}
+            
+                <!-- formulario -->
+                <div class="text-center">
+                    <div class="col-md-9 mx-auto mb-5" style="width: 200px;">
+                            <form action="{% url 'academico:editar_perfil_alumnos' %}" method="POST" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            {% if user.docente.foto  %}
+                            <img  width="50%" height="50%" src="{{ user.docente.foto.url }}" required autofocus/>
+                            {% else %}
+                            <div> Sin foto</div>
+
+                            {% endif %}
+                            {{form.as_p}}
+                            <h2>@{{ user.username }}</h2>
+                            
+                            <div class="mb-2">
+                                <label for="nombre">Nombre</label>
+                                <input type="text" name="nombre" id="nombre" class="form-control " disabled value="{{ request.user.docente.nombre}} {{request.user.docente.apellido}}" required autofocus>
+                            </div>
+
+                            <div class="mb-2">
+                                <label for="correo">Correo</label>
+                                <input type="email" name="correo" id="correo"  class="form-control" value="{{ request.user.docente.correo}}" required autofocus>
+                            </div>
+
+                            <div class="mb-2">
+                                <label class="mb-2" for="telefono">Teléfono</label>
+                                <input type="tel"  name="telefono" id="telefono" class="form-control" minlength="8" value="{{ request.user.docente.telefono}}" required autofocus >
+                            </div>
+
+                            <div class="mb-2">
+                                <label class="mb-2" for="direccion">Direccion</label>
+                                <input type="tel"  name="direccion" id="direccion" class="form-control" value="{{ request.user.docente.direccion}}" required autofocus >
+                            </div>
+
+                            <div class="mb-2">
+                                <label class="mb-2" for="fecha_contratacion">Fecha de contratacion</label>
+                                <input type="tel"  name="fecha_contratacion" id="fecha_contratacion" class="form-control" disabled value="{{ request.user.docente.fecha_contratacion}}" required autofocus >
+                            </div>
+
+                            <div class="mb-2">
+                                <label class="mb-2" for="fecha">Fecha de nacimiento</label>
+                                <input type="text"   name="fecha" id="fecha" class="form-control" disabled value="{{ request.user.docente.fecha_nacimiento}}" required autofocus>
+                            </div>
+
+                            <div class="mb-2">
+                                <input type="submit" class="btn btn-success" value="Actualizar Perfil">
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            {% endif %}
 
             </div>
 
@@ -48,4 +119,8 @@
     </main>
 
 {% endblock  %} 
+
+{% block js %}
+    
+{% endblock  %}
 

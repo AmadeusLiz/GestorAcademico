@@ -524,26 +524,64 @@ def editar_perfil_alumnos(request):
                 telefono = request.POST.get('telefono')
 
                 Alumno.objects.all().filter(user=request.user.id).update(correo=correo, telefono=telefono)
-
+                
+                form = FormAlumno(request.POST,request.FILES,instance=Alumno.objects.all().filter(pk=request.user.alumno.id).first())
+                form.save()
                 # messages.add_message(request, messages.INFO, f'Tu perfil{User.alumnos.nombre} se ha actualizado éxitosamente')
-
+               
             # GET
             ctx = {
                 'activo': 'alumnos',
                 'alumnos': alumnos,
-                'alumno': get_object_or_404(Alumno, user=request.user.id)
+                'alumno': get_object_or_404(Alumno, user=request.user.id),
+                'o':'si',
+                'form': FormAlumno()
+            }
+
+            return render(request, 'academico/perfilAlumno.html', ctx)
+
+        elif request.user.groups.all()[0].name == 'Docente':
+            if request.method == 'POST':
+                correo = request.POST.get('correo')
+                telefono = request.POST.get('telefono')
+
+                Docente.objects.all().filter(user=request.user.id).update(correo=correo, telefono=telefono)
+                
+                form = ImageForm(request.POST,request.FILES,instance=Docente.objects.all().filter(pk=request.user.docente.id).first())
+                form.save()
+                # messages.add_message(request, messages.INFO, f'Tu perfil{User.alumnos.nombre} se ha actualizado éxitosamente')
+          
+            # GET
+            ctx = {
+                'activo': 'alumnos',
+                'alumnos': alumnos,
+                'alumno': get_object_or_404(Docente, user=request.user.id),
+                'form': ImageForm()
             }
 
             return render(request, 'academico/perfilAlumno.html', ctx)
     else:
         return redirect(reverse('academico:index'))
 
-
+ 
 def clasesdocente(request):
     clases = Clase.objects.all().filter(docente__user=request.user.id)
 
+    if request.method == 'POST':
+        finalizada = request.POST.get('finalizada')
+
+        if finalizada:
+            final= True
+        else:
+            final = False
+        
+        Clase.objects.all().filter(pk=finalizada).update(finalizada=final)
+
+        #Clase.objects.create( finalizada=finalizada)   
+
     ctx = {
         'clases': clases
+        
 
     }
 
