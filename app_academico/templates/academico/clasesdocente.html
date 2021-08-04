@@ -3,6 +3,28 @@
 {% block title %}
     Periodos
 {% endblock %}
+{% block navbar %}
+    {% if user.is_superuser %}
+        <a class="nav-link"href="/admin/" >Sitio de administración</a>
+        <a class="nav-link"href="{% url 'academico:alumnos' %}" >Alumno</a>
+        <a class="nav-link"href="{% url 'academico:docenteAdmin' %}" >Docente</a>
+        <a class="nav-link"href="{% url 'academico:clasesAdmin' %}" >Clases</a>
+        <a class="nav-link"href="{% url 'academico:asignaturas' %}" >Asignatura</a>
+        <a class="nav-link"href="{% url 'academico:ofertaAlumno' %}" >Oferta Academica</a>
+    {% elif "Docente" in user.groups.all.first.name %}
+        <a class="nav-link"href="{% url 'academico:notas' %}" >Notas</a>
+        <a class="nav-link"href="{% url 'academico:editar_perfil_alumnos' %}" >Perfil</a>
+        <a class="nav-link"href="{% url 'academico:clasesMatricula' %}" >Clases</a>
+        <a class="nav-link"href="{% url 'academico:clasesdocente' %}" >Boleta</a>
+
+    {% else %}
+        <a class="nav-link"href="{% url 'academico:notas' %}" >Notas</a>
+        <a class="nav-link"href="{% url 'academico:editar_perfil_alumnos' %}" >Perfil</a>
+        <a class="nav-link"href="{% url 'academico:clasesMatricula' %}" >Clases</a>
+        <a class="nav-link"href="{% url 'academico:boletaAlumno' %}" >Boleta</a>
+        <a class="nav-link"href="{% url 'academico:ofertaAlumno' %}" >Matricula</a>
+    {% endif %}
+{% endblock %}
 
 {% block container %}
     <div class="col-12">

@@ -3,7 +3,28 @@
 {% block title %}
     Menu
 {% endblock %}
+{% block navbar %}
+    {% if user.is_superuser %}
+        <a class="nav-link"href="/admin/" >Sitio de administración</a>
+        <a class="nav-link"href="{% url 'academico:alumnos' %}" >Alumno</a>
+        <a class="nav-link"href="{% url 'academico:docenteAdmin' %}" >Docente</a>
+        <a class="nav-link"href="{% url 'academico:clasesAdmin' %}" >Clases</a>
+        <a class="nav-link"href="{% url 'academico:asignaturas' %}" >Asignatura</a>
+        <a class="nav-link"href="{% url 'academico:ofertaAlumno' %}" >Oferta Academica</a>
+    {% elif "Docente" in user.groups.all.first.name %}
+        <a class="nav-link"href="{% url 'academico:notas' %}" >Notas</a>
+        <a class="nav-link"href="{% url 'academico:editar_perfil_alumnos' %}" >Perfil</a>
+        <a class="nav-link"href="{% url 'academico:clasesMatricula' %}" >Clases</a>
+        <a class="nav-link"href="{% url 'academico:clasesdocente' %}" >Boleta</a>
 
+    {% else %}
+        <a class="nav-link"href="{% url 'academico:notas' %}" >Notas</a>
+        <a class="nav-link"href="{% url 'academico:editar_perfil_alumnos' %}" >Perfil</a>
+        <a class="nav-link"href="{% url 'academico:clasesMatricula' %}" >Clases</a>
+        <a class="nav-link"href="{% url 'academico:boletaAlumno' %}" >Boleta</a>
+        <a class="nav-link"href="{% url 'academico:ofertaAlumno' %}" >Matricula</a>
+    {% endif %}
+{% endblock %}
 {% block container %} 
     <style>
         
@@ -96,7 +117,7 @@
                     <div class="card" style="width: 20rem;" id="c">
                         <div class="text-center" id="c">
                             <img src="https://login.sec.unicah.net/imgs/icono_registro.svg" width="50" height="50" color="black"/>
-                            <h2>Crear Clase</h2>
+                            <h2>Gestionar Clases</h2>
                         </div>
                     </div>
                 </a>
