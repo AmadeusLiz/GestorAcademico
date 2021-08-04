@@ -98,25 +98,31 @@ def editar_alumnos(request, id):
 def clasesAdmin(request):
     if request.user.is_superuser:
         asignaturas = Asignatura.objects.all().order_by('nombre')
+        dias = ["L", "M", "X", "J", "V", "S", "D"]
 
         if request.method == 'POST':
             asignatura = get_object_or_404(Asignatura, pk=request.POST.get('asignatura'))
             seccion = request.POST.get('seccion')
             hora = request.POST.get('hora')
-            dias = request.POST.get('dias')
             aula = request.POST.get('aula')
             cupos = request.POST.get('cupos')
             room = request.POST.get('room')
-            Clase.objects.create(asignatura=asignatura, seccion=seccion, hora=hora, dias=dias, aula=aula, cupos=cupos,
-                                 room=room)
+            seleccionados = []
+                                 
+            for dia in dias:
+                chk = request.POST.get(f'chk-{dia}')  # almacenar id de clase
+                if dia == chk:
+                    seleccionados.append(dia)
+            
+            resultado = ', '.join(seleccionados) # Para convertir en string al guardar
 
+            Clase.objects.create(asignatura=asignatura, seccion=seccion, hora=hora, dias=resultado, aula=aula, cupos=cupos, room=room)
             messages.add_message(request, messages.INFO, f'La clase {asignatura.nombre} ha sido agregada con éxito')
 
         q = request.GET.get('q')
 
         if q:
-            clases = Clase.objects.filter(asignatura__nombre__contains=q).order_by(
-                'asignatura')
+            clases = Clase.objects.filter(asignatura__nombre__contains=q).order_by('asignatura')
             # asignatura es unicamente un id, para acceder al nombre de la asignatura se usa doble guion bajo
         else:
             clases = Clase.objects.all().order_by('asignatura')
@@ -127,7 +133,6 @@ def clasesAdmin(request):
             'asignaturas': asignaturas,
             'q': q
         }
-
         return render(request, 'academico/clasesAdmin.html', ctx)
     else:
         return redirect(reverse('academico:index'))
@@ -136,14 +141,22 @@ def clasesAdmin(request):
 def editar_clase(request, id):
     if request.user.is_superuser:
         if request.method == 'POST':
+            dias = ["L", "M", "X", "J", "V", "S", "D"]
             asignatura = get_object_or_404(Asignatura, pk=request.POST.get('asignatura'))
             seccion = request.POST.get('seccion')
             hora = request.POST.get('hora')
-            dias = request.POST.get('dias')
             aula = request.POST.get('aula')
             cupos = request.POST.get('cupos')
+            seleccionados = []
 
-            Clase.objects.filter(pk=id).update(asignatura=asignatura, seccion=seccion, hora=hora, dias=dias, aula=aula,
+            for dia in dias:
+                chk = request.POST.get(f'chk-{dia}')  # almacenar id de clase
+                if dia == chk:
+                    seleccionados.append(dia)
+            
+            resultado = ', '.join(seleccionados) # Para convertir en string al guardar
+
+            Clase.objects.filter(pk=id).update(asignatura=asignatura, seccion=seccion, hora=hora, dias=resultado, aula=aula,
                                                cupos=cupos)
 
             messages.add_message(request, messages.INFO, f'La clase {asignatura.nombre} se ha actualizado éxitosamente')
@@ -156,7 +169,8 @@ def editar_clase(request, id):
             'activo': 'clases',
             'clases': clases,
             'asignaturas': asignaturas,
-            'c': clase
+            'c': clase,
+            'diasClase': clase.dias.split(', '),
         }
 
         return render(request, 'academico/clasesAdmin.html', ctx)
@@ -313,7 +327,6 @@ def editar_asignatura(request, id):
 
 def docente_admin(request):
     if request.user.is_superuser:
-        print(Docente.objects.all().order_by('id').first())
         if request.method == 'POST':
 
             Docente.objects.create(nombre=request.POST.get('nombre'), apellido=request.POST.get('apellido'),
@@ -430,7 +443,6 @@ def editar_nota(request, id):
                                                                 parcial2=request.POST.get('parcial2'),
                                                                 parcial3=request.POST.get('parcial3'))
                         messages.add_message(request, messages.SUCCESS, f'La nota se ha actualizado éxitosamente')
-                        print('EXITO')
                     else:
                         messages.add_message(request, messages.ERROR,
                                              f'No puede haber notas menores a 0 ni mayores a 100')
@@ -595,7 +607,6 @@ def clasesMatricula(request):
         else:
             datos = Clase.objects.all().filter(docente__user_id=request.user.id)
 
-    print(datos)
     ctx = {
         'activo': 'notas',
         'm': datos,
