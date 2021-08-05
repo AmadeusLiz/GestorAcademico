@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}
     Menu
@@ -80,7 +81,7 @@
                 <a href="/admin/" class="card-link text-decoration-none">
                     <div class="card" style="width: 20rem;" id="c">
                         <div class="text-center" id="c">
-                            <img src="https://login.sec.unicah.net/imgs/icono_registro.svg" width="50" height="50" color="black"/>
+                            <img src="{% static 'seguridad/img/icons8-ordenador-portátil-50.png' %}" width="50" height="50" color="white"/>
                             <h2>Sitio de Administración</h2>
                         </div>
                     </div>
@@ -88,7 +89,7 @@
                     <a href="{% url 'academico:alumnos' %}" class="card-link text-decoration-none">
                         <div class="card" style="width: 20rem;" id="c">
                             <div class="text-center" id="c">
-                                <img src="https://login.sec.unicah.net/imgs/icono_registro.svg" width="50" height="50" color="black"/>
+                                <img src="{% static 'seguridad/img/icons8-estudiantes-30.png' %}" width="50" height="50" color="black"/>
                                 <h2>Registrar Alumno</h2>
                             </div>
                         </div>
@@ -96,7 +97,7 @@
                     <a href="{% url 'academico:docenteAdmin' %}" class="card-link text-decoration-none">
                     <div class="card" style="width: 20rem;" id="c">
                         <div class="text-center" id="c">
-                            <img src="https://login.sec.unicah.net/imgs/icono_apps_zoom.svg" width="50" height="50" color="black"/>
+                            <img src="{% static 'seguridad/img/icons8-formación-30.png' %}" width="50" height="50" color="black"/>
                             <h2>Registrar Docente</h2>
                         </div>
                     </div>
@@ -108,7 +109,7 @@
                 <a href="{% url 'academico:asignaturas' %}" class="card-link text-decoration-none">
                     <div class="card" style="width: 20rem;" id="c">
                         <div class="text-center" id="c">
-                            <img src="https://login.sec.unicah.net/imgs/icono_registro.svg" width="50" height="50" color="black"/>
+                            <img src="{% static 'seguridad/img/icons8-storytelling-30.png' %}" width="50" height="50" color="black"/>
                             <h2>Registrar Asignatura</h2>
                         </div>
                     </div>
@@ -116,7 +117,7 @@
                 <a href="{% url 'academico:clasesAdmin' %}" class="card-link text-decoration-none">
                     <div class="card" style="width: 20rem;" id="c">
                         <div class="text-center" id="c">
-                            <img src="https://login.sec.unicah.net/imgs/icono_registro.svg" width="50" height="50" color="black"/>
+                            <img src="{% static 'seguridad/img/icons8-clase-30.png' %}" width="50" height="50" color="black"/>
                             <h2>Gestionar Clases</h2>
                         </div>
                     </div>
@@ -124,7 +125,7 @@
                 <a href="{% url 'academico:periodosAdmin' %}" class="card-link text-decoration-none">
                     <div class="card" style="width: 20rem;" id="c">
                         <div class="text-center" id="c">
-                            <img src="https://login.sec.unicah.net/imgs/icono_registro.svg" width="50" height="50" color="black"/>
+                            <img src="{% static 'seguridad/img/icons8-calendario-1-30.png' %}" width="50" height="50" color="black"/>
                             <h2>Oferta Academica</h2>
                         </div>
                     </div>
@@ -140,7 +141,7 @@
             <a href="{% url 'academico:notas' %}" class="card-link text-decoration-none">
                 <div class="card" style="width: 20rem;" id="c">
                     <div class="text-center" id="c">
-                        <img src="https://login.sec.unicah.net/imgs/icono_registro.svg" width="50" height="50" color="black"/>
+                        <img src="{% static 'seguridad/img/icons8-boleta-de-calificaciones-30.png' %}" width="50" height="50" color="black"/>
                         <h2>Notas</h2>
                     </div>
                 </div>
@@ -148,7 +149,7 @@
             <a href="{% url 'academico:editar_perfil_alumnos' %}" class="card-link text-decoration-none">
             <div class="card" style="width: 20rem;" id="c">
                 <div class="text-center" id="c">
-                    <img src="https://login.sec.unicah.net/imgs/icono_apps_zoom.svg" width="50" height="50" color="black"/>
+                    <img src="{% static 'seguridad/img/icons8-usuario-masculino-en-círculo-30.png' %}" width="50" height="50" color="black"/>
                     <h2>Perfil</h2>
                 </div>
             </div>
@@ -156,7 +157,7 @@
             <a href="{% url 'academico:clasesMatricula' %}" class="card-link text-decoration-none">
                 <div class="card" style="width: 20rem;" id="c">
                     <div class="text-center" id="c">
-                        <img src="https://login.sec.unicah.net/imgs/icono_registro.svg" width="50" height="50" color="black"/>
+                        <img src="{% static 'seguridad/img/icons8-storytelling-30.png' %}" width="50" height="50" color="black"/>
                         <h2>Clases</h2>
                     </div>
                 </div>
@@ -168,7 +169,7 @@
             <a href="{% url 'academico:clasesdocente' %}" class="card-link text-decoration-none">
                 <div class="card" style="width: 20rem;" id="c">
                     <div class="text-center" id="c">
-                        <img src="https://login.sec.unicah.net/imgs/icono_registro.svg" width="50" height="50" color="black"/>
+                        <img src="{% static 'seguridad/img/icons8-clase-30.png' %}" width="50" height="50" color="black"/>
                         <h2>Gestionar Clase</h2>
                     </div>
                 </div>
