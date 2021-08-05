@@ -93,7 +93,7 @@ def editar_alumnos(request, id):
 
         return render(request, 'academico/alumnos.html', ctx)
     else:
-        return redirect(reverse('index'))
+        return redirect(reverse('academico:index'))
 
 
 # ---------------------------------------------------------------CLASES-------------------------------------------------------------------------
