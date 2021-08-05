@@ -135,7 +135,7 @@
         
     {% elif "Docente" in user.groups.all.first.name %}
     <div class="row">
-        <h1>Bienvenido {{ user }}</h1>
+        <h3 class="mb-5 textOrangeDark fw-bold">BIENVENIDO, {{ user|upper }}</h3>
         <div class="container">
             <a href="{% url 'academico:notas' %}" class="card-link text-decoration-none">
                 <div class="card" style="width: 20rem;" id="c">
@@ -183,7 +183,7 @@
     </div>
         {% elif "Alumno" in user.groups.all.first.name %}
     <div class="row">
-        <h1>Bienvenido {{ user }}</h1>
+        <h3 class="mb-5 textOrangeDark fw-bold">BIENVENIDO, {{ user|upper }}</h3>
         <div class="container">
             <a href="{% url 'academico:notas' %}" class="card-link text-decoration-none">
                 <div class="card" style="width: 20rem;" id="c">

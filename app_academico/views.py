@@ -101,8 +101,9 @@ def editar_alumnos(request, id):
 def clasesAdmin(request):
     if request.user.is_superuser:
         asignaturas = Asignatura.objects.all().order_by('nombre')
+        docentes = Docente.objects.all().order_by('nombre')
         dias = ["L", "M", "X", "J", "V", "S", "D"]
-
+        
         if request.method == 'POST':
             asignatura = get_object_or_404(Asignatura, pk=request.POST.get('asignatura'))
             seccion = request.POST.get('seccion')
@@ -113,14 +114,14 @@ def clasesAdmin(request):
             seleccionados = []
 
             print(type(len(seccion)))
-            if len(seccion) == 4 and (cupos > 10 and cupos < 61):
+            if len(seccion) == 4 and (cupos > 5 and cupos < 61):
                 for dia in dias:
                     chk = request.POST.get(f'chk-{dia}')  # almacenar id de clase
                     if dia == chk:
                         seleccionados.append(dia)
             
                 resultado = ', '.join(seleccionados) # Para convertir en string al guardar
-
+ 
                 Clase.objects.create(asignatura=asignatura, seccion=seccion, hora=hora, dias=resultado, aula=aula, cupos=cupos, room=room)
                 messages.add_message(request, messages.INFO, f'La clase {asignatura.nombre} ha sido agregada con éxito')
             else:
@@ -139,7 +140,9 @@ def clasesAdmin(request):
             'activo': 'clases',
             'clases': clases,
             'asignaturas': asignaturas,
-            'q': q
+            'docentes': docentes,
+            'q': q,
+            'asignarDocente': False
         }
         return render(request, 'academico/clasesAdmin.html', ctx)
     else:
@@ -149,6 +152,7 @@ def clasesAdmin(request):
 def editar_clase(request, id):
     if request.user.is_superuser:
         if request.method == 'POST':
+            # docente = get_object_or_404(Docente, pk=request.POST.get('docente'))
             dias = ["L", "M", "X", "J", "V", "S", "D"]
             asignatura = get_object_or_404(Asignatura, pk=request.POST.get('asignatura'))
             seccion = request.POST.get('seccion')
@@ -164,8 +168,13 @@ def editar_clase(request, id):
             
             resultado = ', '.join(seleccionados) # Para convertir en string al guardar
 
-            Clase.objects.filter(pk=id).update(asignatura=asignatura, seccion=seccion, hora=hora, dias=resultado, aula=aula,
-                                               cupos=cupos)
+            docente = get_object_or_404(Docente, pk=request.POST.get('docente'))    
+            if docente:
+                Clase.objects.filter(pk=id).update(asignatura=asignatura, seccion=seccion, hora=hora, dias=resultado, aula=aula,
+                                               cupos=cupos, docente=docente)
+            else:
+                Clase.objects.filter(pk=id).update(asignatura=asignatura, seccion=seccion, hora=hora, dias=resultado, aula=aula,
+                                               cupos=cupos)    
 
             messages.add_message(request, messages.INFO, f'La clase {asignatura.nombre} se ha actualizado éxitosamente')
 
@@ -173,12 +182,19 @@ def editar_clase(request, id):
         asignaturas = Asignatura.objects.all().order_by('nombre')
         clases = Clase.objects.all().order_by('asignatura')
 
+        asignar = True
+        if not ((clase.cupos - clase.cupos_disponibles) >= (clase.cupos/2)):
+            asignar = False
+        
+        docentes = Docente.objects.all().order_by('nombre')
         ctx = {
             'activo': 'clases',
             'clases': clases,
             'asignaturas': asignaturas,
             'c': clase,
             'diasClase': clase.dias.split(', '),
+            'asignarDocente' : asignar,
+            'docentes': docentes
         }
 
         return render(request, 'academico/clasesAdmin.html', ctx)
@@ -494,45 +510,52 @@ def editar_nota(request, id):
 
 # -------------------------------------------------------------OFERTA ALUMNO-------------------------------------------------------------------------
 def ofertaAlumno(request):
-    oferta = OfertaAcademica.objects.get(estado=1)  # Obtener TODAS las clases ofertadas del periodo activo
-    clasesMtr = Clase.objects.filter(
-        alumnos=request.user.alumno.id)  # Clases en las que el alumno esta matriculado actualmente
+    oferta = OfertaAcademica.objects.filter(estado=1).last()  # Obtener TODAS las clases ofertadas del periodo activo
+    clasesMtr = Clase.objects.filter(alumnos=request.user.alumno.id)  # Clases en las que el alumno esta matriculado actualmente
     asignaturas = []
 
+    
+    if oferta:
     # Bucle que ingresa a la lista de asignaturas, unicamente los nombres de las asignaturas ofertadas
-    for c in oferta.clases.all().order_by('asignatura'):
-        if not c.asignatura.nombre in asignaturas:
-            asignaturas.append(c.asignatura.nombre)
+        for c in oferta.clases.all().order_by('asignatura'):
+            if not c.asignatura.nombre in asignaturas:
+                asignaturas.append(c.asignatura.nombre)
 
-    if request.method == 'POST' and request.is_ajax():
-        # clases = Clase.objects.all().order_by('asignatura')
-        clasesAlumno = request.POST.getlist('clases[]')
-        cuposClases = []
-        # Matricular el alumno en las clases con los ids ya obtenidos
-        for c in oferta.clases.all():
-            if f'{c.id}' in clasesAlumno:  # https://parzibyte.me/blog/2018/04/17/python-comprobar-elemento-valor-existe-lista-arreglo/
-                c.alumnos.add(
-                    request.user.alumno.id)  # Si el id de la clase existe en las clases que el alumno matriculo, se añade el alumno
-            else:
-                c.alumnos.remove(
-                    request.user.alumno.id)  # Sino se remueve, en caso de que estuviese matriculado antes y esta vez quitó la clase
+        if request.method == 'POST' and request.is_ajax():
+            # clases = Clase.objects.all().order_by('asignatura')
+            clasesAlumno = request.POST.getlist('clases[]')
+            cuposClases = []
+            # Matricular el alumno en las clases con los ids ya obtenidos
+            for c in oferta.clases.all():
+                if f'{c.id}' in clasesAlumno:  # https://parzibyte.me/blog/2018/04/17/python-comprobar-elemento-valor-existe-lista-arreglo/
+                    c.alumnos.add(
+                        request.user.alumno.id)  # Si el id de la clase existe en las clases que el alumno matriculo, se añade el alumno
+                else:
+                    c.alumnos.remove(
+                        request.user.alumno.id)  # Sino se remueve, en caso de que estuviese matriculado antes y esta vez quitó la clase
 
-            cuposClases.append(c.cupos_disponibles)  # estaran en el mismo orden de las clases en oferta
+                cuposClases.append(c.cupos_disponibles)  # estaran en el mismo orden de las clases en oferta
 
-        return JsonResponse({'clasesAlumno': serializers.serialize("json", oferta.clases.all()),
-                             'cupos': cuposClases})  # https://living-sun.com/es/python/713273-sending-json-data-from-view-in-django-python-json-django.html
+            return JsonResponse({'clasesAlumno': serializers.serialize("json", oferta.clases.all()),
+                                'cupos': cuposClases})  # https://living-sun.com/es/python/713273-sending-json-data-from-view-in-django-python-json-django.html
 
-    # GET
-    ctx = {
-        'activo': 'matricula',
-        'oferta': oferta,
-        'asignaturas': asignaturas,
-        'clasesOfertadas': oferta.clases.order_by('asignatura', 'seccion'),
-        # Clases de la oferta ordenadas por asignatura y seccion
-        'clasesAlumno': clasesMtr,
-        'srcMin': 'https://cdn.lordicon.com/rivoakkk.json',
-        'srcPlus': 'https://cdn.lordicon.com/mecwbjnp.json'
-    }
+        # GET
+        ctx = {
+            'activo': 'matricula',
+            'oferta': oferta,
+            'asignaturas': asignaturas,
+            'clasesOfertadas': oferta.clases.order_by('asignatura', 'seccion'),
+            # Clases de la oferta ordenadas por asignatura y seccion
+            'clasesAlumno': clasesMtr,
+            'srcMin': 'https://cdn.lordicon.com/rivoakkk.json',
+            'srcPlus': 'https://cdn.lordicon.com/mecwbjnp.json'
+        }
+    else:
+        ctx = {
+            'activo': 'matricula',
+            'oferta': oferta,
+            'asignaturas': asignaturas,
+        }
 
     return render(request, 'academico/ofertaAlumno.html', ctx)
 
