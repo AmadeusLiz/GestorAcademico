@@ -650,11 +650,11 @@ def clasesdocente(request):
                 Clase.objects.filter(pk=c.id).update(finalizada=True)
             else:
                 Clase.objects.filter(pk=c.id).update(finalizada=False)
+        messages.add_message(request, messages.INFO, f'Datos actualizados correctamente')
 
             
 
     clases = Clase.objects.all().filter(docente__user=request.user.id)
-    messages.add_message(request, messages.INFO, f'Datos actualizados corectamente')
 
     ctx = {
         'clases': clases

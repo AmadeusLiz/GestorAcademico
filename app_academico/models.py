@@ -119,6 +119,10 @@ class NotasClase(models.Model):
     parcial2 = models.IntegerField(null=True, default=0, blank=True)
     parcial3 = models.IntegerField(null=True, default=0, blank=True)
 
+    @property
+    def aprobado(self):
+        return self.parcial1 + self.parcial2 + self.parcial3
+
     def __str__(self):
         return f'{self.alumno.nombre}'
 
