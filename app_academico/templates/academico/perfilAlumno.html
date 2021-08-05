@@ -8,7 +8,7 @@
         <a class="nav-link"href="{% url 'academico:docenteAdmin' %}" >Docente</a>
         <a class="nav-link"href="{% url 'academico:clasesAdmin' %}" >Clases</a>
         <a class="nav-link"href="{% url 'academico:asignaturas' %}" >Asignatura</a>
-        <a class="nav-link"href="{% url 'academico:ofertaAlumno' %}" >Oferta Academica</a>
+        <a class="nav-link"href="{% url 'academico:periodosAdmin' %}" >Oferta Academica</a>
     {% elif "Docente" in user.groups.all.first.name %}
         <a class="nav-link"href="{% url 'academico:notas' %}" >Notas</a>
         <a class="nav-link"href="{% url 'academico:editar_perfil_alumnos' %}" >Perfil</a>
@@ -71,7 +71,72 @@
 
                             <div class="mb-2">
                                 <label class="mb-2" for="facultad">Facultad</label>
-                                <input type="text"  name="facultad" id="facultad" class="form-control" disabled value="{{ request.user.alumno.facultad}}" required autofocus >
+                                <select name="facultad" id="facultad" class="form-select form-select-sm" selected disabled aria-selected="{{ request.user.alumno.facultad }}">
+                                    
+                                    {% if request.user.alumno.facultad == '1' %}
+                                        <option value="1" selected>Ingeniería en Ciencias de la Computación</option>
+                                        <option value="2">Ingeniería Industrial</option>
+                                        <option value="3">Ingeniería Civil</option>
+                                        <option value="4">Medicina y Cirugía</option>
+                                        <option value="5">Odontología</option>
+                                        <option value="6">Enfermería</option>
+                                        <option value="7">Psicología</option>
+
+                                    {% elif request.user.alumno.facultad == '2' %}
+                                        <option value="1">Ingeniería en Ciencias de la Computación</option>
+                                        <option value="2" selected>Ingeniería Industrial</option>
+                                        <option value="3">Ingeniería Civil</option>
+                                        <option value="4">Medicina y Cirugía</option>
+                                        <option value="5">Odontología</option>
+                                        <option value="6">Enfermería</option>
+                                        <option value="7">Psicología</option>
+
+                                    {% elif request.user.alumno.facultad == '3' %}
+                                        <option value="1">Ingeniería en Ciencias de la Computación</option>
+                                        <option value="2">Ingeniería Industrial</option>
+                                        <option value="3" selected>Ingeniería Civil</option>
+                                        <option value="4">Medicina y Cirugía</option>
+                                        <option value="5">Odontología</option>
+                                        <option value="6">Enfermería</option>
+                                        <option value="7">Psicología</option>
+
+                                    {% elif request.user.alumno.facultad == '4' %}
+                                        <option value="1">Ingeniería en Ciencias de la Computación</option>
+                                        <option value="2">Ingeniería Industrial</option>
+                                        <option value="3">Ingeniería Civil</option>
+                                        <option value="4" selected>Medicina y Cirugía</option>
+                                        <option value="5">Odontología</option>
+                                        <option value="6">Enfermería</option>
+                                        <option value="7">Psicología</option>
+                                    
+                                    {% elif request.user.alumno.facultad == '5' %}
+                                        <option value="1">Ingeniería en Ciencias de la Computación</option>
+                                        <option value="2">Ingeniería Industrial</option>
+                                        <option value="3">Ingeniería Civil</option>
+                                        <option value="4">Medicina y Cirugía</option>
+                                        <option value="5" selected>Odontología</option>
+                                        <option value="6">Enfermería</option>
+                                        <option value="7">Psicología</option>
+
+                                    {% elif request.user.alumno.facultad == '6' %}
+                                        <option value="1">Ingeniería en Ciencias de la Computación</option>
+                                        <option value="2">Ingeniería Industrial</option>
+                                        <option value="3">Ingeniería Civil</option>
+                                        <option value="4">Medicina y Cirugía</option>
+                                        <option value="5">Odontología</option>
+                                        <option value="6" selected>Enfermería</option>
+                                        <option value="7">Psicología</option>
+
+                                    {% else %}
+                                        <option value="1">Ingeniería en Ciencias de la Computación</option>
+                                        <option value="2">Ingeniería Industrial</option>
+                                        <option value="3">Ingeniería Civil</option>
+                                        <option value="4">Medicina y Cirugía</option>
+                                        <option value="5">Odontología</option>
+                                        <option value="6">Enfermería</option>
+                                        <option value="7" selected>Psicología</option>
+                                    {% endif %}
+                                </select>
                             </div>
 
                             <div class="mb-2">

@@ -10,7 +10,7 @@
         <a class="nav-link"href="{% url 'academico:docenteAdmin' %}" >Docente</a>
         <a class="nav-link"href="{% url 'academico:clasesAdmin' %}" >Clases</a>
         <a class="nav-link"href="{% url 'academico:asignaturas' %}" >Asignatura</a>
-        <a class="nav-link"href="{% url 'academico:ofertaAlumno' %}" >Oferta Academica</a>
+        <a class="nav-link"href="{% url 'academico:periodosAdmin' %}" >Oferta Academica</a>
     {% elif "Docente" in user.groups.all.first.name %}
         <a class="nav-link"href="{% url 'academico:notas' %}" >Notas</a>
         <a class="nav-link"href="{% url 'academico:editar_perfil_alumnos' %}" >Perfil</a>
@@ -18,25 +18,26 @@
         <a class="nav-link"href="{% url 'academico:clasesdocente' %}" >Boleta</a>
 
     {% else %}
-        <a class="nav-link"href="{% url 'academico:notas' %}" >Notas</a>
-        <a class="nav-link"href="{% url 'academico:editar_perfil_alumnos' %}" >Perfil</a>
-        <a class="nav-link"href="{% url 'academico:clasesMatricula' %}" >Clases</a>
-        <a class="nav-link"href="{% url 'academico:boletaAlumno' %}" >Boleta</a>
-        <a class="nav-link"href="{% url 'academico:ofertaAlumno' %}" >Matricula</a>
+        <a class="nav-link" href="{% url 'academico:notas' %}">Notas</a>
+        <a class="nav-link" href="{% url 'academico:editar_perfil_alumnos' %}">Perfil</a>
+        <a class="nav-link" href="{% url 'academico:clasesMatricula' %}">Clases</a>
+        <a class="nav-link" href="{% url 'academico:boletaAlumno' %}">Boleta</a>
+        <a class="nav-link" href="{% url 'academico:ofertaAlumno' %}">Matricula</a>
     {% endif %}
 {% endblock %}
 
 {% block container %}
+    <h1 class="titulo">Clases de {{ user.username }}</h1>
 
-{% for c in m %}
+    {% for c in m %}
 
 
-<style>
-.cards{
-    padding: 1em;
-    margin: 1em;
-    display: inline-block;
-    font-size: 12px;
+        <style>
+            .cards {
+                padding: 1em;
+                margin: 1em;
+                display: inline-block;
+                font-size: 12px;
 }
 
 .card{
@@ -226,7 +227,16 @@
                     </div>
                 </div>
             </div>
-                           
+    {% empty %}
+        <div class="text-center">
+                <h1 class="textOrangeDark fw-bold">NO HAY CLASES MATRICULADAS</h1>
+                <lord-icon
+                    src="https://cdn.lordicon.com/tdrtiskw.json"
+                    trigger="loop"
+                    colors="primary:#121331,secondary:#ff8a50"
+                    style="width:50%;height:50%">
+                </lord-icon>
+            </div>
     {% endfor %}           
 
 
