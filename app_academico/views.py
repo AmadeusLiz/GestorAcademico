@@ -435,8 +435,8 @@ def notas(request):
         elif request.user.groups.all()[0].name == 'Docente':
             if request.GET.get('clase'):
                 datos = NotasClase.objects.all().filter(clase=request.GET.get('clase'),
-                                                        clase__docente__user_id=request.user.id)
-            otro = Clase.objects.all().filter(docente__user=request.user.id)
+                                                        clase__docente__user_id=request.user.id,clase__finalizada=False)
+            otro = Clase.objects.all().filter(docente__user=request.user.id,finalizada=False)
 
     else:
         return redirect(reverse('academico:index'))
