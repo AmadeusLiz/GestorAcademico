@@ -165,16 +165,12 @@ def editar_clase(request, id):
                 chk = request.POST.get(f'chk-{dia}')  # almacenar id de clase
                 if dia == chk:
                     seleccionados.append(dia)
-            
-            resultado = ', '.join(seleccionados) # Para convertir en string al guardar
 
-            docente = get_object_or_404(Docente, pk=request.POST.get('docente'))    
-            if docente:
-                Clase.objects.filter(pk=id).update(asignatura=asignatura, seccion=seccion, hora=hora, dias=resultado, aula=aula,
-                                               cupos=cupos, docente=docente)
-            else:
-                Clase.objects.filter(pk=id).update(asignatura=asignatura, seccion=seccion, hora=hora, dias=resultado, aula=aula,
-                                               cupos=cupos)    
+            resultado = ', '.join(seleccionados)  # Para convertir en string al guardar
+
+            Clase.objects.filter(pk=id).update(asignatura=asignatura, seccion=seccion, hora=hora, dias=resultado,
+                                               aula=aula,
+                                               cupos=cupos)
 
             messages.add_message(request, messages.INFO, f'La clase {asignatura.nombre} se ha actualizado éxitosamente')
 
