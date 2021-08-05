@@ -10,7 +10,7 @@
         <a class="nav-link"href="{% url 'academico:docenteAdmin' %}" >Docente</a>
         <a class="nav-link"href="{% url 'academico:clasesAdmin' %}" >Clases</a>
         <a class="nav-link"href="{% url 'academico:asignaturas' %}" >Asignatura</a>
-        <a class="nav-link"href="{% url 'academico:ofertaAlumno' %}" >Oferta Academica</a>
+        <a class="nav-link"href="{% url 'academico:periodosAdmin' %}" >Oferta Academica</a>
     {% elif "Docente" in user.groups.all.first.name %}
         <a class="nav-link"href="{% url 'academico:notas' %}" >Notas</a>
         <a class="nav-link"href="{% url 'academico:editar_perfil_alumnos' %}" >Perfil</a>
@@ -36,21 +36,21 @@
 
 
  <div class="row">
-    <form class="form-horizontal" role="form">
+
         <div class="row d-inline-flex container-fluid">
         {% if alumno %}
-            <form action="{% url 'academico:editar_alumnos' alumno.id %}" method="POST">
+            <form action="{% url 'academico:editar_alumnos' alumno.id %}" method="POST" enctype="multipart/form-data">
         {% else %}
             <form action="{% url 'academico:alumnos' %}" method="POST" enctype="multipart/form-data">
         {% endif %}
                 {% csrf_token %}
 
-        <div class="col-5 d-inline-block me-5">
+            <div class="col-5 d-inline-block me-5">
                  {{ form.as_p }}
-                <div class="mb-2">
+                 <div class="mb-2">
                     <label class="mb-2" for="nombre">Nombre</label>
                     <input type="text" value="{{ alumno.nombre }}" name="nombre" id="nombre" class="form-control" placeholder="Jose Mario" pattern="(\b[A-Z]\w+)?(\s)?(\b[A-Z]\w+)"  required>
-                </div>
+                    </div>
                 <div class="mb-2">
                     <label class="mb-2" for="apellido">Apellido</label>
                     <input type="text"  value="{{ alumno.apellido }}" name="apellido" id="apellido" class="form-control" placeholder="Carcamo Ruiz" pattern="(\b[A-Z]\w+)?(\s)?(\b[A-Z]\w+)" required>
@@ -65,10 +65,16 @@
                     <label class="mb-2" for="telefono">Teléfono</label>
                     <input type="tel" value="{{ alumno.telefono }}" name="telefono" id="telefono" class="form-control" pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}" placeholder="9999-9999" required>
                 </div>
+
+               
+            </div>
+
+       
+        <div class="col-5 d-inline-block me-5">
                 <div class="mb-2">
                     <label class="mb-2" for="facultad">Facultad</label>
                     <select name="facultad" id="facultad" class="form-select form-select-sm" aria-selected="{{ alumno.facultad }}">
-                        
+
                         {% if alumno.facultad == '1' %}
                             <option value="1" selected>Ingeniería en Ciencias de la Computación</option>
                             <option value="2">Ingeniería Industrial</option>
@@ -104,7 +110,7 @@
                             <option value="5">Odontología</option>
                             <option value="6">Enfermería</option>
                             <option value="7">Psicología</option>
-                        
+
                         {% elif alumno.facultad == '5' %}
                             <option value="1">Ingeniería en Ciencias de la Computación</option>
                             <option value="2">Ingeniería Industrial</option>
@@ -134,12 +140,6 @@
                         {% endif %}
                     </select>
                 </div>
-               
-        </div>
-    </form>
-       
-        <div class="col-5 d-inline-block me-5">
-
                 <div class="mb-2">
                     <label for="dir">Dirección</label>
                     <textarea name="dir" id="dir" class="form-control" required rows="7" style="width:100%" required>{{ alumno.direccion }}</textarea>
@@ -157,8 +157,9 @@
                     <input type ="submit" class="btn text-white orange" value="Registrar Alumno">
                 {% endif %}
                 </div>
-            </form>
         </div>
+            </form>
+
 
         <div class="col-9">
             {% if messages %}

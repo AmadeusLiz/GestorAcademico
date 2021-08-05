@@ -10,7 +10,7 @@
         <a class="nav-link"href="{% url 'academico:docenteAdmin' %}" >Docente</a>
         <a class="nav-link"href="{% url 'academico:clasesAdmin' %}" >Clases</a>
         <a class="nav-link"href="{% url 'academico:asignaturas' %}" >Asignatura</a>
-        <a class="nav-link"href="{% url 'academico:ofertaAlumno' %}" >Oferta Academica</a>
+        <a class="nav-link"href="{% url 'academico:periodosAdmin' %}" >Oferta Academica</a>
     {% elif "Docente" in user.groups.all.first.name %}
         <a class="nav-link"href="{% url 'academico:notas' %}" >Notas</a>
         <a class="nav-link"href="{% url 'academico:editar_perfil_alumnos' %}" >Perfil</a>
@@ -58,7 +58,7 @@
             <tbody>
                 {% for p in periodos %}
                     <tr>
-                        <td>{{ p.anio }}</td>
+                        <th>{{ p.anio }}</th>
 
                         {% if p.periodo == '1' %}
                             <td>PRIMERO</td>

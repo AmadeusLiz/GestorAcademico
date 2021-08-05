@@ -10,7 +10,7 @@
         <a class="nav-link"href="{% url 'academico:docenteAdmin' %}" >Docente</a>
         <a class="nav-link"href="{% url 'academico:clasesAdmin' %}" >Clases</a>
         <a class="nav-link"href="{% url 'academico:asignaturas' %}" >Asignatura</a>
-        <a class="nav-link"href="{% url 'academico:ofertaAlumno' %}" >Oferta Academica</a>
+        <a class="nav-link"href="{% url 'academico:periodosAdmin' %}" >Oferta Academica</a>
     {% elif "Docente" in user.groups.all.first.name %}
         <a class="nav-link"href="{% url 'academico:notas' %}" >Notas</a>
         <a class="nav-link"href="{% url 'academico:editar_perfil_alumnos' %}" >Perfil</a>
@@ -42,9 +42,10 @@
                     <select name="asignatura" id="asignatura" class="form-select">
                         {% for a in  asignaturas %}
                             {% if c and c.asignatura.id == a.id %}
-                                <option value="{{a.id}}" selected>{{ a.nombre }}</option>>
+                                <option value="{{a.id}}" selected>{{ a.nombre }}</option>
+                            {% else %}
+                                <option value="{{a.id}}">{{ a.nombre }}</option>
                             {% endif %}
-                            <option value="{{a.id}}">{{ a.nombre }}</option>
                         {% endfor %}
                     </select> 
                 </div>
@@ -56,7 +57,7 @@
 
                 <div class="mb-2">
                     <label class="mb-2 fw-bold" for="hora">Hora Inicio</label>
-                    <input type="time" value="{{ c.hora}}" name="hora" id="hora" class="form-control" min="07:00" required>
+                    <input type="time" value="{{ c.hora}}" name="hora" id="hora" class="form-control" min="07:00" max= "21:00" required>
                 </div>
 
                 <div class="mb-2">
@@ -77,13 +78,29 @@
 
                 <div class="mb-2">
                     <label class="fw-bold" for="cupos">Cupos</label>
-                    <input type="number"  value="{{ c.cupos }}" name="cupos" id="cupos" class="form-control" min="10"  placeholder="10" required>
+                    <input type="number"  value="{{ c.cupos }}" name="cupos" id="cupos" class="form-control" min="5"  placeholder="5" required>
                 </div>
 
                 <div class="mb-2">
                     <label class="mb-2 fw-bold" for="aula">Room</label>
-                    <input type="text"  value="{{ c.room }}" name="room" id="room" class="form-control" placeholder="www.unicah.edu">
+                    <input type="text"  value="{{ c.room|default_if_none:'' }}" name="room" id="room" class="form-control" placeholder="www.unicah.edu">
                 </div>
+
+
+            {% if asignarDocente %}
+                <div class="mb-2">
+                    <label class="mb-2 fw-bold" for="docente">Docente</label>
+                    <select name="docente" id="docente" class="form-select">
+                        {% for d in docentes %}
+                            {% if c and c.docente.id == d.id %}
+                                <option value="{{d.id}}" selected>{{ d.nombre }}</option>
+                            {% else %}
+                                <option value="{{d.id}}">{{ d.nombre }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select> 
+                </div>
+            {% endif %}
 
                 <div class="mb-2">
                 {% if c %}
@@ -120,6 +137,7 @@
                         <th class="textOrangeDark">AULA</th>
                         <th class="textOrangeDark">CUPOS</th>
                         <th class="textOrangeDark">ROOM</th>
+                        <th class="textOrangeDark">DOCENTE</th>
                         <th class="textOrangeDark">ACCIONES</th>
                     </tr>
                 </thead>
@@ -134,6 +152,7 @@
                             <td>{{ c.aula}}</td>
                             <td class="text-center">{{ c.cupos}}</td>
                             <td>{{ c.room | default_if_none:'-'}}</td> 
+                            <td>{{ c.docente | default_if_none:'SIN ASIGNAR'}}</td> 
                             <td class="text-center">
                                 <a href="{% url 'academico:editar_clase' c.id %}" class="edit"><span class="fas fa-edit"></span></a>&nbsp
                                 <a onclick="if (!confirm('¿Desea eliminar {{c.asignatura}} {{c.seccion}}?')) return false;" href="{% url 'academico:eliminar_clase' c.id %}" class="delete"> <span class="fas fa-trash-alt"></span></a>

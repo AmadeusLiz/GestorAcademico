@@ -10,7 +10,7 @@
         <a class="nav-link"href="{% url 'academico:docenteAdmin' %}" >Docente</a>
         <a class="nav-link"href="{% url 'academico:clasesAdmin' %}" >Clases</a>
         <a class="nav-link"href="{% url 'academico:asignaturas' %}" >Asignatura</a>
-        <a class="nav-link"href="{% url 'academico:ofertaAlumno' %}" >Oferta Academica</a>
+        <a class="nav-link"href="{% url 'academico:periodosAdmin' %}" >Oferta Academica</a>
     {% elif "Docente" in user.groups.all.first.name %}
         <a class="nav-link"href="{% url 'academico:notas' %}" >Notas</a>
         <a class="nav-link"href="{% url 'academico:editar_perfil_alumnos' %}" >Perfil</a>
@@ -38,6 +38,7 @@
 
         <h2 class="fw-bold mb-5 textOrangeDark">Bienvenidx, {{request.user.alumno.nombre}} {{request.user.alumno.apellido}}</h2>
 
+        {% if oferta %}
         <h4 class="fw-bold mt-5">Clases a matricular</h3>
         <table id="clasesMtr" class="table table-hover mb-5" filas=0>
             <thead>
@@ -75,7 +76,6 @@
                 </tr>
             </thead>
             <tbody>
-            {% if oferta %}
                 {% for a in asignaturas %}
                     <tr><td class="pb-0 fw-bold text-white gray" colspan="8"><h5 class="card-header fw-bold text-white gray">{{a}}</h5></td></tr>
                         {% for c in clasesOfertadas %}
@@ -118,7 +118,15 @@
                     </tr>
                 {% endfor %}
             {% else %}
-            <h1>NO HAY OFERTA</h1>
+            <div class="text-center">
+                <h1 class="textOrangeDark fw-bold">NO HAY OFERTA ACADÉMICA DISPONIBLE</h1>
+                <lord-icon
+                    src="https://cdn.lordicon.com/tdrtiskw.json"
+                    trigger="loop"
+                    colors="primary:#121331,secondary:#ff8a50"
+                    style="width:50%;height:50%">
+                </lord-icon>
+            </div>
             {% endif %}
             </tbody>
         </table>
@@ -222,7 +230,7 @@
             }
 
             $.post('', ctx, function (response) {
-                alert("Matriculado")
+                alert("Matriculado exitosamente. Recuerda que si quitaste tus clases no podras acceder a ellas.")
                 clasesMtr = $("#clasesMtr tbody").children()
 
                 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/parse, poner los datos en formato json
