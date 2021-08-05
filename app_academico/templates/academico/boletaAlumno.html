@@ -63,7 +63,7 @@
                         <td>{{ a.dias}}</td>
                         <td>{{ a.docente | default_if_none:'-'}}</td>
                         <td>{{ a.aula}}</td>
-                        <td>{{ a.room | default_if_none:'-'}}</td>
+                        <td><a href="{{ a.room | default_if_none:'#'}}">{{ a.room | default_if_none:'-'}}</a></td>
 
                     </tr>    
                 {% empty %}
