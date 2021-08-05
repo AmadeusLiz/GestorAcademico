@@ -18,25 +18,26 @@
         <a class="nav-link"href="{% url 'academico:clasesdocente' %}" >Boleta</a>
 
     {% else %}
-        <a class="nav-link"href="{% url 'academico:notas' %}" >Notas</a>
-        <a class="nav-link"href="{% url 'academico:editar_perfil_alumnos' %}" >Perfil</a>
-        <a class="nav-link"href="{% url 'academico:clasesMatricula' %}" >Clases</a>
-        <a class="nav-link"href="{% url 'academico:boletaAlumno' %}" >Boleta</a>
-        <a class="nav-link"href="{% url 'academico:ofertaAlumno' %}" >Matricula</a>
+        <a class="nav-link" href="{% url 'academico:notas' %}">Notas</a>
+        <a class="nav-link" href="{% url 'academico:editar_perfil_alumnos' %}">Perfil</a>
+        <a class="nav-link" href="{% url 'academico:clasesMatricula' %}">Clases</a>
+        <a class="nav-link" href="{% url 'academico:boletaAlumno' %}">Boleta</a>
+        <a class="nav-link" href="{% url 'academico:ofertaAlumno' %}">Matricula</a>
     {% endif %}
 {% endblock %}
 
 {% block container %}
+    <h1 class="titulo">Clases de {{ user.username }}</h1>
 
-{% for c in m %}
+    {% for c in m %}
 
 
-<style>
-.cards{
-    padding: 1em;
-    margin: 1em;
-    display: inline-block;
-    font-size: 12px;
+        <style>
+            .cards {
+                padding: 1em;
+                margin: 1em;
+                display: inline-block;
+                font-size: 12px;
 }
 
 .card{
