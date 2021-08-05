@@ -115,18 +115,23 @@
                             <td>{% if otro %}{{ c.alumno}}{% else %}{{ c.clase}}{% endif %}</td>
                             <td>{{ c.parcial1 }}</td>
                             <td>{{ c.parcial2 }}</td>
-                            <td>{{ c.parcial3}}</td>
+                            <td>{{ c.parcial3 }}</td>
                             {% if otro %}
-                            <td>
-                                <a href="{% url 'academico:editar_nota' c.id %}" class="edit"><span class="fas fa-edit"></span></a>
-                            </td>
-                        {% endif %}
-                        {% if "Alumno" in user.groups.all.first.name %}
-                            {% if c.clase.finalizada  %}
-                                {% if c.parcial1 >= 70  %}{% if c.parcial2 >= 70  %}{% if c.parcial3 >= 70  %}<th>✅</th>{% endif %}{% endif %}{% else %}<th>❌</th>{% endif %}
-                            {% else %}<th>-</th>
+                                <td>
+                                    <a href="{% url 'academico:editar_nota' c.id %}" class="edit"><span
+                                            class="fas fa-edit"></span></a>
+                                </td>
                             {% endif %}
-                        {% endif %}
+                            {% if "Alumno" in user.groups.all.first.name %}
+                                {% if c.clase.finalizada %}
+                                    {% if c.aprobado >= 210 %}
+                                        <th>✅</th>{% else %}
+                                        <th>❌</th>{% endif %}
+
+                                {% else %}
+                                    <th>-</th>
+                                {% endif %}
+                            {% endif %}
                         </tr>
                     {% empty %}
                         <tr>
